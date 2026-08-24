@@ -79,8 +79,8 @@ interface DrawFootprintOptions {
 }
 
 
-const positionShiftedFootprints: Map<string, Point[][]> = new Map();
-const delaunayCache: Map<string, number[]> = new Map();
+const positionShiftedFootprints: Map<string, Point[][]> = new Map<string, Point[][]>();
+const delaunayCache: Map<string, number[]> = new Map<string, number[]>();
 
 
 // earcut needs to not straddle 0/360.
@@ -171,7 +171,7 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
 
   const getOnePxSquare = (rc: RenderContext) => {
     onePixSquare = convertScreenPointsToClip(rc, [[[0, 0], [1, 1]]]);
-  }
+  };
   executeWithTransforms(renderContext, getOnePxSquare, zeroTransforms);
   const onePix = [Math.abs(onePixSquare[0][0][0] - onePixSquare[0][1][0]), Math.abs(onePixSquare[0][0][1] - onePixSquare[0][1][1])];
 
@@ -229,7 +229,7 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
     footprint.drawLines(wwt.renderContext, opacity, options.color);
   
     if (options.fill) {
-       triangles.draw(wwt.renderContext, 1, true);
+      triangles.draw(wwt.renderContext, 1, true);
     }
   };
 
@@ -238,7 +238,7 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
 
 
 
-const outlineCache: Map<string, SimpleLineList> = new Map();
+const outlineCache: Map<string, SimpleLineList> = new Map<string, SimpleLineList>();
 /*
  If we try to draw large outlines that same was as we were with the free-floating 
  outlines, then when a line list was directly behind the camera, it would end up getting
@@ -285,7 +285,7 @@ export function drawStaticFootprint(wwt: WWTControl, options: DrawFootprintOptio
     return;
   }
 
-  const footprint = getOutline(options.id, options.footprint)
+  const footprint = getOutline(options.id, options.footprint);
   footprint.drawLines(wwt.renderContext, options.opacity ?? 1, options.color);
 
   if (options.fill) {
@@ -295,21 +295,22 @@ export function drawStaticFootprint(wwt: WWTControl, options: DrawFootprintOptio
 
     const triangleColor = Color.fromArgb(Math.round(options.fillOpacity * (options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
     options.footprint.forEach((shape, index) => {
-    const vecs = shape.map(pt => Coordinates.raDecTo3d(pt[0] / 15, pt[1])); // takes RA hours
+      const vecs = shape.map(pt => Coordinates.raDecTo3d(pt[0] / 15, pt[1])); // takes RA hours
 
-    // cached per polygon, not per footprint. the id alone would hand every
-    // ring the first ring's triangulation
-    const triangleIndices = getDelaunay(shape, `${options.id}:${index}`);
-    for (let i = 0; i < triangleIndices.length; i += 3) {
-      fill.addTriangle(
-        vecs[triangleIndices[i]],
-        vecs[triangleIndices[i + 1]],
-        vecs[triangleIndices[i + 2]],
-        triangleColor,
-        date
-      );
-    }
-  });
-  fill.draw(wwt.renderContext, 1, true);
+      // cached per polygon, not per footprint. the id alone would hand every
+      // ring the first ring's triangulation
+      const triangleIndices = getDelaunay(shape, `${options.id}:${index}`);
+      for (let i = 0; i < triangleIndices.length; i += 3) {
+        fill.addTriangle(
+          vecs[triangleIndices[i]],
+          vecs[triangleIndices[i + 1]],
+          vecs[triangleIndices[i + 2]],
+          triangleColor,
+          date
+        );
+      }
+    });
+
+    fill.draw(wwt.renderContext, 1, true);
   }
 }

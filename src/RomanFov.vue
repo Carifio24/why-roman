@@ -1403,7 +1403,7 @@ onMounted(() => {
     //     show: true,
     //   });
     // };
-   //  store.applySetting(["showCrosshairs", true]);
+    //  store.applySetting(["showCrosshairs", true]);
 
     store.addFrameCallback(_si => {
       footprints.forEach((footprint) => footprint.draw(WWTControl.singleton));
