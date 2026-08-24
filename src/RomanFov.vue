@@ -13,14 +13,14 @@
       <SplashGesture v-if="!isLoading && !showInfoDialog && !showStartup" />
 
       <component
-        :is="smallSize ? 'div' : SplashScreen"
+        :is="SplashScreen"
         v-if="showStartup"
-        v-bind="smallSize ? { id: 'startup-screen' } : { color: accentColor }"
-        @close="showStartup = false"
+        v-bind="{ color: accentColor }"
+        @close="handleSplashClose"
       >
         <div id="startup-screen-content">
-          <h1 class="startup-screen-title">Why Roman</h1>
-          <v-btn
+          <h1 class="startup-screen-title">Why the Roman Space Telescope</h1>
+          <!-- <v-btn
             v-for="tour in tours"
             :key="tour.id"
             class="startup-button"
@@ -32,23 +32,29 @@
             @click="startTourFromStartup(tour.id)"
           >
             {{ tour.label }}
-          </v-btn>
+          </v-btn> -->
           <v-btn
             class="startup-button"
-            variant="flat"
+            variant="elevated"
+            rounded="lg"
             block
-            rounded="pill"
-            :color="accentColor"
+            :color="backgroundColorDarkest"
             :disabled="isLoading"
-            @click="showStartup = false"
+            @click="handleSplashClose"
           >
-            Let me explore
+            Get Started
           </v-btn>
         </div>
       </component>
+      
+      <IntroSlides 
+        v-if="showIntroSlides" 
+        v-model:open="showIntroSlides" 
+        @close="handleIntroClose"
+      />
 
       <div
-        v-else
+        v-if="!showStartup && !showIntroSlides"
         id="wwt-overlay"
       >
         <div id="top-content">
@@ -119,7 +125,7 @@
               >
               </icon-button>
 
-              <icon-button
+              <!-- <icon-button
                 v-if="!inTour"
                 id="share-icon"
                 icon="fa-share-nodes"
@@ -128,7 +134,7 @@
                 tooltip-location="start"
                 @activate="copyURLToClipboard"
               >
-              </icon-button>
+              </icon-button> -->
               <v-snackbar
                 v-model="snackbar"
                 :color="snackbarColor"
@@ -268,26 +274,6 @@
           </div>
         </div>
         <!-- on screen info from rubin first look -->
-        <div
-          v-if="inTour"
-          id="tour-text"
-          :class="[
-            'selected-info',
-            smallSize ? 'selected-info-tall' : '',
-            'info-box',
-          ]"
-        >
-          <h3>{{ tourStepTitle }}</h3>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Illo eligendi at accusantium, corporis, vitae est dolorem 
-            suscipit aut, inventore dignissimos ab! Ipsa ab cupiditate 
-            quae voluptas, molestias repudiandae necessitatibus natus!
-          </p>
-          <p>
-            Click "next"
-          </p>
-        </div>
 
         <div
           v-if="inTour"
@@ -352,13 +338,7 @@
             </div>
           </v-row>
 
-          <v-progress-linear
-            v-if="inTour"
-            :model-value="tourProgress"
-            :color="accentColor"
-            height="6"
-            rounded
-          />
+          
           <!-- Imageset Credits -->
           <footer
             v-if="!smallSize"
@@ -420,8 +400,18 @@
 
     <div
       id="side-drawer"
-      :class="[showTextSheet ? 'side-drawer-open' : 'side-drawer-closed']"
+      :class="[(showTextSheet || inTour) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
+      <TourSheet
+        v-if="activeTour"
+        :tour-id="activeTour.id"
+        :step="tourStep"
+        :small-size="smallSize"
+        :progress="tourProgress"
+        @next="goToStep(tourStep + 1)"
+        @previous="goToStep(tourStep - 1)"
+        @leave="leaveTour"
+      />
       <InformationSheet
         v-if="showTextSheet"
         v-model="showTextSheet"
@@ -519,7 +509,7 @@ import {
   useWWTKeyboardControls,
 } from "@cosmicds/vue-toolkit";
 import PlaceCards from "./components/PlaceCards.vue";
-import { useDisplay } from "vuetify";
+import { useDisplay, useTheme } from "vuetify";
 import { storeToRefs } from "pinia";
 
 import * as wwtlib from "@wwtelescope/engine";
@@ -539,6 +529,7 @@ import SplashGesture from "./components/SplashGesture.vue";
 import SplashScreen from "./components/SplashScreen.vue";
 import FootprintSettings from "./components/FootprintSettings.vue";
 import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
+import TourSheet from "./components/TourSheet.vue";
 import {
   useWtmlLoader,
   type WtmlLoaderReturn,
@@ -581,9 +572,9 @@ const props = withDefaults(defineProps<RomanFovProps>(), {
       // Orion
       // raRad: 1.4612,
       // decRad: -0.09646,
-      // Carina
-      raRad: 160 * D2R,
-      decRad: -60 * D2R,
+      // Andromeda
+      raRad: 10.6847083 * D2R,
+      decRad: 41.26875 * D2R,
       zoomDeg: 60,
     };
   },
@@ -653,6 +644,7 @@ import { corners as m31HiDiskFootprint } from "./footprints/roman_2002_m31_hi_di
 */
 // import { corners as m31SfDiskChips } from "./footprints/roman_2002_m31_sf_disk";
 import { corners as m31SfDiskFootprint } from "./footprints/roman_2002_m31_sf_disk_display";
+import IntroSlides from "./components/IntroSlides.vue";
 
 const roman = useFootprint({
   id: "roman-footprint",
@@ -804,7 +796,22 @@ const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
 
+import { useLocalStorage } from "@vueuse/core";
+
+const hasSeenIntroSlides = useLocalStorage("why-roman:hasSeenIntroSlides", false);
+const hasSeenFullTour = useLocalStorage("why-roman:hasSeenFullTour", false);
+
 const showStartup = ref(true);
+const showIntroSlides = ref(false);
+function handleSplashClose() {
+  showStartup.value = false;
+  showIntroSlides.value = true;
+}
+function handleIntroClose() {
+  showIntroSlides.value = false;
+  startTourFromStartup("andromeda");
+  hasSeenIntroSlides.value = true;
+}
 
 const showTextSheet = ref(false);
 const infoSheetTab = ref(0);
@@ -871,12 +878,6 @@ function goToImageset(
   });
 }
 
-function startUpTour() {
-  console.log("startUpTour");
-  // showTextSheet.value = true;
-  // infoSheetTab.value = 0;
-}
-
 const endTourOverlay = ref(false);
 function showEndTourOverlay() {
   endTourOverlay.value = true;
@@ -912,7 +913,6 @@ function carinaTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    if (tour) startUpTour();
     onlyFootprints(); // no footprints
     showImagesets(carinaWtml, 0); // eso widefield image
     goToImageset(carinaWtml, 0, { zoom: 0.9, instant: false }); //
@@ -965,7 +965,6 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    if (tour) startUpTour();
     onlyFootprints();
     showImagesets(andromedaWtml);
     store.gotoRADecZoom({
@@ -1040,7 +1039,6 @@ function eagleTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    if (tour) startUpTour();
     onlyFootprints(hubble);
     showImagesets(eagleWtml, 1);
     store.gotoRADecZoom({
@@ -1079,7 +1077,6 @@ function smacsTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    if (tour) startUpTour();
     onlyFootprints(jwst);
     showImagesets(smacsWtml, 1);
     goToImageset(smacsWtml, 1, {
@@ -1119,7 +1116,6 @@ function helixTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    if (tour) startUpTour();
     onlyFootprints(hubble);
     showImagesets(helixWtml, 0);
     store.gotoRADecZoom({
@@ -1882,8 +1878,8 @@ body {
 // checkbox will only get oreo styling when user tabs by keyboard.
 :focus-visible,
 .v-checkbox .v-selection-control__input:has(:focus-visible) {
-  outline: 9px double white !important;
-  box-shadow: 0 0 0 6px black !important;
+  outline: 9px double white;
+  box-shadow: 0 0 0 6px black;
   border-radius: 0.125rem;
 }
 
@@ -1969,34 +1965,6 @@ video {
   }
 }
 
-.info-box {
-  font-size: 0.9rem;
-  color: white;
-  background: rgba(10, 5, 21, 0.7);
-  border: 1px solid;
-  border-radius: 5px;
-  padding: 0.5rem;
-  pointer-events: auto;
-  border-color: var(--border-color);
-  // width: 100%;
-}
-
-// Copied from rubin-first-look. Positions the floating tour text against
-// #wwt-overlay, in the corner the place cards vacate during a tour.
-.selected-info {
-  position: absolute;
-  padding: 10px;
-  top: 10px;
-  right: 10px;
-  max-width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-.selected-info.selected-info-tall {
-  max-width: 60%;
-  top: 20px;
-}
 
 #coordinates {
   .coordinates-content {
@@ -2149,10 +2117,11 @@ video {
   inset: 0;
   z-index: 10;
 
-  background-image: url("/roman_early_universe.jpg");
+  // background-image: url("/roman_early_universe.jpg");
+  background-image: url("/Trailer_still_1-1.jpg");
   background-size: cover;
   background-position: center;
-
+  filter:grayscale(0.6);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2163,11 +2132,12 @@ video {
 // Not nested under #startup-screen: the same content is slotted into
 // SplashScreen on large screens, where that ancestor doesn't exist.
 h1.startup-screen-title {
-  color: var(--accent-color);
+  color: white;
+  font-size: 1.25em;
   text-align: center;
   line-height: 1.1;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 8px #000;
+  text-shadow: 0 2px 8px black; //var(--background-color);
 }
 
 #startup-screen-content {
@@ -2183,9 +2153,11 @@ h1.startup-screen-title {
 .v-btn.startup-button {
   text-transform: none;
   letter-spacing: normal;
+  border: 3px solid var(--accent-color);
 }
 
 .v-btn {
   pointer-events: auto;
+  line-height: 1;
 }
 </style>
