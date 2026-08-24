@@ -1391,19 +1391,20 @@ onMounted(() => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    control._drawCrosshairs = (_renderContext: RenderContext) => {
-      drawFootprint(WWTControl.singleton, {
-        id: "footprint",
-        footprint: romanFootprint,
-        color: Color.fromArgb(255, 255, 0, 0),
-        fill: true,
-        opacity: 1,
-        fillOpacity: 0.7,
-        linewidth: 4,
-        show: true,
-      });
-    };
-    store.applySetting(["showCrosshairs", true]);
+    // control._drawCrosshairs = (_renderContext: RenderContext) => {
+    //   drawFootprint(WWTControl.singleton, {
+    //     id: "footprint",
+    //     footprint: romanFootprint,
+    //     color: Color.fromArgb(255, 255, 0, 0),
+    //     fill: true,
+    //     opacity: 1,
+    //     fillOpacity: 0.7,
+    //     linewidth: 4,
+    //     show: true,
+    //   });
+    // };
+   //  store.applySetting(["showCrosshairs", true]);
+
     store.addFrameCallback(_si => {
       footprints.forEach((footprint) => footprint.draw(WWTControl.singleton));
     });
