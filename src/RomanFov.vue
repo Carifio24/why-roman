@@ -637,6 +637,7 @@ import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
 import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint";
 import { corners as phastIFootprint } from "./footprints/m31_individual_footprints";
+import { drawFootprint } from "./footprint";
 
 /*
  * The Roman core community surveys, as idealized 49.404' x 25.307' tiles, one
@@ -1388,12 +1389,24 @@ onMounted(() => {
       }
     }
 
-    // control._drawCrosshairs = (_renderContext: RenderContext) => { drawFootprint(WWTControl.singleton); };
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    control.renderFrameCallback = function (wwt: WWTControl) {
-      footprints.forEach((footprint) => footprint.draw(wwt));
+    control._drawCrosshairs = (_renderContext: RenderContext) => {
+      drawFootprint(WWTControl.singleton, {
+        id: "footprint",
+        footprint: romanFootprint,
+        color: Color.fromArgb(255, 255, 0, 0),
+        fill: true,
+        opacity: 1,
+        fillOpacity: 0.7,
+        linewidth: 4,
+        show: true,
+      });
     };
+    store.applySetting(["showCrosshairs", true]);
+    store.addFrameCallback(_si => {
+      footprints.forEach((footprint) => footprint.draw(WWTControl.singleton));
+    });
     WWTControl.singleton.renderOneFrame();
 
     store

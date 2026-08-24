@@ -1,26 +1,43 @@
-/* eslint-disable */
-
-import { Color, Coordinates, Dates, RenderContext, Settings, SimpleLineList, SpaceTimeController, TriangleList, Vector3d, WWTControl } from "@wwtelescope/engine";
-import { horizontalToEquatorial, flat } from "./utils";
-import { D2H, H2D, D2R } from "@wwtelescope/astro";
-import { TriangleList2D } from "./wwt-hacks";
+import { Color, Coordinates, Dates, Matrix3d, RenderContext, SimpleLineList, TriangleList, Vector3d, WWTControl } from "@wwtelescope/engine";
+import { flat } from "./utils";
 
 import { Point } from "./footprints/types";
-import earcut, {flatten, deviation, refine} from 'earcut';
+import earcut, {refine} from 'earcut';
+import { D2R } from "@cosmicds/vue-toolkit";
+
+function executeWithTransforms(renderContext: RenderContext, callable: CallableFunction, transforms: {
+  world?: Matrix3d,
+  view?: Matrix3d,
+  projection?: Matrix3d,
+}) {
+
+  const oldWorld = transforms.world ? renderContext.get_world().clone() : renderContext.get_world();
+  const oldWorldBase = transforms.world ? renderContext.get_worldBase().clone() : renderContext.get_world();
+  const oldView = transforms.view ? renderContext.get_view().clone() : renderContext.get_view();
+  const oldProjection = transforms.projection ? renderContext.get_projection().clone() : renderContext.get_projection();
+
+  if (transforms.world) {
+    renderContext.set_worldBase(Matrix3d.multiplyMatrix(transforms.world, renderContext.get_world())); renderContext.set_world(renderContext.get_worldBase().clone());
+  }
+  if (transforms.view) {
+    renderContext.set_view(Matrix3d.multiplyMatrix(transforms.view, renderContext.get_view()));
+  }
+  if (transforms.projection) {
+    renderContext.set_projection(Matrix3d.multiplyMatrix(transforms.projection, renderContext.get_projection()));
+  }
+  renderContext.makeFrustum();
+
+  callable(renderContext);
+
+  renderContext.set_worldBase(oldWorldBase);
+  renderContext.set_world(oldWorld);
+  renderContext.set_view(oldView);
+  renderContext.set_projection(oldProjection);
+  renderContext.makeFrustum();
+}
 
 function samePoint(p1: Point, p2: Point): boolean {
   return p1[0] === p2[0] && p1[1] === p2[1];
-}
-
-function shiftCorners(corners: Point[][], offsetXDeg: number = 0, offsetYDeg: number = 0): Point[][] {
-  const nPoints = corners.reduce((currVal, corner) => currVal + corner.length, 0);
-  const meanIndex = (index: number) => corners.reduce((currVal, corner) => currVal + corner.reduce((curr, pair) => curr + pair[index], 0), 0) / nPoints;
-
-  // const meanRA = meanIndex(0);
-  // const meanDec = meanIndex(1);
-  const meanRA = offsetXDeg;
-  const meanDec = offsetYDeg;
-  return corners.map(corner => corner.map(pair => [pair[0] - meanRA, pair[1] - meanDec]));
 }
 
 function getScreenPoints(wwt: WWTControl, worldPts: Point[]): Point[] {
@@ -31,17 +48,14 @@ function getScreenPoints(wwt: WWTControl, worldPts: Point[]): Point[] {
   });
 }
 
-function _getWorldPoints(wwt: WWTControl, screenPts: Point[]): Point[] {
-  return screenPts.map(pt => {
-    const raDec = wwt.getCoordinatesForScreenPoint(...pt);
-    return [15 * (raDec.x + 720) / 360, raDec.y];
-  });
+function shiftCorners(corners: Point[][], offsetXDeg: number = 0, offsetYDeg: number = 0): Point[][] {
+  return corners.map(corner => corner.map(pair => [pair[0] - offsetXDeg, pair[1] - offsetYDeg]));
 }
 
 // NB: Clip space is the space [-1, 1]^2
-function convertScreenPointsToClip(wwt: WWTControl, screenPts: Point[][]): Point[][] {
-  const width = wwt.renderContext.width;
-  const height = wwt.renderContext.height;
+function convertScreenPointsToClip(renderContext: RenderContext, screenPts: Point[][]): Point[][] {
+  const width = renderContext.width;
+  const height = renderContext.height;
   const slopeH = 2 / width;
   const interceptH = -1;
   // I don't know why this needed to be switched slopeV needs the negative and not the intercept
@@ -53,7 +67,6 @@ function convertScreenPointsToClip(wwt: WWTControl, screenPts: Point[][]): Point
 
 interface DrawFootprintOptions {
   id: string;
-  canvasId?: string;
   footprint: Point[][];
   color: Color;
   fill: boolean;
@@ -66,47 +79,9 @@ interface DrawFootprintOptions {
 }
 
 
-
 const positionShiftedFootprints: Map<string, Point[][]> = new Map();
-const _fakeControl: Map<string, WWTControl> = new Map();
-const fakeRendered: Map<string,boolean> = new Map();
 const delaunayCache: Map<string, number[]> = new Map();
 
-const fakeCenters: Map<string, Record<string, number>> = new Map();
-function setupFakeControl(wwt: WWTControl, options: DrawFootprintOptions) {
-  
-  const canvasId = options.canvasId ?? options.id;
-  
-  // we can only have 1 control per canvas
-  if (!_fakeControl.has(canvasId)) {
-    const fakeControl = new WWTControl();
-    fakeControl.renderContext = new RenderContext();
-    _fakeControl.set(canvasId, fakeControl);
-  }
-  const fakeControl = _fakeControl.get(canvasId)!;
-  
-  if (!positionShiftedFootprints.has(options.id)) {
-    // with when this runs, the initial RA/Dec is the Galactic Center at 17.76h-28.9d
-    if (!fakeCenters.has(canvasId)) {
-      fakeCenters.set(canvasId, {ra: wwt.renderContext.get_RA(), dec: wwt.renderContext.get_dec()});
-    }
-    const {ra, dec} = fakeCenters.get(canvasId)!;
-    const psc = shiftCorners(options.footprint, options.offsetXDeg ?? 0, options.offsetYDeg ?? 0).map(corner => corner.map(pair => [pair[0] + ra * 15, pair[1] + dec]));
-    positionShiftedFootprints.set(options.id, psc as Point[][]);
-  }
-  
-  if (!(fakeRendered.has(canvasId) && fakeRendered.get(canvasId))) {
-    const shadow = document.getElementById(`${canvasId}`) as HTMLCanvasElement;
-    // @ts-ignore
-    fakeControl.canvas = shadow; fakeControl.renderContext.gl = shadow.getContext("webgl2"); fakeControl.renderContext.set_backgroundImageset(wwt.renderContext.get_backgroundImageset());
-    fakeControl.renderOneFrame();
-    // @ts-ignore
-    fakeControl.renderContext.set_world(wwt.renderContext.get_world()); fakeControl.renderContext.set_view(wwt.renderContext.get_view()); fakeControl.renderContext.set_projection(wwt.renderContext.get_projection());
-    fakeRendered.set(canvasId,true);
-  }
-  
-  return {fakeControl, positionedShiftedCorners: positionShiftedFootprints.get(options.id)!}
-}
 
 // earcut needs to not straddle 0/360.
 // since we only get indices out, we can just shift 
@@ -155,88 +130,111 @@ function addLineWidth(footprint: SimpleLineList, v1: Vector3d, v2: Vector3d, one
     footprint.addLine(...perpsMinus);
   }
 }
-  
-/**
- * TODO: There is a problem with how these get drawn. 
- * The coordintes to this are essentiallly delta_RA and delta_Dec, not actually coordinates
- * So there should be some sorta declincation correction, cos(dec + delta_dec) -> cos(delta_dec) if central dec = 0. 
- * 
- */
+
 export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
   if (options.show === false) {
     return;
   }
-  const {fakeControl, positionedShiftedCorners } = setupFakeControl(wwt, options);
   const footprint = new SimpleLineList();
   footprint.pure2D = true;
   footprint.set_depthBuffered(true);
 
-  const camera = wwt.renderContext.viewCamera;
-  fakeControl.renderContext.viewCamera.zoom = camera.zoom;
+  let positionedShiftedCorners: Point[][];
+  if (positionShiftedFootprints.has(options.id)) {
+    positionedShiftedCorners = positionShiftedFootprints.get(options.id)!;
+  } else {
+    positionedShiftedCorners = shiftCorners(
+      options.footprint,
+      options.offsetXDeg ?? 0,
+      options.offsetYDeg ?? 0
+    );
+    positionShiftedFootprints.set(options.id, positionedShiftedCorners);
+  }
 
+  const renderContext = wwt.renderContext;
+  let onePixSquare = [] as Point[][];
+  const worldZeros = Matrix3d.rotationYawPitchRoll(90 * D2R, 0, 0);
+  const currentWorld = renderContext.get_world().clone();
+  currentWorld.invert();
+  const viewZeros = Matrix3d.lookAtLH(
+    Vector3d.create(0, 0, 0),
+    Vector3d.create(0, 0, -1), 
+    Vector3d.create(0, 1, 0)
+  );
+  const currentView = renderContext.get_view().clone();
+  currentView.invert();
 
-  // @ts-ignore
-  fakeControl.renderContext.set_projection(wwt.renderContext.get_projection());
-  const screenPoints = positionedShiftedCorners.map(box => getScreenPoints(fakeControl, box));
-  const clipPoints = convertScreenPointsToClip(fakeControl, screenPoints);
-  const onePixSquare = convertScreenPointsToClip(fakeControl, [[[0, 0], [1, 1]]]);
+  const zeroTransforms = {
+    world: Matrix3d.multiplyMatrix(worldZeros, currentWorld),
+    view: Matrix3d.multiplyMatrix(viewZeros, currentView),
+  };
+
+  const getOnePxSquare = (rc: RenderContext) => {
+    onePixSquare = convertScreenPointsToClip(rc, [[[0, 0], [1, 1]]]);
+  }
+  executeWithTransforms(renderContext, getOnePxSquare, zeroTransforms);
   const onePix = [Math.abs(onePixSquare[0][0][0] - onePixSquare[0][1][0]), Math.abs(onePixSquare[0][0][1] - onePixSquare[0][1][1])];
 
-  const triangles = new TriangleList(); // TringleList should support pure2D. 
+  const triangles = new TriangleList(); // TriangleList should support pure2D. 
   triangles.pure2D = true;
   triangles.depthBuffered = false; // false, otherwise only the first draw is visible.
   const date = new Dates(0, 1);
 
-  clipPoints.forEach((box, index) => {
-    const vectors = box.map(pt => Vector3d.create(...pt, 0));
-    for (let i = 0; i < box.length - 1; i++) {
-      footprint.addLine(vectors[i], vectors[i+1]);
-      if (options.linewidth && options.linewidth > 1) {
-        addLineWidth(footprint, vectors[i], vectors[i+1], onePix[0], options.linewidth);
-      }
-    }
-    footprint.addLine(vectors[box.length - 1], vectors[0]);
-    if (options.linewidth && options.linewidth > 1) {
-      addLineWidth(footprint, vectors[box.length - 1], vectors[0], onePix[0], options.linewidth);
-    }
-    
+  // Since the line width has been added I think it makes sense to keep doing things in screen points
+  const draw = (_rc: RenderContext) => {
 
-    if (options.fill) {
-      const triangleColor = Color.fromArgb(Math.round(options.fillOpacity * (options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
-      // if the box is actually just a box use the original method
-      if (vectors.length === 4) {
-        triangles.addTriangle(vectors[0], vectors[1], vectors[2], triangleColor, date);
-        triangles.addTriangle(vectors[2], vectors[3], vectors[0], triangleColor, date);
-      } 
-      if (vectors.length > 4) {
-        const triangleIndices = getDelaunay(positionedShiftedCorners[index], `${options.id}:${index}`);
-        // count up the triangles. just a list of indices in order
-        for (let i = 0; i < triangleIndices.length; i += 3) {
-          triangles.addTriangle(
-            vectors[triangleIndices[i]],
-            vectors[triangleIndices[i + 1]],
-            vectors[triangleIndices[i + 2]],
-            triangleColor,
-            date
-          );
+    const screenPoints = positionedShiftedCorners.map(box => getScreenPoints(wwt, box));
+    const clipPoints = convertScreenPointsToClip(renderContext, screenPoints);
+
+    clipPoints.forEach((box, index) => {
+      const vectors = box.map(pt => Vector3d.create(...pt, 0));
+      for (let i = 0; i < box.length - 1; i++) {
+        footprint.addLine(vectors[i], vectors[i+1]);
+        if (options.linewidth && options.linewidth > 1) {
+          addLineWidth(footprint, vectors[i], vectors[i+1], onePix[0], options.linewidth);
+        }
+      }
+      footprint.addLine(vectors[box.length - 1], vectors[0]);
+      if (options.linewidth && options.linewidth > 1) {
+        addLineWidth(footprint, vectors[box.length - 1], vectors[0], onePix[0], options.linewidth);
+      }
+      
+
+      if (options.fill) {
+        const triangleColor = Color.fromArgb(Math.round(options.fillOpacity * (options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
+        // if the box is actually just a box use the original method
+        if (vectors.length === 4) {
+          triangles.addTriangle(vectors[0], vectors[1], vectors[2], triangleColor, date);
+          triangles.addTriangle(vectors[2], vectors[3], vectors[0], triangleColor, date);
+        } 
+        if (vectors.length > 4) {
+          const triangleIndices = getDelaunay(options.footprint[index], `${options.id}:${index}`);
+          // count up the triangles. just a list of indices in order
+          for (let i = 0; i < triangleIndices.length; i += 3) {
+            triangles.addTriangle(
+              vectors[triangleIndices[i]],
+              vectors[triangleIndices[i + 1]],
+              vectors[triangleIndices[i + 2]],
+              triangleColor,
+              date
+            );
+          }
+          
         }
         
       }
-      
-    }
-  });
+    });
 
+    const opacity = options.opacity ?? 1;
+    footprint.drawLines(wwt.renderContext, opacity, options.color);
   
-  const opacity = options.opacity ?? 1;
-  footprint.drawLines(wwt.renderContext, opacity, options.color);
+    if (options.fill) {
+       triangles.draw(wwt.renderContext, 1, true);
+    }
+  };
 
-  if (options.fill) {
-     triangles.draw(wwt.renderContext, 1, true);
-  }
+  executeWithTransforms(renderContext, draw, zeroTransforms);
 }
-
-
-
 
 
 
@@ -245,7 +243,7 @@ const outlineCache: Map<string, SimpleLineList> = new Map();
  If we try to draw large outlines that same was as we were with the free-floating 
  outlines, then when a line list was directly behind the camera, it would end up getting
  drawn as straight lines stretching accross the view. This doesn't happen with Constellations, 
- so I use the same drawing steps as rom Constellations._drawSingleConstellation
+ so I use the same drawing steps as from Constellations._drawSingleConstellation
  
  Constellations
  - use raDecTo3D for the positions. 
@@ -290,12 +288,10 @@ export function drawStaticFootprint(wwt: WWTControl, options: DrawFootprintOptio
   const footprint = getOutline(options.id, options.footprint)
   footprint.drawLines(wwt.renderContext, options.opacity ?? 1, options.color);
 
-
   if (options.fill) {
     const fill = new TriangleList();
     fill.depthBuffered = false;
     const date = new Dates(0, 1);
-
 
     const triangleColor = Color.fromArgb(Math.round(options.fillOpacity * (options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
     options.footprint.forEach((shape, index) => {
