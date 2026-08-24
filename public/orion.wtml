@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="orion vista" Searchable="True">
+  <Place Angle="0" AngularSize="0" Annotation="{&quot;channel&quot;: &quot;eso&quot;, &quot;itemid&quot;: &quot;eso1006a&quot;, &quot;publishedUTCISO8601&quot;: &quot;2010-02-10T12:00:00+00:00&quot;}" Constellation="ORI" DataSetType="Sky" Dec="-5.3220943948268795" Magnitude="0" Name="VISTA's infrared view of the Orion Nebula*" Opacity="100" RA="5.585995332166997" Rotation="0" Thumbnail="http://data1.wwtassets.org/feeds/eso/eso1006a/thumb.jpg" ZoomLevel="15.018967422911999">
+    <Description>This wide-field view of the Orion Nebula (Messier 42), lying about 1350 light-years from Earth, was taken with the VISTA infrared survey telescope at ESO’s Paranal Observatory in Chile. The new telescope’s huge field of view allows the whole nebula and its surroundings to be imaged in a single picture and its infrared vision also means that it can peer deep into the normally hidden dusty regions and reveal the curious antics of the very active young stars buried there. This image was created from images taken through Z, J and Ks filters in the near-infrared part of the spectrum. The exposure times were ten minutes per filter. The image covers a region of sky about one degree by 1.5 degrees.   #L</Description>
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.5518194091727158" BaseTileLevel="0" BottomsUp="False" CenterX="83.822156" CenterY="-5.390986" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="VISTA's infrared view of the Orion Nebula*" OffsetX="0.032001300894799356" OffsetY="0.0689306930147772" Projection="Tan" QuadTreeMap="" Rotation="-0.0713523831423867" Sparse="True" StockSet="False" TileLevels="6" Url="http://data1.wwtassets.org/feeds/eso/eso1006a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="eso|eso1006a" Xcxstatus="queue:eso">
+        <Credits>ESO/J. Emerson/VISTA. Acknowledgment: Cambridge Astronomical Survey Unit</Credits>
+        <CreditsUrl>https://www.eso.org/public/images/eso1006a/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/feeds/eso/eso1006a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="21.80927313571974" Annotation="{&quot;channel&quot;: &quot;eso&quot;, &quot;itemid&quot;: &quot;eso1701a&quot;, &quot;publishedUTCISO8601&quot;: &quot;2017-01-04T12:00:00+00:00&quot;}" Constellation="ORI" DataSetType="Sky" Dec="-6.010453760348883" Magnitude="0" Name="The Orion a molecular cloud from VISTA" Opacity="100" RA="5.60581995334433" Rotation="0" Thumbnail="http://data1.wwtassets.org/feeds/eso/eso1701a/thumb.jpg" ZoomLevel="21.80927313571974">
+    <Description>This image from the VISTA infrared survey telescope at ESO’s Paranal Observatory in northern Chile is part of the largest infrared high-resolution mosaic of Orion ever created. It covers the Orion A molecular cloud, the nearest known massive star factory, lying about 1350 light-years from Earth, and reveals many young stars and other objects normally buried deep inside the dusty clouds.</Description>
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="6.074243272835071" BaseTileLevel="0" BottomsUp="False" CenterX="84.08767188787635" CenterY="-6.011917938966319" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Orion a molecular cloud from VISTA" OffsetX="9.268559681449999e-05" OffsetY="9.268559681449999e-05" Projection="Tan" QuadTreeMap="" Rotation="-116.27999999999996" Sparse="True" StockSet="False" TileLevels="8" Url="http://data1.wwtassets.org/feeds/eso/eso1701a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="eso|eso1701a" Xcxstatus="queue:eso">
+        <Credits>ESO/VISION survey</Credits>
+        <CreditsUrl>https://www.eso.org/public/images/eso1701a/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/feeds/eso/eso1701a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0"
+    AngularSize="0"
+    Constellation="ORI"
+    DataSetType="Sky"
+    Dec="-5.1105835008474525"
+    Magnitude="0"
+    Name="Webb unveils young stars across every stage of formation"
+    Opacity="100"
+    RA="5.59058320759968"
+    Rotation="0"
+    Thumbnail="https://data1.wwtassets.org/feeds/jwst/potm2605a/thumb.jpg"
+    ZoomLevel="0.6685785873106589">
+    <Description>For this NASA/ESA/CSA James Webb Space Telescope Picture of the Month we return to the constellation Orion (the Hunter), a location familiar to Webb. This area of the sky is replete with star-forming clouds that make up a complex hundreds of light-years across. We find ourselves in the giant molecular cloud Orion A, of which the familiar Orion Nebula (also known as M42) is just a part; Webb has taken both close-up and wide-angle looks at M42 before. The target of these observations, however, requires us to look behind the Orion Nebula. Behind the stars, gas and dust of M42 is a long, massive filament of cold gas and dust called (somewhat confusingly) the Orion Molecular Clouds, which is divided into four parts, OMC-1 through OMC-4. OMC-1 sits immediately behind M42, to the north are OMC-2 and OMC-3, and OMC-4 lies to the south. This image shows just a small, northern portion of OMC-2, located 1280 light-years from Earth and a little north of the Orion Nebula. Every stage of star formation — from the youngest stellar embryos, to protoplanetary discs, to newly-minted pre-main sequence stars — is contained within just this scene, which stretches 150 light-years across. The intense star-forming activity has produced an impressive display of billowing outflows and sparkling stars atop swirling layers of gas and dark, obscuring clouds. Molecular clouds such as OMC-2 are vast clumps of gas much more dense than the rest of interstellar space. This density allows complex molecules to form, protected from the radiation given off by other stars, and it means that gravity can cause the cloud to collapse and form stars. The earliest stage of this process is a protostar - a growing star that is being fed gas from the surrounding cloud through a spinning disc of gas. As gas falls onto the protostar, it heats up, powering the glow of the protostar. The immense amount of energy acquired during this process is unleashed in fierce jets of gas from the poles of the star, frequently seen as twin glowing outflows that mark the location of a protostar. The abundance of protostars forming here in OMC-2 has created many spectacular outflows, large and small. Jets emitted from the young stars form high-speed shockwaves that sweep through the dense material around them; where the shockwaves are impacting the gas, it heats up and glows brightly, creating sharp ridges. Zoom in to observe the fine details in these shockwaves, as well as spot the smaller outflows from younger protostars. See if you can spot the location of hidden protostars, still so deeply obscured by their dusty cradles that they can’t be seen directly, by following outflows! Compare these very young protostars to the most evolved examples: the large, bright stars which have cleared away the clouds that surrounded them and now illuminate OMC-2. Webb’s Near-Infrared Camera (NIRCam) was used to capture this view of OMC-2. The thick gas and dust in and around the Orion Nebula blocks any light coming from OMC-2 at visible wavelengths, and the clouds in OMC-2 itself obscure the protostars that astronomers really want to find. Only in the infrared do we see these protostars begin to shine out from their cocoons of dust. In many places, the cold dust is so dense that it absorbs all or almost all light, creating dark globules. Orange, brown and some of the red colours mark warmer dust that absorbs some light and emits some of its own. The yellow to green gradient is largely emission from polycyclic aromatic hydrocarbons (PAHs), while light from stars and protostars scattered by dust grains is seen here primarily as blue and cyan hazes. Gas heated by the outflows creates the detailed, glowing red ridges. The data was collected in observing programme #5804, which aims to study the star formation in OMC-2 and its immediate neighbour, OMC-3. Since these molecular clouds are so near to Earth, they are excellent laboratories to learn about the earliest stages of stellar evolution. Astronomers will use the data from Webb to investigate how the many outflows affect star formation in the two regions, how the ultraviolet emission from the young stars impacts chemistry in the circumstellar discs which one day will form planets, and how gas and dust accretes onto the tens of protostars in the region. [Image Description: An area inside a star-forming molecular cloud. The background is covered with layers of gas and dust in blue, green and yellowish colours. Thicker clumps of cold dust, dark brown to black, block out light completely. Stars lie among and atop the clouds, from small orange ones to large white or blue ones. Waves and streams of glowing whitish gas are created by jets from protostars colliding with the surrounding material.] Links Pan video: OMC-2 Zoom video: OMC-2 Space Sparks episode: OMC-2 Image on ESA website</Description>
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible"
+        BaseDegreesPerTile="0.1421282083903953"
+        BaseTileLevel="0"
+        BottomsUp="False"
+        CenterX="83.85874481228858"
+        CenterY="-5.1105886788260895"
+        DataSetType="Sky"
+        ElevationModel="False"
+        FileType=".png"
+        Generic="False"
+        Name="Webb unveils young stars across every stage of formation"
+        OffsetX="4.337408703320169e-06"
+        OffsetY="4.337408703320169e-06"
+        Projection="Tan"
+        QuadTreeMap=""
+        Rotation="77.42000000000026"
+        Sparse="True"
+        StockSet="False"
+        TileLevels="6"
+        Url="https://data1.wwtassets.org/feeds/jwst/potm2605a/L{1}X{2}Y{3}.png"
+        WidthFactor="2">
+        <Credits>ESA/Webb, NASA &amp; CSA, T. Megeath, M. Zamani (ESA/Webb) Acknowledgement: M. H. Özsaraç</Credits>
+        <CreditsUrl>https://esawebb.org/images/potm2605a/</CreditsUrl>
+        <ThumbnailUrl>https://data1.wwtassets.org/feeds/jwst/potm2605a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+</Folder>

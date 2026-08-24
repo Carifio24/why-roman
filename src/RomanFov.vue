@@ -1,0 +1,2177 @@
+<template>
+  <v-app
+    id="app"
+    :style="cssVars"
+    :class="[smallSize ? 'app-is-small' : '']"
+  >
+    <div id="main-content">
+      <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
+
+      <canvas id="shadow-footprint"></canvas>
+      <wwt-loader v-model="isLoading" />
+
+      <SplashGesture v-if="!isLoading && !showInfoDialog && !showStartup" />
+
+      <component
+        :is="smallSize ? 'div' : SplashScreen"
+        v-if="showStartup"
+        v-bind="smallSize ? { id: 'startup-screen' } : { color: accentColor }"
+        @close="showStartup = false"
+      >
+        <div id="startup-screen-content">
+          <h1 class="startup-screen-title">Why Roman</h1>
+          <v-btn
+            v-for="tour in tours"
+            :key="tour.id"
+            class="startup-button"
+            variant="flat"
+            block
+            rounded="pill"
+            :color="borderColor"
+            :disabled="isLoading"
+            @click="startTourFromStartup(tour.id)"
+          >
+            {{ tour.label }}
+          </v-btn>
+          <v-btn
+            class="startup-button"
+            variant="flat"
+            block
+            rounded="pill"
+            :color="accentColor"
+            :disabled="isLoading"
+            @click="showStartup = false"
+          >
+            Let me explore
+          </v-btn>
+        </div>
+      </component>
+
+      <div
+        v-else
+        id="wwt-overlay"
+      >
+        <div id="top-content">
+          <div id="left-buttons">
+            <!-- <div
+              v-if="!inTour"
+              class="d-flex flex-column ga-2"
+            >
+              <h3 v-if="visibleFootprints.length > 0">
+                Satellite fields of view
+              </h3>
+              <MiniFootprintSettings
+                v-for="footprint in visibleFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-fill="footprint.id === 'roman-footprint' || true"
+              />
+            </div> -->
+
+            <div
+              v-if="endTourOverlay"
+              id="tour-options"
+              class="d-flex flex-column ga-2"
+            >
+              <v-btn
+                v-for="option in tourEndOptions"
+                :key="option.id"
+                :color="borderColor"
+                elevation="6"
+                density="comfortable"
+                class="tour-option"
+                @click="option.action"
+              >
+                {{ option.label }}
+              </v-btn>
+            </div>
+
+            <!-- <InfoDialog
+          :style="cssVars"
+          v-model="showInfoDialog"
+          v-model:auto-open="autoOpenInfoDialog"
+          :accent-color="accentColor"
+        /> -->
+
+            <div class="d-flex flex-direction-row ga-2">
+              <icon-button
+                v-if="!inTour"
+                id="options-closed"
+                icon="sliders"
+                :color="borderColor"
+                tooltip-text="Open controls"
+                tooltip-location="start"
+                tabindex="0"
+                background-color="transparent"
+                @activate="showOptions = !showOptions"
+              ></icon-button>
+
+              <icon-button
+                id="info-icon"
+                v-model="showTextSheet"
+                icon="info"
+                :color="borderColor"
+                tooltip-text="Show User Guide"
+                tooltip-location="start"
+              >
+              </icon-button>
+
+              <icon-button
+                v-if="!inTour"
+                id="share-icon"
+                icon="fa-share-nodes"
+                :color="borderColor"
+                tooltip-text="Copy share URL"
+                tooltip-location="start"
+                @activate="copyURLToClipboard"
+              >
+              </icon-button>
+              <v-snackbar
+                v-model="snackbar"
+                :color="snackbarColor"
+              >
+                {{ snackbarMessage }}
+              </v-snackbar>
+            </div>
+            <div
+              v-if="showOptions && !inTour"
+              id="options"
+            >
+              <div id="options-content">
+                <div id="options-top-row">
+                  <v-select
+                    id="bg-select"
+                    v-model="backgroundImagesetName"
+                    class="mt-3 ml-1"
+                    width="165"
+                    label="Select Background"
+                    :items="backgroundImagesets"
+                    :list-props="{ bgColor: backgroundColorDarkest }"
+                    variant="solo-filled"
+                    item-title="displayName"
+                    item-value="imagesetName"
+                    :bg-color="backgroundColor"
+                    :item-color="textColor"
+                    density="compact"
+                    hide-details
+                  >
+                  </v-select>
+                  <icon-button
+                    id="options-open"
+                    class="pt-0 px-0"
+                    icon="chevron-up"
+                    :color="borderColor"
+                    tooltip-text="Close controls"
+                    tooltip-location="start"
+                    tabindex="0"
+                    :border="false"
+                    background-color="transparent"
+                    @activate="showOptions = !showOptions"
+                  ></icon-button>
+                </div>
+                <div id="options-scroll">
+                  <FootprintSettings
+                    v-for="footprint in footprints"
+                    :key="footprint.id"
+                    v-model:footprint-color="footprint.color"
+                    v-model:fill="footprint.fill"
+                    v-model:fill-opacity="footprint.fillOpacity"
+                    v-model:show="footprint.show"
+                    :label="footprint.label"
+                  />
+                  <!--                   
+                  <div
+                    id="crosshairs-row"
+                    class="centered-content"
+                  >
+                    <v-checkbox
+                      v-model="crosshairs"
+                      label="Crosshairs"
+                      density="compact"
+                      hide-details
+                      @keydown.space.prevent="crosshairs = !crosshairs"
+                      @keydown.enter.prevent="crosshairs = !crosshairs"
+                    ></v-checkbox>
+                    <input
+                      v-show="crosshairs"
+                      id="crosshairs-color"
+                      v-model="crosshairsColor"
+                      class="bordered"
+                      type="color"
+                      :disabled="!crosshairs"
+                    />
+                  </div>
+                  <v-checkbox
+                    v-model="decimalCoordinates"
+                    label="Decimal coordinates"
+                    density="compact"
+                    hide-details
+                    @keydown.space.prevent="
+                      decimalCoordinates = !decimalCoordinates
+                    "
+                    @keydown.enter.prevent="
+                      decimalCoordinates = !decimalCoordinates
+                    "
+                  ></v-checkbox>
+                  <v-checkbox
+                    v-model="galactic"
+                    label="Galactic mode"
+                    density="compact"
+                    hide-details
+                    @keydown.space.prevent="galactic = !galactic"
+                    @keydown.enter.prevent="galactic = !galactic"
+                  ></v-checkbox>
+                   -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="center-content">
+            <v-btn
+              v-if="selectedPlaceId"
+              id="leave-tour"
+              variant="outlined"
+              density="comfortable"
+              :color="borderColor"
+              @click="leaveTour"
+            >
+              Leave tour
+            </v-btn>
+            <div
+              v-if="false"
+              id="coordinates"
+              class="info-box"
+            >
+              <div class="coordinates-content">
+                <span class="coordinate-item">RA: {{ raDisplay }}</span>
+                <span class="coordinate-item">Dec: {{ decDisplay }}</span>
+                <span class="coordinate-item">FOV: {{ fovDisplay }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="right-buttons">
+            <PlaceCards
+              v-if="!inTour"
+              :cards="placeCards"
+              :selected="selectedPlaceId"
+              :zoom="2"
+              :width="smallSize ? '100px' : '200px'"
+              :accent-color="accentColor"
+              :aspect-ratio="smallSize ? 1 : 2"
+              @select="selectPlace"
+              @go-to="goToPlace"
+            />
+          </div>
+        </div>
+        <!-- on screen info from rubin first look -->
+        <div
+          v-if="inTour"
+          id="tour-text"
+          :class="[
+            'selected-info',
+            smallSize ? 'selected-info-tall' : '',
+            'info-box',
+          ]"
+        >
+          <h3>{{ tourStepTitle }}</h3>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Illo eligendi at accusantium, corporis, vitae est dolorem 
+            suscipit aut, inventore dignissimos ab! Ipsa ab cupiditate 
+            quae voluptas, molestias repudiandae necessitatibus natus!
+          </p>
+          <p>
+            Click "next"
+          </p>
+        </div>
+
+        <div
+          v-if="inTour"
+          id="middle-content"
+          class="d-flex flex-row justify-space-between"
+        >
+          <v-btn
+            prepend-icon="mdi-chevron-left"
+            :color="borderColor"
+            density="comfortable"
+            :disabled="tourStep <= 0"
+            @click="goToStep(tourStep - 1)"
+          >
+            Previous
+          </v-btn>
+          <v-btn
+            :append-icon="onLastStep ? undefined : 'mdi-chevron-right'"
+            :color="borderColor"
+            density="comfortable"
+            @click="onLastStep ? leaveTour() : goToStep(tourStep + 1)"
+          >
+            {{ onLastStep ? "Explore" : "Next" }}
+          </v-btn>
+        </div>
+
+
+
+        <div id="bottom-content">
+          <!-- padding on top is needed because -->
+          <v-row
+            id="position-layout"
+            align="start"
+            justify="center"
+            class="mb-1 pt-4"
+          >
+            <div
+              v-if="opacitySliders.length > 0"
+              id="step-control"
+              class="info-box"
+            >
+              <div
+                v-for="slider in opacitySliders"
+                :key="slider.index"
+              >
+                <label :for="`layer-opacity-${slider.index}`">{{
+                  slider.name
+                }}</label>
+                <v-slider
+                  :id="`layer-opacity-${slider.index}`"
+                  :model-value="opacityOf(slider.index)"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
+                  :color="roman.color"
+                  density="compact"
+                  hide-details
+                  @update:model-value="
+                    (value: number) => setOpacity(slider.index, value)
+                  "
+                />
+              </div>
+            </div>
+          </v-row>
+
+          <v-progress-linear
+            v-if="inTour"
+            :model-value="tourProgress"
+            :color="accentColor"
+            height="6"
+            rounded
+          />
+          <!-- Imageset Credits -->
+          <footer
+            v-if="!smallSize"
+            id="body-logos"
+          >
+            <div id="imageset-credits">
+              <template v-if="activeTour && shownImagesets.length > 0">
+                <ImagesetCredits
+                  v-for="index in shownImagesets"
+                  :key="index"
+                  :imageset="activeTour?.wtml.imagesets.value[index]"
+                />
+              </template>
+            </div>
+            <div>zoom deg: {{ store.zoomDeg.toFixed(2) }}</div>
+            <div>ra deg: {{ (store.raRad * R2D).toFixed(2) }}</div>
+            <div>dec deg: {{ (store.decRad * R2D).toFixed(2) }}</div>
+            <credit-logos />
+          </footer>
+        </div>
+      </div>
+
+      <!-- WebGL2 not enabled dialog -->
+      <webgl-test
+        :style="cssVars"
+        @webgl2-disabled="webglDisabled = true"
+      />
+
+      <!-- This dialog contains the video that is displayed when the video icon is clicked -->
+
+      <v-dialog
+        id="video-container"
+        v-model="showVideoSheet"
+        transition="slide-y-transition"
+        fullscreen
+      >
+        <div class="video-wrapper">
+          <font-awesome-icon
+            id="video-close-icon"
+            class="close-icon"
+            icon="times"
+            size="lg"
+            tabindex="0"
+            @click="showVideoSheet = false"
+            @keyup.enter="showVideoSheet = false"
+          ></font-awesome-icon>
+          <video
+            id="info-video"
+            controls
+          >
+            <source
+              src=""
+              type="video/mp4"
+            />
+          </video>
+        </div>
+      </v-dialog>
+    </div>
+
+    <div
+      id="side-drawer"
+      :class="[showTextSheet ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
+      <InformationSheet
+        v-if="showTextSheet"
+        v-model="showTextSheet"
+        v-model:tab="infoSheetTab"
+        :tab-color="borderColor"
+        :text-color="textColor"
+        :heading-color="borderColor"
+        :accent-color="roman.color"
+        tab-title="WWT Why Roman"
+      >
+        <InfoPage title="Tour">
+          <template v-if="selectedPlaceId === 'eagle'">
+            <h4 class="user-guide-header">The Eagle Nebula (M16)</h4>
+            <p>
+              Hubble's <em>Pillars of Creation</em> captures a few light-years
+              of towering gas and dust where new stars are forming. It's one of
+              the most recognizable images in astronomy, and it covers a tiny
+              patch of sky.
+            </p>
+            <p class="mt-3">
+              Step the slider to <strong>Roman</strong> to bring in the wider
+              view. Roman sees the whole star-forming region at once, at
+              Hubble-like sharpness.
+            </p>
+          </template>
+
+          <template v-else-if="selectedPlaceId">
+            <h4 class="user-guide-header">
+              {{ activeTour?.label }}
+            </h4>
+            <p>
+              Step through with the slider to bring in the wider, Roman-scale
+              view behind the current image.
+            </p>
+          </template>
+
+          <template v-else>
+            <h4 class="user-guide-header">Why Roman</h4>
+            <p>
+              This
+              <a
+                href="https://www.worldwidetelescope.org/home"
+                target="_blank"
+                rel="noopener noreferrer"
+              >WorldWide Telescope</a>
+              (WWT) interactive provides a view of the Roman Space Telescope
+              footprint on the sky.
+            </p>
+            <p class="mt-3">
+              Pick a target from the cards on the right to compare what today's
+              telescopes see with what Roman would.
+            </p>
+          </template>
+        </InfoPage>
+        <!-- <InfoPage title="View Finder Info">
+                    <ViewFinderHelp />
+                  </InfoPage> -->
+        <InfoPage
+          v-if="selectedPlaceId"
+          title="User Guide"
+        >
+          <UserGuide />
+        </InfoPage>
+      </InformationSheet>
+    </div>
+  </v-app>
+</template>
+
+<script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  ref,
+  reactive,
+  computed,
+  watch,
+  onBeforeMount,
+  onMounted,
+  nextTick,
+  type Ref,
+} from "vue";
+import { fmtDegLat, fmtHours, D2R, R2D } from "@wwtelescope/astro";
+import {
+  Color,
+  Coordinates,
+  Imageset,
+  Place,
+  Settings,
+  WWTControl,
+} from "@wwtelescope/engine";
+import { GotoRADecZoomParams, engineStore } from "@wwtelescope/engine-pinia";
+import {
+  BackgroundImageset,
+  skyBackgroundImagesets,
+  blurActiveElement,
+  useWWTKeyboardControls,
+} from "@cosmicds/vue-toolkit";
+import PlaceCards from "./components/PlaceCards.vue";
+import { useDisplay } from "vuetify";
+import { storeToRefs } from "pinia";
+
+import * as wwtlib from "@wwtelescope/engine";
+
+import { useFootprint, type Footprint } from "./composables/useFootprint";
+import { flat } from "./utils";
+import { renderOneFrame, splitString } from "./wwt-hacks";
+
+import { ResolvedObject } from "./simbad_resolvers";
+import ImagesetCredits from "./components/ImagesetCredits.vue";
+import InformationSheet from "./components/InformationSheet.vue";
+import InfoPage from "./components/InfoPage.vue";
+import UserGuide from "./components/UserGuide.vue";
+import ViewFinderHelp from "./components/ViewFinderHelp.vue";
+import InfoDialog from "./components/InfoDialog.vue";
+import SplashGesture from "./components/SplashGesture.vue";
+import SplashScreen from "./components/SplashScreen.vue";
+import FootprintSettings from "./components/FootprintSettings.vue";
+import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
+import {
+  useWtmlLoader,
+  type WtmlLoaderReturn,
+} from "./composables/useWtmlLoader";
+import { useLayerOrdering } from "./composables/useLayerOrdering";
+import { useSpreadsheetLayer } from "./composables/useSpreadsheetLayer";
+import { RAUnits } from "@wwtelescope/engine-types";
+
+// @ts-expect-error `Util.splitString` is defined
+wwtlib.Util.splitString = splitString;
+
+type SheetType = "text" | "video";
+type CameraParams = Omit<GotoRADecZoomParams, "instant">;
+export interface RomanFovProps {
+  wwtNamespace?: string;
+  initialCameraParams?: CameraParams;
+}
+
+const store = engineStore();
+
+const { backgroundImageset, decRad, raRad } = storeToRefs(store);
+
+const backgroundImagesetName = computed({
+  get(): string | undefined {
+    return backgroundImageset.value?.get_name();
+  },
+  set(name: string) {
+    store.setBackgroundImageByName(name);
+  },
+});
+
+useWWTKeyboardControls(store);
+
+const { smAndDown } = useDisplay();
+
+const props = withDefaults(defineProps<RomanFovProps>(), {
+  wwtNamespace: "roman-fov",
+  initialCameraParams: () => {
+    return {
+      // Orion
+      // raRad: 1.4612,
+      // decRad: -0.09646,
+      // Carina
+      raRad: 160 * D2R,
+      decRad: -60 * D2R,
+      zoomDeg: 60,
+    };
+  },
+});
+
+// const backgroundImagesets = reactive<BackgroundImageset[]>([
+//   new BackgroundImageset("DSS", "Digitized Sky Survey (Color)"),
+//   new BackgroundImageset("2MASS", "2Mass: Imagery (Infrared)"),
+// ]);
+const backgroundImagesets = reactive<BackgroundImageset[]>([
+  ...skyBackgroundImagesets,
+]);
+
+
+const sheet = ref<SheetType | null>(null);
+const layersLoaded = ref(false);
+const positionSet = ref(false);
+
+const positionSearchRA = ref<string | null>(null);
+const positionSearchDec = ref<string | null>(null);
+const positionSearchError = ref<string | null>(null);
+
+// Color palette generated by Claude from https://assets.science.nasa.gov/dynamicimage/assets/science/missions/rst/spacecraft-illustrations/Roman_Title_1.jpg
+// (with some adjustments by me)
+// Deep Space Purple #502752(Background)
+// Cosmic Violet #632B7D (Background)
+// ISM Indigo #8B5FB6 (Call to Action, with Stardust White text)
+// pick one accent
+// Nebula Magenta #C77FB3 (Accents)
+// Stellar Amber #FFB86C (Accents / Contrast)
+// Electric Cyan #00F0FF (Accents)
+// Soft Lavender #B8A5D4  (Borders)
+// Stardust White #F5F0FF  (Background / text on dark)
+// Space Black #0A0515  (text on light)
+// https://contrast-grid.eightshapes.com/?version=1.1.0&background-colors=&foreground-colors=%23FFFFFF%2C%20white%0D%0A%23502762%2C%20Deep%20Space%20Purple%0D%0A%23632b7d%2C%20Cosmic%20Violet%0D%0A%238B5FB6%2C%20ISM%20Indigo%0D%0A%23C77FB3%2C%20Nebula%20Magenta%0D%0A%23FFB86C%2C%20Stellar%20Amber%0D%0A%2300F0FF%2C%20Electric%20Cyan%0D%0A%23B8A5D4%2C%20Soft%20Lavender%0D%0A%23F5F0FF%2C%20Stardust%20White%0D%0A%230A0515%2C%20Space%20Black%0D%0A%23000000%2C%20black&es-color-form__tile-size=compact&es-color-form__show-contrast=aaa&es-color-form__show-contrast=aa&es-color-form__show-contrast=aa18&es-color-form__show-contrast=dnp
+
+const backgroundColorDarkest = ref("#502752");
+const backgroundColor = ref("#632B7D");
+const borderColor = ref("#B8A5D4");
+const accentColor = ref("#C77FB3");
+const textColor = ref("#F5F0FF");
+
+/*
+ * Each footprint carries its own geometry and settings. To add one: import its
+ * corners, add a useFootprint() call, and list it in `footprints` below. The
+ * controls and the render loop both come from that array.
+ */
+import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
+import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
+import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
+import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
+import { corners as phastFootprint } from "./footprints/m31_footprint";
+import { corners as phastIFootprint } from "./footprints/m31_individual_footprints";
+
+/*
+ * The Roman core community surveys, as idealized 49.404' x 25.307' tiles, one
+ * cell per pointing.
+ */
+/*
+import { corners as gpsFootprint } from "./footprints/gps";
+import { corners as hltdsFootprint } from "./footprints/hltds";
+import { corners as hlwasFootprint } from "./footprints/hlwas";
+// m31 footprints
+import { corners as gbtdsFootprint } from "./footprints/gbtds_wfi";
+import { corners as m31HiDiskFootprint } from "./footprints/roman_2002_m31_hi_disk";
+*/
+// import { corners as m31SfDiskChips } from "./footprints/roman_2002_m31_sf_disk";
+import { corners as m31SfDiskFootprint } from "./footprints/roman_2002_m31_sf_disk_display";
+
+const roman = useFootprint({
+  id: "roman-footprint",
+  label: "Roman",
+  footprint: romanFootprint,
+  color: "#ff1900",
+  // linewidth: 2, // faking the linewidth can leave artifacts
+  show: true,
+});
+const testFootprint = useFootprint({
+  id: "roman-fixed-footprint",
+  label: "TEST 10 deg",
+  // footprint: [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]],
+  footprint: [
+    [
+      [-0.5, -0.5],
+      [-0.5, 0.5],
+      [0.5, 0.5],
+      [0.5, -0.5],
+    ].map(([x, y]) => [x * 15, y * 10]),
+  ], // 1 hour x 10 deg. the equatorial grid spacing
+  // footprint: romanFootprint,
+  color: "#4afa4a",
+  fixed: false,
+  fill: false,
+  show: false,
+});
+const jwst = useFootprint({
+  id: "jwst-footprint",
+  label: "JWST",
+  footprint: jwstFootprint,
+  color: "#002aff",
+  offsetXDeg: -0.075, // left
+  // offsetYDeg: 0.2, // down
+  // linewidth: 2,
+  show: false,
+});
+const hubble = useFootprint({
+  id: "hubble-footprint",
+  label: "WFC3",
+  footprint: hubbleFootprint,
+  color: "#e100ff",
+  offsetXDeg: 0.1,
+  // offsetYDeg: 0.2,
+  // linewidth: 2,
+  show: false,
+});
+// const wfpc2 = useFootprint({
+//   id: "wfpc2-footprint",
+//   label: "WFPC2",
+//   footprint: wfpc2Footprint,
+//   color: "#34ebd5",
+//   offsetXDeg: 0.2,
+//   offsetYDeg: 0.2,
+//   fill: true,
+//   linewidth: 2,
+// });
+const phast = useFootprint({
+  id: "phast-footprint",
+  label: "PHAST",
+  footprint: phastFootprint,
+  color: "#00ff95",
+  fixed: true,
+  show: false,
+});
+
+const phastI = useFootprint({
+  id: "phastI-footprint",
+  label: "PHAST (individual)",
+  footprint: phastIFootprint,
+  color: "#00ff00",
+  fixed: true,
+  show: false,
+  opacity: 0.2,
+});
+
+/* The Roman core survey footprints: real sky positions, so all `fixed`. */
+/*
+const gbtds = useFootprint({
+  id: "gbtds-footprint",
+  label: "GBTDS",
+  footprint: gbtdsFootprint,
+  color: "#ffb86c",
+  fixed: true,
+  show: false,
+});
+const gps = useFootprint({
+  id: "gps-footprint",
+  label: "GPS",
+  footprint: gpsFootprint,
+  color: "#00f0ff",
+  fixed: true,
+  show: false,
+});
+const hltds = useFootprint({
+  id: "hltds-footprint",
+  label: "HLTDS",
+  footprint: hltdsFootprint,
+  color: "#ffe066",
+  fixed: true,
+  show: false,
+});
+const hlwas = useFootprint({
+  id: "hlwas-footprint",
+  label: "HLWAS",
+  footprint: hlwasFootprint,
+  color: "#ff6ec7",
+  fixed: true,
+  show: false,
+});
+
+const m31HiDisk = useFootprint({
+  id: "m31-hi-disk-footprint",
+  label: "M31 HI disk (2002)",
+  footprint: m31HiDiskFootprint,
+  color: "#00bfa5",
+  fixed: true,
+  show: false,
+});
+*/
+const m31SfDisk = useFootprint({
+  id: "m31-sf-disk-footprint",
+  label: "M31 SF disk (2002)",
+  footprint: m31SfDiskFootprint,
+  color: "#bd93f9",
+  fixed: true,
+  show: false,
+});
+
+// phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
+const footprints = [
+  roman,
+  jwst,
+  hubble,
+  
+  phast,
+  phastI,
+  // gbtds,
+  // hlwas,
+  // hltds,
+  // gps,
+  // m31HiDisk,
+  m31SfDisk,
+  
+];
+
+// the currently visible footprints. 
+const visibleFootprints = computed(() =>
+  footprints.filter((footprint) => footprint.show),
+);
+
+const showStartup = ref(true);
+
+const showTextSheet = ref(false);
+const infoSheetTab = ref(0);
+
+
+function onlyFootprints(...visible: Footprint[]) {
+  footprints.forEach(
+    (footprint) => (footprint.show = visible.includes(footprint)),
+  );
+}
+
+const { setOrderForLayers } = useLayerOrdering();
+
+
+const shownImagesets = ref<number[]>([]);
+const layerOpacities = ref<Record<number, number>>({});
+
+// show just these layers, lowest first
+function showImagesets(wtml: WtmlLoaderReturn, ...indices: number[]) {
+  shownImagesets.value = indices;
+  layerOpacities.value = {};
+  wtml.imagesets.value.forEach((imageset, index) => {
+    console.log(imageset.get_creditsUrl());
+  });
+  wtml.imagesetLayers.value.forEach((layer, index) => {
+    layer.set_enabled(indices.includes(index));
+    layer.set_opacity(1);
+  });
+  const shown = indices
+    .map((index) => wtml.imagesetLayers.value[index])
+    .filter((layer) => layer != null);
+  if (shown.length > 1) {
+    setOrderForLayers(shown);
+  }
+}
+
+interface ImagesetView {
+  zoom: number; // vertical field of view, degrees
+  roll?: number | "imageset";
+  ra?: number;
+  dec?: number;
+  instant?: boolean;
+  duration?: number;
+}
+
+function goToImageset(
+  wtml: WtmlLoaderReturn,
+  index: number,
+  view: ImagesetView,
+) {
+  const imageset = wtml.imagesets.value[index];
+  if (!imageset) {
+    return;
+  }
+  const rollDeg =
+    view.roll === "imageset" ? imageset.get_rotation() : (view.roll ?? 0);
+  store.gotoRADecZoom({
+    raRad: (view.ra ?? imageset.get_centerX()) * D2R,
+    decRad: (view.dec ?? imageset.get_centerY()) * D2R,
+    zoomDeg: view.zoom * 6,
+    rollRad: rollDeg * D2R,
+    instant: view.instant ?? true,
+    duration: view.duration,
+  });
+}
+
+function startUpTour() {
+  console.log("startUpTour");
+  // showTextSheet.value = true;
+  // infoSheetTab.value = 0;
+}
+
+const endTourOverlay = ref(false);
+function showEndTourOverlay() {
+  endTourOverlay.value = true;
+  // in case there is more we want to do
+}
+
+const carinaWtml = useWtmlLoader("carina.wtml", {
+  goTo: false,
+  onLoad: (out) => out.layer.set_enabled(false),
+});
+const carinaTitles = ["NGC 3324", "Hubble", "JWST", "Roman"];
+const currentViewRad = computed(() => {
+  return {
+    raRad: store.raRad,
+    decRad: store.decRad,
+    zoomDeg: store.zoomDeg,
+    rollRad: store.rollRad,
+  };
+});
+
+/* in the tours step -1 displays everything from a tour for a user to explore */
+
+
+function carinaTour(n: number, tour = true) {
+  if (n === -1) {
+    onlyFootprints(hubble, jwst, roman);
+    showImagesets(carinaWtml, 0, 1, 2);
+    goToImageset(carinaWtml, 2, {
+      zoom: 0.9,
+      roll: "imageset",
+      instant: false,
+    });
+    return;
+  }
+  if (n === 0) {
+    if (tour) startUpTour();
+    onlyFootprints(); // no footprints
+    showImagesets(carinaWtml, 0); // eso widefield image
+    goToImageset(carinaWtml, 0, { zoom: 0.9, instant: false }); //
+    return;
+  }
+  if (n === 1) {
+    onlyFootprints(hubble); // hst cosmic cliffs
+    showImagesets(carinaWtml, 0, 1); // wide + hst
+    goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
+    return;
+  }
+  if (n === 2) {
+    onlyFootprints(hubble, jwst);
+    showImagesets(carinaWtml, 0, 1, 2); // wide + hst + jwst
+    goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
+    return;
+  }
+  if (n === 3) {
+    onlyFootprints(hubble, jwst, roman);
+    showImagesets(carinaWtml, 0, 1, 2);
+    store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 5.4,
+      instant: true,
+    });
+    if (tour) showEndTourOverlay();
+    return;
+  }
+  console.error("carina tour does not have step", n);
+}
+
+const andromedaWtml = useWtmlLoader("M31_PHAST.wtml", {
+  goTo: false,
+  onLoad: (out) => out.layer.set_enabled(false),
+});
+const andromedaTitles = [
+  "Andromeda",
+  "Wide Field",
+  "Hubble",
+  "PHAST",
+  "HI Disk",
+  "SF Disk",
+];
+
+function andromedaTour(n: number, tour = true) {
+  if (n === -1) {
+    onlyFootprints(phast, phastI, roman);
+    showImagesets(andromedaWtml, 0);
+    goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
+    return;
+  }
+  if (n === 0) {
+    if (tour) startUpTour();
+    onlyFootprints();
+    showImagesets(andromedaWtml);
+    store.gotoRADecZoom({
+      raRad: 10.6847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 3 * 6,
+      rollRad: 0,
+      instant: false,
+    });
+    return;
+  }
+  // if (n === 1) {
+  //  // TODO: needs a wide-field image; the sky background stands in for now
+  //   onlyFootprints();
+  //   showImagesets(andromedaWtml);
+  //   return;
+  // }
+  if (n === 1) { // show a single hubbble frame
+    onlyFootprints(hubble);
+    // showImagesets(andromedaWtml);
+    return;
+  }
+  if (n === 2) { // who PHAST andromeda 
+    onlyFootprints(phast);
+    showImagesets(andromedaWtml, 0);
+    // goToImageset(andromedaWtml, 0, { zoom: 2 });
+    return;
+  }
+  if (n === 3) { // show individual PHAST hubble footprints
+    onlyFootprints(phast, phastI);
+    showImagesets(andromedaWtml, 0);
+    // store.gotoRADecZoom({
+    //   raRad: 10.6847 * D2R,
+    //   decRad: 41.269 * D2R,
+    //   zoomDeg: 3.5 * 6,
+    //   rollRad: 0,
+    //   instant: false,
+    // });
+    return;
+  }
+  if (n === 4) {
+    onlyFootprints(phast, m31SfDisk);
+    showImagesets(andromedaWtml, 0);
+    return;
+  }
+  if (n === 5) {
+    onlyFootprints(phast, phastI, m31SfDisk, roman);
+    showImagesets(andromedaWtml, 0);
+    if (tour) showEndTourOverlay();
+    return;
+  }
+  console.error("andromeda tour does not have step", n);
+}
+
+const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
+  goTo: false,
+  onLoad: (out) => out.layer.set_enabled(false),
+});
+const eagleTitles = ["Hubble", "Roman"];
+
+function eagleTour(n: number, tour = true) {
+  if (n === -1) {
+    onlyFootprints(hubble, roman);
+    showImagesets(eagleWtml, 0, 1);
+    store.gotoRADecZoom({
+      raRad: 274.7457 * D2R,
+      decRad: -13.8305 * D2R,
+      zoomDeg: 1 * 6,
+      rollRad: 0,
+      instant: false,
+    });
+    return;
+  }
+  if (n === 0) {
+    if (tour) startUpTour();
+    onlyFootprints(hubble);
+    showImagesets(eagleWtml, 1);
+    store.gotoRADecZoom({
+      raRad: 274.7457 * D2R,
+      decRad: -13.8305 * D2R,
+      zoomDeg: 1 * 6,
+      rollRad: 0,
+      instant: true,
+    });
+    return;
+  }
+  if (n === 1) {
+    onlyFootprints(hubble, roman);
+    showImagesets(eagleWtml, 0, 1);
+    if (tour) showEndTourOverlay();
+    return;
+  }
+  console.error("eagle tour does not have step", n);
+}
+
+const smacsWtml = useWtmlLoader("SMAC_0723_all_loose.wtml", {
+  goTo: false,
+  onLoad: (out) => out.layer.set_enabled(false),
+});
+const smacsTitles = ["JWST", "Roman"];
+
+function smacsTour(n: number, tour = true) {
+  if (n === -1) {
+    onlyFootprints(jwst, roman);
+    showImagesets(smacsWtml, 1, 0);
+    goToImageset(smacsWtml, 1, {
+      zoom: 0.15,
+      roll: "imageset",
+      instant: false,
+    });
+    return;
+  }
+  if (n === 0) {
+    if (tour) startUpTour();
+    onlyFootprints(jwst);
+    showImagesets(smacsWtml, 1);
+    goToImageset(smacsWtml, 1, {
+      zoom: 0.15,
+      roll: "imageset",
+      instant: false,
+    });
+    // store.gotoRADecZoom({ raRad: 110.8335 * D2R, decRad: -73.4542 * D2R, zoomDeg: 0.15, rollRad: 0, instant: true });
+    return;
+  }
+  if (n === 1) {
+    onlyFootprints(jwst, roman);
+    showImagesets(smacsWtml, 1, 0);
+    if (tour) showEndTourOverlay();
+    return;
+  }
+  console.error("smacs tour does not have step", n);
+}
+
+const helixWtml = useWtmlLoader("helix_hst.wtml", {
+  goTo: false,
+  onLoad: (out) => out.layer.set_enabled(false),
+});
+const helixTitles = ["Hubble", "Roman"];
+
+function helixTour(n: number, tour = true) {
+  if (n === -1) {
+    onlyFootprints(hubble, roman);
+    showImagesets(helixWtml, 0);
+    store.gotoRADecZoom({
+      raRad: 337.4167 * D2R,
+      decRad: -20.8394 * D2R,
+      zoomDeg: 1 * 6,
+      rollRad: 0,
+      instant: false,
+    });
+    return;
+  }
+  if (n === 0) {
+    if (tour) startUpTour();
+    onlyFootprints(hubble);
+    showImagesets(helixWtml, 0);
+    store.gotoRADecZoom({
+      raRad: 337.4167 * D2R,
+      decRad: -20.8394 * D2R,
+      zoomDeg: 1 * 6,
+      rollRad: 0,
+      instant: true,
+    });
+    return;
+  }
+  if (n === 1) {
+    onlyFootprints(hubble, roman);
+    showImagesets(helixWtml, 0);
+    if (tour) showEndTourOverlay();
+    return;
+  }
+  console.error("helix tour does not have step", n);
+}
+
+interface PlaceTour {
+  id: string;
+  label: string;
+  titles: string[];
+  wtml: WtmlLoaderReturn;
+  step: (n: number, tour?: boolean) => void;
+}
+
+const tours: PlaceTour[] = [
+  // { id: "eagle", label: "Eagle Nebula", titles: eagleTitles, wtml: eagleWtml, step: eagleTour },
+  {
+    id: "andromeda",
+    label: "Andromeda",
+    titles: andromedaTitles,
+    wtml: andromedaWtml,
+    step: andromedaTour,
+  },
+  // { id: "smacs", label: "SMACS 0723", titles: smacsTitles, wtml: smacsWtml, step: smacsTour,},
+  // { id: "carina", label: "Carina", titles: carinaTitles, wtml: carinaWtml, step: carinaTour,},
+  // { id: "helix", label: "Helix Nebula", titles: helixTitles, wtml: helixWtml, step: helixTour },
+];
+
+const selectedPlaceId = ref<string | null>(null);
+const activeTour = computed(
+  () => tours.find((t) => t.id === selectedPlaceId.value) ?? null,
+);
+const inTour = computed(() => activeTour.value != null);
+
+function leaveTour() {
+  if (activeTour.value) {
+    activeTour.value.wtml.hide();
+  }
+  selectedPlaceId.value = null;
+  tourStep.value = 0;
+  endTourOverlay.value = false;
+  onlyFootprints();
+  showOptions.value = false;
+}
+
+const tourStep = ref(0);
+const tourStepTitles = computed(() => {
+  if (activeTour.value) {
+    return activeTour.value.titles;
+  }
+  return [];
+});
+const tourTotalSteps = computed(() => tourStepTitles.value.length);
+const tourStepTitle = computed(
+  () => tourStepTitles.value[tourStep.value] ?? "",
+);
+
+const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
+
+// percentage for <v-progress-linear>. the last step reads 100%
+const tourProgress = computed(() =>
+  tourTotalSteps.value > 0
+    ? ((tourStep.value + 1) / tourTotalSteps.value) * 100
+    : 0,
+);
+
+function goToStep(n: number) {
+  tourStep.value = n;
+
+  endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
+  if (activeTour.value) {
+    activeTour.value.step(n);
+  }
+}
+
+/* what buttons will be shown at the end of a tour */
+const tourEndOptions = computed(() => {
+  const options = [
+    {
+      id: "explore-view",
+      label: "Explore this view more",
+      action: () => {
+        showTextSheet.value = false;
+      },
+    },
+    {
+      id: "let-me-explore",
+      label: "Let me explore freely",
+      action: () => leaveTour(),
+    },
+  ];
+  return options;
+});
+
+/*
+ * The comparison lives on the last step, so once it has stacked more than one
+ * image the upper ones get an opacity slider. The lowest layer is what the
+ * others fade against, so it doesn't get one.
+ */
+const opacitySliders = computed(() => {
+  if (!activeTour.value || tourStep.value !== tourTotalSteps.value - 1) {
+    return [];
+  }
+  const names = activeTour.value.wtml.imagesetNames.value;
+  return shownImagesets.value
+    .slice(1)
+    .map((index) => ({ index, name: names[index] ?? "" }));
+});
+
+function opacityOf(index: number): number {
+  return layerOpacities.value[index] ?? 1;
+}
+
+function setOpacity(index: number, opacity: number) {
+  if (activeTour.value) {
+    const layer = activeTour.value.wtml.imagesetLayers.value[index];
+    if (layer) {
+      layer.set_opacity(opacity);
+      layerOpacities.value[index] = opacity;
+    }
+  }
+}
+
+function imagesetFor(place: Place | null | undefined): Imageset | null {
+  if (!place) {
+    return null;
+  }
+  return place.get_studyImageset() ?? place.get_backgroundImageset();
+}
+
+const placeCards = computed(() =>
+  tours.map(({ id, label, wtml }) => ({
+    id,
+    label,
+    imageset: imagesetFor(wtml.places.value[0]),
+    disabled: !wtml.loaded.value,
+  })),
+);
+
+// picking a card starts that tour, or restarts it if it's already up
+function selectPlace(id: string) {
+  if (activeTour.value) {
+    leaveTour();
+  }
+  selectedPlaceId.value = id;
+  goToStep(0);
+}
+
+/* bring up an experience's layers */
+function goToPlace(id: string) {
+  const place = tours.find((t) => t.id === id);
+  if (!place) {
+    return;
+  }
+  tours.forEach((t) => t.wtml.hide());
+  place.step(-1, false);
+}
+
+function startTourFromStartup(id: string) {
+  showStartup.value = false;
+  selectPlace(id);
+}
+
+const decimalCoordinates = ref(false);
+const raDisplay = computed(() => {
+  return decimalCoordinates.value
+    ? (raRad.value * R2D).toFixed(6)
+    : fmtHours(raRad.value, "h", "m", 0, "s");
+});
+const decDisplay = computed(() => {
+  return decimalCoordinates.value
+    ? (decRad.value * R2D).toFixed(6)
+    : fmtDegLat(decRad.value);
+});
+
+const fovDisplay = computed(() => {
+  const fovDeg = store.zoomDeg / 6;
+  if (fovDeg >= 1) {
+    return `${fovDeg.toFixed(2)}°`;
+  }
+  const fovArcmin = fovDeg * 60;
+  if (fovArcmin >= 1) {
+    return `${fovArcmin.toFixed(1)}'`;
+  }
+  return `${(fovArcmin * 60).toFixed(1)}"`;
+});
+const galactic = ref(false);
+const crosshairs = ref(false);
+const crosshairsColor = ref("#ffffff");
+const moving = ref(false);
+
+const snackbar = ref(false);
+const snackbarColor = ref<"error" | "success">("success");
+const snackbarMessage = ref("");
+
+const showInfoDialog = ref(false);
+const autoOpenInfoDialog = ref(false);
+
+const settings = Settings.get_active();
+
+const webglDisabled = ref(false);
+
+const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
+// onBeforeMount(() => {
+//   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
+// });
+
+onMounted(() => {
+  store.waitForReady().then(async () => {
+    if (webglDisabled.value) {
+      layersLoaded.value = true;
+      positionSet.value = true;
+      // eslint-disable-next-lint @typescript-eslint/ban-ts-comment
+      // @ts-expect-error `canvas` is defined
+      WWTControl.singleton.canvas.setAttribute("hidden", "true");
+      WWTControl.singleton.renderOneFrame = function () {
+        /* empty */
+      };
+      return;
+    }
+
+    // allow zoom out to 90deg
+    WWTControl.singleton.set_zoomMax(6 * 90);
+
+    settings.set_galacticMode(galactic.value);
+    settings.set_showCrosshairs(crosshairs.value);
+    settings.set_crosshairsColor(crosshairsColor.value);
+    settings.set_showGrid(true);
+    settings.set_showEquatorialGridText(true);
+
+    const control = WWTControl.singleton;
+    control.renderOneFrame();
+    control.renderOneFrame = renderOneFrame.bind(control);
+
+    const cameraParams = { ...props.initialCameraParams };
+    const query = new URLSearchParams(window.location.search);
+
+    const paramNames: Record<string, keyof CameraParams> = {
+      raDeg: "raRad",
+      decDeg: "decRad",
+      zoomDeg: "zoomDeg",
+      rollDeg: "rollRad",
+    };
+    for (const [queryParam, cameraParam] of Object.entries(paramNames)) {
+      const valueString = query.get(queryParam);
+      if (valueString == null) {
+        continue;
+      }
+      const value = parseFloat(valueString);
+      if (!isNaN(value)) {
+        const factor = queryParam === "zoomDeg" ? 1 : D2R;
+        cameraParams[cameraParam] = value * factor;
+      }
+    }
+
+    // control._drawCrosshairs = (_renderContext: RenderContext) => { drawFootprint(WWTControl.singleton); };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    control.renderFrameCallback = function (wwt: WWTControl) {
+      footprints.forEach((footprint) => footprint.draw(wwt));
+    };
+    WWTControl.singleton.renderOneFrame();
+
+    store
+      .gotoRADecZoom({
+        ...cameraParams,
+        instant: true,
+      })
+      .then(() => (positionSet.value = true));
+
+    // the default set is WWT's built-in imagery, bg.wtml adds two HiPS surveys
+    await store
+      .loadImageCollection({ url: "bg.wtml", loadChildFolders: false })
+      .then((_folder) => {
+        backgroundImagesets.push(
+          new BackgroundImageset(
+            "unWISE",
+            "unWISE color, from W2 and W1 bands",
+          ),
+        );
+        backgroundImagesets.push(new BackgroundImageset("SDSS", "SDSS9 color"));
+      });
+
+    const bgName = query.get("bg") ?? "Optical (Terapixel DSS)";
+    let backgroundName: string | null = null;
+    if (bgName) {
+      const bgSet = backgroundImagesets.find((bg) => bg.displayName === bgName);
+      if (bgSet) {
+        backgroundName = bgSet.imagesetName;
+      }
+    }
+    if (backgroundName) {
+      backgroundImagesetName.value = backgroundName;
+    }
+
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, document.title, url.toString());
+
+    // createTableLayer needs the engine up, so build the catalog here
+    // m31Catalog.createLayer();
+
+    // If there are layers to set up, do that here!
+    layersLoaded.value = true;
+
+    // showInfoDialog.value = autoOpenInfoDialog.value;
+  });
+});
+
+const ready = computed(() => layersLoaded.value && positionSet.value);
+
+/* `isLoading` is a bit redundant here, but it could potentially have independent logic */
+const isLoading = computed(() => !ready.value);
+
+/* Properties related to device/screen characteristics */
+const smallSize = computed(() => smAndDown.value);
+
+/* This lets us inject component data into element CSS */
+const cssVars = computed(() => {
+  return {
+    "--accent-color": accentColor.value,
+    "--background-color-darkest": backgroundColorDarkest.value,
+    "--background-color": backgroundColor.value,
+    "--border-color": borderColor.value,
+    "--text-color": textColor.value,
+    "--accent-color-2": roman.color,
+  };
+});
+
+const showOptions = ref(false);
+/**
+  Computed flags that control whether the relevant dialogs display.
+  The `sheet` data member stores which sheet is open, so these are just
+  computed wrappers around modifying/querying that which can be used as
+  dialog v-model values
+*/
+
+const showVideoSheet = computed({
+  get() {
+    return sheet.value === "video";
+  },
+  set(value: boolean) {
+    selectSheet("video");
+    if (!value) {
+      const video = document.querySelector("#info-video") as HTMLVideoElement;
+      video.pause();
+    }
+  },
+});
+
+function selectSheet(sheetType: SheetType | null) {
+  if (sheet.value === sheetType) {
+    sheet.value = null;
+    nextTick(() => {
+      blurActiveElement();
+    });
+  } else {
+    sheet.value = sheetType;
+  }
+}
+
+let timeout: ReturnType<typeof setTimeout> | null = null;
+let clickCount = 0;
+const DOUBLE_CLICK_INTERVAL_MS = 200;
+function handlePositionGoToClick(isActive: Ref<boolean>) {
+  clickCount += 1;
+  if (timeout != null) {
+    clearTimeout(timeout);
+  }
+  if (clickCount > 1) {
+    tryGoToSearchPosition(isActive, true);
+    clickCount = 0;
+    return;
+  }
+  timeout = setTimeout(() => {
+    tryGoToSearchPosition(isActive, false);
+    clickCount = 0;
+  }, DOUBLE_CLICK_INTERVAL_MS);
+}
+
+function parseRA(data: string): number {
+  const lower = data.toLowerCase();
+  let hours = false;
+  if (["h", ":", " "].some((c) => lower.indexOf(c) !== -1)) {
+    hours = lower.indexOf("d") === -1; // so 14d 23m would pass the above check because of the space, but 'd' means degree
+  }
+  let ra = Coordinates.parse(lower);
+  if (hours && ra <= 24) {
+    ra *= 15;
+  }
+  return ra;
+}
+
+function tryGoToSearchPosition(
+  menuOpen: Ref<boolean>,
+  instant: boolean = false,
+) {
+  positionSearchError.value = null;
+  console.log(
+    "Searching for RA:",
+    positionSearchRA.value,
+    "Dec:",
+    positionSearchDec.value,
+  );
+  const ra = parseRA(positionSearchRA.value ?? "");
+  const dec = Coordinates.parseDec(positionSearchDec.value ?? "");
+
+  const raValid = !isNaN(ra);
+  const decValid = !isNaN(dec);
+  console.log("Parsed RA:", ra, "Dec:", dec, "Valid:", raValid, decValid);
+  if (raValid && decValid) {
+    store.gotoRADecZoom({
+      raRad: ra * D2R,
+      decRad: dec * D2R,
+      zoomDeg: 20,
+      instant,
+    });
+    menuOpen.value = false;
+    return;
+  }
+
+  const invalid: string[] = [];
+  if (!raValid) {
+    invalid.push("right ascension");
+  }
+  if (!decValid) {
+    invalid.push("declination");
+  }
+
+  const multiple = invalid.length > 1;
+  const isAre = multiple ? "are" : "is";
+  positionSearchError.value = `Your value${multiple ? "s" : ""} for ${invalid.join(" and ")} ${isAre} invalid`;
+}
+
+function shareURL(): string {
+  const url = new URL(window.location.href);
+  const bgSet = backgroundImagesets.find(
+    (bg) => bg.imagesetName === backgroundImagesetName.value,
+  );
+  let search = `raDeg=${store.raRad * R2D}&decDeg=${store.decRad * R2D}&zoomDeg=${store.zoomDeg}&rollDeg=${store.rollRad * R2D}`;
+  if (bgSet) {
+    search = `${search}&bg=${bgSet.displayName}`;
+  }
+  url.search = search;
+  return url.href;
+}
+
+function copyURLToClipboard() {
+  navigator.clipboard
+    .writeText(shareURL())
+    .then(() => {
+      snackbarColor.value = "success";
+      snackbarMessage.value = "Shareable URL copied to clipboard";
+      snackbar.value = true;
+    })
+    .catch((_err) => {
+      snackbarColor.value = "error";
+      snackbarMessage.value = "Failed to copy share URL to clipboard";
+      snackbar.value = true;
+    });
+}
+
+watch(galactic, (gal: boolean) => {
+  const raRad = store.raRad;
+  const decRad = store.decRad;
+  settings.set_galacticMode(gal);
+  store.gotoRADecZoom({
+    raRad,
+    decRad,
+    zoomDeg: store.zoomDeg,
+    instant: true,
+  });
+});
+watch(crosshairs, (show: boolean) => settings.set_showCrosshairs(show));
+watch(crosshairsColor, (color: string) => settings.set_crosshairsColor(color));
+
+function handleResolved(object: ResolvedObject) {
+  const { raDeg, decDeg } = object;
+  console.log("Received", object);
+  if (raDeg && decDeg) {
+    positionSearchRA.value = raDeg.toFixed(7);
+    positionSearchDec.value = decDeg.toFixed(7);
+  }
+  handlePositionGoToClick(ref(true));
+}
+
+
+
+watch(autoOpenInfoDialog, (open: boolean) => {
+  window.localStorage.setItem(AUTO_SHOW_INFO_KEY, open.toString());
+});
+</script>
+
+<style lang="less">
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+
+@font-face {
+  font-family: "Highway Gothic Narrow";
+  src: url("./assets/HighwayGothicNarrow.ttf");
+}
+
+:root {
+  --default-font-size: clamp(0.7rem, min(1.7vh, 1.7vw), 1.1rem);
+  --default-line-height: clamp(1rem, min(2.2vh, 2.2vw), 1.6rem);
+
+  --accent-color: #c77fb3;
+  --background-color-darkest: #502752;
+  --background-color: #632b7d;
+  --border-color: #b8a5d4;
+  --text-color: #f5f0ff;
+  overscroll-behavior: none;
+}
+
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  overflow: hidden;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  font-family: "Source Sans 3", Helvetica, sans-serif;
+  font-weight: regular;
+}
+
+// #app is a flex, but the direct parent is .v-application__wrap, which sizes
+// to its children, so height definitions go here. `row` keeps #side-drawer on
+// the right (it follows #main-content in the DOM), `row-reverse` puts it left.
+// Scoped under #app to beat Vuetify's own .v-application__wrap rule: a bare
+// selector ties on specificity, and in dev Vuetify's styles are injected last
+// (main.ts imports RomanFov.vue before plugins/vuetify), so it would lose.
+#app > .v-application__wrap {
+  flex-direction: row;
+  max-height: 100svh;
+}
+
+#app.app-is-small > .v-application__wrap {
+  flex-direction: column; // side panel becomes a bottom panel
+  max-height: 100svh;
+}
+
+#main-content {
+  // containing block for the absolutely positioned WWT host and overlay
+  position: relative;
+  display: block;
+  // grow into the space #side-drawer doesn't take, but stay shrinkable
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+
+  transition: height 0.1s ease-in-out;
+}
+
+// a flex sibling of #main-content, so opening it shrinks the WWT view
+#side-drawer {
+  flex: 0 0 auto;
+  overflow: hidden;
+  width: 0;
+
+  &.side-drawer-open {
+    width: 34%;
+  }
+}
+
+#app.app-is-small {
+  #side-drawer {
+    flex: 0 0 auto;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+
+    &.side-drawer-open {
+      height: 34%;
+    }
+  }
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-size: 11pt;
+
+  // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
+  .wwtelescope-component {
+    position: absolute;
+    inset: 0;
+    border-style: none;
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+
+    // filter: brightness(2)
+  }
+}
+
+// positioned against #main-content, not the viewport. out of flow, but its
+// children lay out with normal flex inside it
+#wwt-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 1rem;
+  pointer-events: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // pushes top and bottom content apart
+}
+
+#wwt-overlay > * > * {
+  // pointer-events: auto;
+  // outline: 1px solid orange;  // debug
+  // background-color: rgba(164, 34, 34, 0.5);
+}
+
+#shadow {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: static;
+  opacity: 0;
+}
+
+#top-content {
+  width: 100%; // 100% of the overlay less its padding
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: flex-start;
+  // Take the height #bottom-content doesn't, so tall children (the gallery)
+  // fill the gap and scroll internally instead of pushing it off screen.
+  // min-height: 0 lets those children shrink below their content height.
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#left-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  // Override the grid's align-items: flex-start for this column only, so the
+  // options panel has a definite height to shrink against; min-height: 0 lets
+  // it shrink. Without this the column is content-height and the panel just
+  // runs off the bottom of the screen.
+  align-self: stretch;
+  min-height: 0;
+}
+
+// #top-content is pointer-events: none so drags fall through to WWT, so the
+// buttons have to switch it back on for themselves. The block is only as tall
+// as the buttons, so nothing invisible is left over to swallow those drags.
+#tour-options {
+  pointer-events: auto;
+  flex: 0 0 auto;
+  // #left-buttons aligns to flex-start, so the block is content-width without
+  // this; the cap keeps a long label from running across the sky.
+  width: 100%;
+  max-width: 240px;
+
+  .tour-option {
+    // Let a long label wrap instead of forcing the column wider.
+    height: auto;
+    min-height: 36px;
+    padding-block: 0.4rem;
+    text-transform: none;
+    letter-spacing: normal;
+
+    .v-btn__content {
+      white-space: normal;
+      text-align: left;
+    }
+  }
+}
+
+#center-content {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+#right-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  // Override the grid's align-items: flex-start for this column only, so the
+  // gallery has a definite height to fill; min-height: 0 lets it shrink.
+  align-self: stretch;
+  min-height: 0;
+
+  .icon-wrapper {
+    min-width: 50px;
+    border-radius: 10px;
+  }
+
+  // #wwt-overlay and #top-content are pointer-events: none so drags pass
+  // through to WWT, so it has to be re-enabled on the gallery or it can't be
+  // clicked. The gallery is only as tall as its content (one line when closed),
+  // so nothing invisible is left over to swallow drags on WWT.
+  .wtml-gallery {
+    pointer-events: auto;
+  }
+}
+
+#body-logos {
+  #logo-credits img {
+    height: 32px !important;
+  }
+
+  @media (max-height: 599px) {
+    img {
+      display: none;
+    }
+  }
+}
+
+// From Sara Soueidan (https://www.sarasoueidan.com/blog/focus-indicators/) & Erik Kroes (https://www.erikkroes.nl/blog/the-universal-focus-state/)
+// checkbox will only get oreo styling when user tabs by keyboard.
+:focus-visible,
+.v-checkbox .v-selection-control__input:has(:focus-visible) {
+  outline: 9px double white !important;
+  box-shadow: 0 0 0 6px black !important;
+  border-radius: 0.125rem;
+}
+
+// Reduce focus indicator for text input fields only (they have their own built-in indicators)
+.v-text-field input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.video-wrapper {
+  height: 100%;
+  background: black;
+  text-align: center;
+  z-index: 1000;
+
+  #video-close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 15;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:focus {
+      color: white;
+      border: 2px solid white;
+    }
+  }
+}
+
+video {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+#info-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0px;
+  z-index: 10;
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 15;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    color: white;
+    border: 2px solid white;
+  }
+}
+
+.bullet-icon {
+  color: var(--border-color);
+  width: 1.2em;
+  padding-right: 0.5em;
+}
+
+// The info sheet is now laid out by #side-drawer's flex sizing, and its
+// internal styling comes from InformationSheet.vue.
+
+#bg-select {
+  pointer-events: auto;
+
+  &:hover {
+    color: var(--accent-color);
+    cursor: pointer;
+  }
+}
+
+.info-box {
+  font-size: 0.9rem;
+  color: white;
+  background: rgba(10, 5, 21, 0.7);
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0.5rem;
+  pointer-events: auto;
+  border-color: var(--border-color);
+  // width: 100%;
+}
+
+// Copied from rubin-first-look. Positions the floating tour text against
+// #wwt-overlay, in the corner the place cards vacate during a tour.
+.selected-info {
+  position: absolute;
+  padding: 10px;
+  top: 10px;
+  right: 10px;
+  max-width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.selected-info.selected-info-tall {
+  max-width: 60%;
+  top: 20px;
+}
+
+#coordinates {
+  .coordinates-content {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    row-gap: 0.25rem;
+    font-family: monospace;
+    justify-content: center;
+  }
+
+  .coordinate-item {
+    white-space: nowrap;
+  }
+}
+
+.bordered {
+  border: 1px solid #bbbbbb;
+  padding-inline: 2px;
+  border-radius: 4px;
+}
+
+.centered-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#bottom-content {
+  width: 100%;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#position-layout {
+  font-family: monospace;
+}
+
+#position-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.position-label {
+  font-size: 0.9em;
+  font-weight: bold;
+  width: fit-content;
+  white-space: nowrap;
+  padding-top: 0.6rem;
+}
+
+#options {
+  background: black;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75em;
+  pointer-events: auto;
+
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .icon-wrapper {
+    border: none;
+  }
+
+  #options-top-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    // Stays put while the settings below it scroll, so the close button and
+    // background picker are always reachable.
+    flex: 0 0 auto;
+  }
+
+  #options-content {
+    padding-inline: 5px;
+    padding-bottom: 5px;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  #options-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  input[type="checkbox"] {
+    color: var(--border-color);
+  }
+}
+
+.error-dialog {
+  width: auto;
+  height: auto;
+  max-width: 425px;
+  border-radius: 10px;
+}
+
+.error-message {
+  padding: 1rem;
+  border: 1px solid var(--accent-color);
+  text-align: center;
+  border-radius: 10px;
+}
+
+// Out of flow so a growing credit list doesn't push the step controls up.
+// Positioned against #wwt-overlay, whose padding box it has to inset itself from.
+#body-logos {
+  position: absolute;
+  inset: auto 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// The overlay is a fixed-height flex column. #top-content has to be the one
+// that gives, or a tall gallery pushes the footer past the bottom edge.
+#top-content {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#bottom-content {
+  flex: 0 0 auto;
+  padding-bottom: 3rem; // the space #body-logos no longer takes
+}
+
+#middle-content {
+  flex: 0 0 auto;
+
+  // Deliberately not on the container: it spans the full width of the overlay,
+  // and an invisible full-width band would swallow drags on the sky.
+  .v-btn {
+    pointer-events: auto;
+  }
+}
+
+#startup-screen {
+  /* competing with the main wwt-component */
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  background-image: url("/roman_early_universe.jpg");
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+// Not nested under #startup-screen: the same content is slotted into
+// SplashScreen on large screens, where that ancestor doesn't exist.
+h1.startup-screen-title {
+  color: var(--accent-color);
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 8px #000;
+}
+
+#startup-screen-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: min(100%, 320px);
+}
+
+// Fill and contrast text come from the `color` prop, shape from `rounded`.
+// Only the casing needs overriding.
+.v-btn.startup-button {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.v-btn {
+  pointer-events: auto;
+}
+</style>

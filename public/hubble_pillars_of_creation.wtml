@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="new view Pillars visible" Searchable="True">
+  <Place Angle="0" AngularSize="0.691031832846452" Classification="Unidentified" Constellation="SER2" DataSetType="Sky" Dec="-13.84" Magnitude="0" Name="New view of the Pillars of Creation — visible" Opacity="100" RA="18.3145" Rotation="0" ZoomLevel="0.8">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0912038385786876" BaseTileLevel="0" BottomsUp="False" CenterX="274.71982247409784" CenterY="-13.840682214812949" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="New view of the Pillars of Creation — visible" OffsetX="1.113328107649995e-05" OffsetY="1.6699921614749926e-05" Projection="Tan" QuadTreeMap="0123" Rotation="-34.97999999999999" Sparse="True" StockSet="False" TileLevels="5" Url="http://data1.wwtassets.org/packages/2020/07_hubble30/heic1501a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="esahubble|heic1501a" Xcorepipe_ids="hst|heic1501a" Xcxstatus="in:6548efd85dff7c3291e39e11">
+        <Credits>NASA, ESA/Hubble  and the Hubble Heritage Team</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1501a/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_hubble30/heic1501a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+</Folder>

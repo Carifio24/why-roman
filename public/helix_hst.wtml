@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="Helix" Searchable="True">
+  <Place Angle="0" AngularSize="1" Classification="PlanetaryNebula" Constellation="AQR" DataSetType="Sky" Dec="-20.8394444444444" Magnitude="0" Name="Iridescent Glory of Nearby Helix Nebula;Helix Nebula;NGC 7293" Opacity="100" RA="22.4944444444444" Rotation="0" ZoomLevel="7.39666666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.453998996479325" BaseTileLevel="0" BottomsUp="False" CenterX="337.415853196725" CenterY="-20.8371485668218" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Iridescent Glory of Nearby Helix Nebula;Helix Nebula;NGC 7293" Projection="Tan" QuadTreeMap="0123" Rotation="-0.377409915056428" Sparse="True" StockSet="False" TileLevels="6" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000002320{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-11a" Xcxstatus="in:65982951293f0a5746370464">
+        <Credits>Credit: NASA, NOAO, ESA, the Hubble Helix Nebula Team,  M. Meixner (STScI), and T.A. Rector (NRAO).</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-11.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1525127718</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+</Folder>

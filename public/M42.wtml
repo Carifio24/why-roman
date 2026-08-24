@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="Messier 42" Searchable="True">
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="ORI" DataSetType="Sky" Dec="-5.41333333333333" Magnitude="0" Name="Messier 42;M42" Opacity="100" RA="5.58611111111111" Rotation="0" ZoomLevel="15.9233333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.911005070122704" BaseTileLevel="0" BottomsUp="False" CenterX="83.7901366042835" CenterY="-5.41320529849934" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Messier 42;M42" Projection="Tan" QuadTreeMap="0123" Rotation="1.2490009027033e-15" Sparse="True" StockSet="False" TileLevels="7" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000011320{Q}?g=138" WidthFactor="2" Xcxstatus="in:65e5f0f4affb32cbf1d97d16">
+        <Credits>NASA,ESA, M. Robberto (Space Telescope Science Institute/ESA) and the Hubble Space Telescope Orion Treasury Project Team</Credits>
+        <CreditsUrl>https://hubblesite.org/contents/media/images/2006/01/1826-Image.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=hst_m42_7</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+</Folder>
