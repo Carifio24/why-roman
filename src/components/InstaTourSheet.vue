@@ -19,8 +19,6 @@ interface Props {
   tourId: string,
   smallSize: boolean,
   step: number,
-  totalSteps: number,
-  progress: number,
 }
 
 const props = defineProps<Props>();

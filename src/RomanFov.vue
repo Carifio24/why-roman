@@ -64,9 +64,7 @@
           v-if="activeTour"
           :tour-id="activeTour.id"
           :step="tourStep"
-          :total-steps="tourTotalSteps"
           :small-size="smallSize"
-          :progress="tourProgress"
           @next="goToStep(tourStep + 1)"
           @previous="goToStep(tourStep - 1)"
           @leave="leaveTour"
@@ -388,9 +386,7 @@
         v-if="activeTour"
         :tour-id="activeTour.id"
         :step="tourStep"
-        :total-steps="tourTotalSteps"
         :small-size="smallSize"
-        :progress="tourProgress"
         @next="goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
@@ -572,6 +568,7 @@ import FootprintSettings from "./components/FootprintSettings.vue";
 import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
 import TourSheet from "./components/TourSheet.vue";
 import InstaTourSheet from "./components/InstaTourSheet.vue";
+import { tourExperiences } from "./experiences";
 import {
   useWtmlLoader,
   type WtmlLoaderReturn,
@@ -949,7 +946,6 @@ const carinaWtml = useWtmlLoader("carina.wtml", {
   goTo: false,
   onLoad: (out) => out.layer.set_enabled(false),
 });
-const carinaTitles = ["NGC 3324", "Hubble", "JWST", "Roman"];
 const currentViewRad = computed(() => {
   return {
     raRad: store.raRad,
@@ -1009,15 +1005,6 @@ const andromedaWtml = useWtmlLoader("M31_PHAST.wtml", {
   goTo: false,
   onLoad: (out) => out.layer.set_enabled(false),
 });
-const andromedaTitles = [
-  "Andromeda",
-  "Hubble",
-  "PHAST",
-  "PHAST Frames",
-  "SF Disk",
-  "Roman",
-];
-
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
     onlyFootprints(phast, phastI, roman, hubble, jwst, m31SfDisk, m31SfDiskOutline);
@@ -1084,7 +1071,6 @@ const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
   goTo: false,
   onLoad: (out) => out.layer.set_enabled(false),
 });
-const eagleTitles = ["Hubble", "Roman"];
 
 function eagleTour(n: number, tour = true) {
   if (n === -1) {
@@ -1124,7 +1110,6 @@ const smacsWtml = useWtmlLoader("SMAC_0723_all_loose.wtml", {
   goTo: false,
   onLoad: (out) => out.layer.set_enabled(false),
 });
-const smacsTitles = ["JWST", "Roman"];
 
 function smacsTour(n: number, tour = true) {
   if (n === -1) {
@@ -1161,7 +1146,6 @@ const helixWtml = useWtmlLoader("helix_hst.wtml", {
   goTo: false,
   onLoad: (out) => out.layer.set_enabled(false),
 });
-const helixTitles = ["Hubble", "Roman"];
 
 function helixTour(n: number, tour = true) {
   if (n === -1) {
@@ -1200,23 +1184,21 @@ function helixTour(n: number, tour = true) {
 interface PlaceTour {
   id: string;
   label: string;
-  titles: string[];
   wtml: WtmlLoaderReturn;
   step: (n: number, tour?: boolean) => void;
 }
 
 const tours: PlaceTour[] = [
-  // { id: "eagle", label: "Eagle Nebula", titles: eagleTitles, wtml: eagleWtml, step: eagleTour },
+  // { id: "eagle", label: "Eagle Nebula", wtml: eagleWtml, step: eagleTour },
   {
     id: "andromeda",
     label: "Andromeda",
-    titles: andromedaTitles,
     wtml: andromedaWtml,
     step: andromedaTour,
   },
-  { id: "smacs", label: "SMACS 0723", titles: smacsTitles, wtml: smacsWtml, step: smacsTour,},
-  { id: "carina", label: "Carina", titles: carinaTitles, wtml: carinaWtml, step: carinaTour,},
-  // { id: "helix", label: "Helix Nebula", titles: helixTitles, wtml: helixWtml, step: helixTour },
+  { id: "smacs", label: "SMACS 0723", wtml: smacsWtml, step: smacsTour,},
+  { id: "carina", label: "Carina", wtml: carinaWtml, step: carinaTour,},
+  // { id: "helix", label: "Helix Nebula", wtml: helixWtml, step: helixTour },
 ];
 
 const selectedPlaceId = ref<string | null>(null);
@@ -1240,9 +1222,10 @@ function leaveTour() {
 }
 
 const tourStep = ref(0);
+// src/experiences is the source of truth for what the steps are
 const tourStepTitles = computed(() => {
   if (activeTour.value) {
-    return activeTour.value.titles;
+    return (tourExperiences[activeTour.value.id] ?? []).map((s) => s.title ?? "");
   }
   return [];
 });
@@ -1252,13 +1235,6 @@ const tourStepTitle = computed(
 );
 
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
-
-// percentage for <v-progress-linear>. the last step reads 100%
-const tourProgress = computed(() =>
-  tourTotalSteps.value > 0
-    ? ((tourStep.value + 1) / tourTotalSteps.value) * 100
-    : 0,
-);
 
 function goToStep(n: number) {
   tourStep.value = n;
