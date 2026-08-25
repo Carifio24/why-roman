@@ -74,8 +74,6 @@ interface Props {
   tourId: string,
   smallSize: boolean,
   step: number,
-  totalSteps: number,
-  progress: number,
 }
 
 const props = defineProps<Props>();
@@ -87,9 +85,10 @@ const emit = defineEmits<{
 }>();
 
 const currentStep = computed(() => tourExperiences[props.tourId]?.[props.step]);
+const totalSteps = computed(() => tourExperiences[props.tourId]?.length ?? 0);
 
 const items = computed(() => {
-  return Array.from({ length: props.totalSteps }).map((_, index) => ({
+  return Array.from({ length: totalSteps.value }).map((_, index) => ({
     title: '',
     disabled: index !== props.step,
   }));
