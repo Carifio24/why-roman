@@ -857,7 +857,7 @@ const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
   label: "M31 SF disk (2002)",
   footprint: m31SfDiskFootprintOutline,
-  color: "#bd93f9",
+  color: "#f58d42",  // TODO: Feel free to change this
   fixed: true,
   show: false,
 });
@@ -1106,12 +1106,12 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 4) {
-    onlyFootprints(phast, m31SfDisk);
+    onlyFootprints(phast, m31SfDisk, m31SfDiskOutline);
     showImagesets(andromedaWtml, 0);
     return;
   }
   if (n === 5) {
-    onlyFootprints(phast, phastI, m31SfDisk, roman);
+    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline, roman);
     showImagesets(andromedaWtml, 0);
     if (tour) showEndTourOverlay();
     return;
