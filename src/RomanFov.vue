@@ -417,6 +417,7 @@
         @next="goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
+        @step="(index) => goToStep(index)"
       />
       <InformationSheet
         v-if="showTextSheet"

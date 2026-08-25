@@ -4,7 +4,7 @@
     :content-class="['gesture-preview', smallScreen ? 'small' : '']"
     rounded="large"
     :timeout="6000000"
-    location="bottom"
+    location="left center"
     close-on-content-click
     :min-width="0"
   >

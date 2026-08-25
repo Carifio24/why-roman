@@ -43,7 +43,7 @@
       >
         Leave Tour
       </v-btn> -->
-
+      <v-spacer />
       <v-btn
         v-if="step < totalSteps - 1"
         variant="flat"
@@ -55,8 +55,21 @@
         Next
       </v-btn>
     </div>
+    <v-breadcrumbs 
+      class="justify-space-between"
+      :items="items"
+      divider=""
+    >
+      <template #item="{index}"> 
+        <button 
+          @click="() => emit('step', index)">
+          ⬤ 
+        </button>
+      </template>
+    </v-breadcrumbs>
     <v-progress-linear
       :model-value="progress"
+      class="mt-2"
       height="6"
       rounded
     />
@@ -64,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { computed } from 'vue';
 interface Props {
   tourId: string,
   smallSize: boolean,
@@ -73,9 +86,20 @@ interface Props {
   progress: number,
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
   
-const emit = defineEmits(['previous', 'next', 'leave']);
+// const emit = defineEmits(['previous', 'next', 'leave',]);
+const emit = defineEmits<{
+  (e: 'previous' | 'next' | 'leave'): void;
+  (e: 'step', index: number): void;
+}>();
+
+const items = computed(() => {
+  return Array.from({ length: props.totalSteps }).map((_, index) => ({
+    title: '',
+    disabled: index !== props.step,
+  }));
+});
 
 </script>
 
