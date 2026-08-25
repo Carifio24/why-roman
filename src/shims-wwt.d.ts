@@ -59,4 +59,7 @@ declare module "@wwtelescope/engine" {
     clear(): void;
   }
 
+  class Text3dBatch {
+  }
+
 }
