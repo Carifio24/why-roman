@@ -129,12 +129,8 @@ function closeSplashScreen() {
   .background {
     position: fixed;
     inset: 0;
-    // background-image: url('/roman_early_universe.jpg');
-    background-image: url("/Trailer_still_1-1.jpg");
-    filter: grayscale(0.8);
-
+    background-image: url('/roman_early_universe.jpg');
     background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
     contain: strict;
     z-index: -1;
@@ -145,9 +141,9 @@ function closeSplashScreen() {
     backdrop-filter: blur(0px) saturate(2);
     position: fixed;
     inset: 0;
-    // margin-top: 2rem;
-    // margin-bottom: 1rem;
-    // margin-inline: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    margin-inline: 1rem;
     border-radius: var(--border-radius);
   }
   
@@ -243,7 +239,6 @@ function closeSplashScreen() {
   #splash-screen-acknowledgements {
     // margin-top: 3rem;
     margin: clamp(0.5rem, 3vh, 3rem) auto;
-    margin-bottom: 0;
     font-size: 1em;
     line-height: calc(var(--default-line-height));
     width: 80%; 
@@ -255,14 +250,14 @@ function closeSplashScreen() {
 
   #splash-screen-credit-logos {
     img {
-    // height: 65px;
+    height: 65px;
     vertical-align: middle;
     margin-inline: 0.5em;
     }
 
     @media only screen and (max-width: 600px) {
       img {
-        // height: 40px;
+        height: 40px;
       }
     }
 

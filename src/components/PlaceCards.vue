@@ -163,7 +163,6 @@ const emit = defineEmits<{
 
 .place-card-actions {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.25rem;
 }
