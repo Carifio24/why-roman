@@ -251,16 +251,6 @@
             </div>
           </div>
           <div id="center-content">
-            <v-btn
-              v-if="selectedPlaceId"
-              id="leave-tour"
-              variant="outlined"
-              density="comfortable"
-              :color="borderColor"
-              @click="leaveTour"
-            >
-              Leave tour
-            </v-btn>
             <div
               v-if="false"
               id="coordinates"
@@ -289,32 +279,6 @@
           </div>
         </div>
         <!-- on screen info from rubin first look -->
-
-        <div
-          v-if="inTour"
-          id="middle-content"
-          class="d-flex flex-row justify-space-between"
-        >
-          <v-btn
-            prepend-icon="mdi-chevron-left"
-            :color="borderColor"
-            density="comfortable"
-            :disabled="tourStep <= 0"
-            @click="goToStep(tourStep - 1)"
-          >
-            Previous
-          </v-btn>
-          <v-btn
-            :append-icon="onLastStep ? undefined : 'mdi-chevron-right'"
-            :color="borderColor"
-            density="comfortable"
-            @click="onLastStep ? leaveTour() : goToStep(tourStep + 1)"
-          >
-            {{ onLastStep ? "Explore" : "Next" }}
-          </v-btn>
-        </div>
-
-
 
         <div
           id="bottom-content"
@@ -1308,18 +1272,6 @@ function goToStep(n: number) {
 /* what buttons will be shown at the end of a tour */
 const tourEndOptions = computed(() => {
   const options = [
-    {
-      id: "explore-view",
-      label: "Explore this view more",
-      action: () => {
-        showTextSheet.value = false;
-      },
-    },
-    {
-      id: "let-me-explore",
-      label: "Let me explore freely",
-      action: () => leaveTour(),
-    },
   ];
   return options;
 });
@@ -1465,7 +1417,7 @@ onMounted(() => {
     settings.set_galacticMode(galactic.value);
     settings.set_showCrosshairs(crosshairs.value);
     settings.set_crosshairsColor(crosshairsColor.value);
-    settings.set_showGrid(true);
+    settings.set_showGrid(false);
     settings.set_showEquatorialGridText(true);
 
     const control = WWTControl.singleton;
