@@ -1270,7 +1270,7 @@ function goToStep(n: number) {
 }
 
 /* what buttons will be shown at the end of a tour */
-const tourEndOptions = computed(() => {
+const tourEndOptions = computed<{id: string, label: string, action: () => void}[]>(() => {
   const options = [
   ];
   return options;
