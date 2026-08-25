@@ -10,7 +10,9 @@
       <canvas id="shadow-footprint"></canvas>
       <wwt-loader v-model="isLoading" />
 
-      <SplashGesture v-if="!isLoading && !showInfoDialog && !showStartup" />
+      <SplashGesture
+        v-if="!isLoading && !showInfoDialog && !showStartup && !showIntroSlides"
+      />
 
       <component
         :is="SplashScreen"
@@ -301,7 +303,10 @@
 
 
 
-        <div id="bottom-content">
+        <div
+          id="bottom-content"
+          :class="[smallSize ? 'no-footer' : '']"
+        >
           <!-- padding on top is needed because -->
           <v-row
             id="position-layout"
@@ -406,6 +411,7 @@
         v-if="activeTour"
         :tour-id="activeTour.id"
         :step="tourStep"
+        :total-steps="tourTotalSteps"
         :small-size="smallSize"
         :progress="tourProgress"
         @next="goToStep(tourStep + 1)"
@@ -466,6 +472,62 @@
             </p>
           </template>
         </InfoPage>
+        <InfoPage
+          v-if="!inTour"
+          title="Controls"
+        >
+          <div class="d-flex flex-column ga-2">
+            <v-btn
+              v-for="tour in tours"
+              :key="tour.id"
+              variant="flat"
+              color="#502752"
+              size="small"
+              rounded="lg"
+              @click="goToPlace(tour.id)"
+            >
+              {{ tour.label }}
+            </v-btn>
+          </div>
+
+          <h3
+            v-if="visibleFootprints.length > 0"
+            class="mt-4"
+          >
+            Satellite fields of view
+          </h3>
+          <MiniFootprintSettings
+            v-for="footprint in visibleFootprints"
+            :key="footprint.id"
+            v-model:opacity="footprint.opacity"
+            v-model:fill="footprint.fill"
+            v-model:color="footprint.color"
+            :label="footprint.label"
+            :show-fill="footprint.id === 'roman-footprint' || true"
+          />
+
+          <div
+            v-for="slider in layerSliders"
+            :key="slider.index"
+          >
+            <label :for="`explore-opacity-${slider.index}`">{{
+              slider.name
+            }}</label>
+            <v-slider
+              :id="`explore-opacity-${slider.index}`"
+              :model-value="opacityOf(slider.index)"
+              :min="0"
+              :max="1"
+              :step="0.01"
+              :color="roman.color"
+              density="compact"
+              hide-details
+              @update:model-value="
+                (value: number) => setOpacity(slider.index, value)
+              "
+            />
+          </div>
+        </InfoPage>
         <!-- <InfoPage title="View Finder Info">
                     <ViewFinderHelp />
                   </InfoPage> -->
@@ -484,6 +546,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ref,
+  shallowRef,
   reactive,
   computed,
   watch,
@@ -801,7 +864,14 @@ import { useLocalStorage } from "@vueuse/core";
 const hasSeenIntroSlides = useLocalStorage("why-roman:hasSeenIntroSlides", false);
 const hasSeenFullTour = useLocalStorage("why-roman:hasSeenFullTour", false);
 
-const showStartup = ref(true);
+
+hasSeenIntroSlides.value = false;
+hasSeenFullTour.value = false;
+console.error("NOTE: make these live for real use");
+// if we are returnings we can skip
+const returning = hasSeenIntroSlides.value && hasSeenFullTour.value;
+
+const showStartup = ref(!returning);
 const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
@@ -828,10 +898,13 @@ const { setOrderForLayers } = useLayerOrdering();
 
 const shownImagesets = ref<number[]>([]);
 const layerOpacities = ref<Record<number, number>>({});
+// whichever wtml showImagesets last drew from, so the sliders work outside a tour too
+const shownWtml = shallowRef<WtmlLoaderReturn | null>(null);
 
 // show just these layers, lowest first
 function showImagesets(wtml: WtmlLoaderReturn, ...indices: number[]) {
   shownImagesets.value = indices;
+  shownWtml.value = wtml;
   layerOpacities.value = {};
   wtml.imagesets.value.forEach((imageset, index) => {
     console.log(imageset.get_creditsUrl());
@@ -881,6 +954,7 @@ function goToImageset(
 const endTourOverlay = ref(false);
 function showEndTourOverlay() {
   endTourOverlay.value = true;
+  hasSeenFullTour.value = true;
   // in case there is more we want to do
 }
 
@@ -950,11 +1024,11 @@ const andromedaWtml = useWtmlLoader("M31_PHAST.wtml", {
 });
 const andromedaTitles = [
   "Andromeda",
-  "Wide Field",
   "Hubble",
   "PHAST",
-  "HI Disk",
+  "PHAST Frames",
   "SF Disk",
+  "Roman",
 ];
 
 function andromedaTour(n: number, tour = true) {
@@ -1153,8 +1227,8 @@ const tours: PlaceTour[] = [
     wtml: andromedaWtml,
     step: andromedaTour,
   },
-  // { id: "smacs", label: "SMACS 0723", titles: smacsTitles, wtml: smacsWtml, step: smacsTour,},
-  // { id: "carina", label: "Carina", titles: carinaTitles, wtml: carinaWtml, step: carinaTour,},
+  { id: "smacs", label: "SMACS 0723", titles: smacsTitles, wtml: smacsWtml, step: smacsTour,},
+  { id: "carina", label: "Carina", titles: carinaTitles, wtml: carinaWtml, step: carinaTour,},
   // { id: "helix", label: "Helix Nebula", titles: helixTitles, wtml: helixWtml, step: helixTour },
 ];
 
@@ -1173,6 +1247,9 @@ function leaveTour() {
   endTourOverlay.value = false;
   onlyFootprints();
   showOptions.value = false;
+  // the wtml was just hidden, so nothing is left to put a slider on
+  shownImagesets.value = [];
+  shownWtml.value = null;
 }
 
 const tourStep = ref(0);
@@ -1229,14 +1306,22 @@ const tourEndOptions = computed(() => {
  * image the upper ones get an opacity slider. The lowest layer is what the
  * others fade against, so it doesn't get one.
  */
+// the stacked layers above the bottom one, which is what the rest fade against
+const layerSliders = computed(() => {
+  if (!shownWtml.value) {
+    return [];
+  }
+  const names = shownWtml.value.imagesetNames.value;
+  return shownImagesets.value
+    .slice(1)
+    .map((index) => ({ index, name: names[index] ?? "" }));
+});
+
 const opacitySliders = computed(() => {
   if (!activeTour.value || tourStep.value !== tourTotalSteps.value - 1) {
     return [];
   }
-  const names = activeTour.value.wtml.imagesetNames.value;
-  return shownImagesets.value
-    .slice(1)
-    .map((index) => ({ index, name: names[index] ?? "" }));
+  return layerSliders.value;
 });
 
 function opacityOf(index: number): number {
@@ -1244,8 +1329,8 @@ function opacityOf(index: number): number {
 }
 
 function setOpacity(index: number, opacity: number) {
-  if (activeTour.value) {
-    const layer = activeTour.value.wtml.imagesetLayers.value[index];
+  if (shownWtml.value) {
+    const layer = shownWtml.value.imagesetLayers.value[index];
     if (layer) {
       layer.set_opacity(opacity);
       layerOpacities.value[index] = opacity;
@@ -2099,6 +2184,10 @@ video {
 #bottom-content {
   flex: 0 0 auto;
   padding-bottom: 3rem; // the space #body-logos no longer takes
+
+  &.no-footer {
+    padding-bottom: 0;
+  }
 }
 
 #middle-content {

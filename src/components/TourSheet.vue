@@ -45,7 +45,7 @@
       </v-btn> -->
 
       <v-btn
-        v-if="step < 2"
+        v-if="step < totalSteps - 1"
         variant="flat"
         color="#502752"
         size="small"
@@ -68,7 +68,8 @@
 interface Props {
   tourId: string,
   smallSize: boolean,
-  step: number, 
+  step: number,
+  totalSteps: number,
   progress: number,
 }
 

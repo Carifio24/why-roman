@@ -15,6 +15,18 @@
       </div>
       <div
         v-if="showFill"
+        class="color-option"
+      >
+        <label>
+          <!-- <span class="mr-2">Fill</span> -->
+          <input
+            v-model="color"
+            type="color"
+          />
+        </label>
+      </div>
+      <div
+        v-if="showFill"
         class="fill-option"
       >
         <label>
@@ -44,8 +56,6 @@ import { computed } from "vue";
 interface Props {
   /** footprint label, e.g. "Roman" */
   label: string;
-  /** outline color, hex format */
-  color: string;
   /** offer the fill toggle. most footprints aren't filled */
   showFill?: boolean;
 }
@@ -56,6 +66,7 @@ withDefaults(defineProps<Props>(), {
 
 const opacity = defineModel<number>("opacity", { required: true });
 const fill = defineModel<boolean>("fill", { required: true });
+const color = defineModel<string>("color", { required: true });
 
 // the checkbox hides the footprint by taking opacity to 0 and putting the old
 // value back. `show` belongs to the tour, which flips footprints per step, so
