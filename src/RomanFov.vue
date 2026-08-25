@@ -60,6 +60,18 @@
         v-if="!showStartup && !showIntroSlides"
         id="wwt-overlay"
       >
+        <InstaTourSheet
+          v-if="activeTour"
+          :tour-id="activeTour.id"
+          :step="tourStep"
+          :total-steps="tourTotalSteps"
+          :small-size="smallSize"
+          :progress="tourProgress"
+          @next="goToStep(tourStep + 1)"
+          @previous="goToStep(tourStep - 1)"
+          @leave="leaveTour"
+          @step="(index) => goToStep(index)"
+        />
         <div id="top-content">
           <div id="left-buttons">
             <!-- <div
@@ -595,6 +607,7 @@ import SplashScreen from "./components/SplashScreen.vue";
 import FootprintSettings from "./components/FootprintSettings.vue";
 import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
 import TourSheet from "./components/TourSheet.vue";
+import InstaTourSheet from "./components/InstaTourSheet.vue";
 import {
   useWtmlLoader,
   type WtmlLoaderReturn,
@@ -839,7 +852,7 @@ const m31SfDisk = useFootprint({
   show: false,
 });
 const m31SfDiskOutline = useFootprint({
-  id: "m31-sf-disk-footprint",
+  id: "m31-sf-disk-footprint-outline",
   label: "M31 SF disk (2002)",
   footprint: m31SfDiskFootprintOutline,
   color: "#bd93f9",
