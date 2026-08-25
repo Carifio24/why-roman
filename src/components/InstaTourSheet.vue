@@ -27,13 +27,6 @@ const props = defineProps<Props>();
 
 const currentStep = computed(() => tourExperiences[props.tourId]?.[props.step]);
 
-const items = computed(() => {
-  return Array.from({ length: props.totalSteps }).map((_, index) => ({
-    title: '',
-    disabled: index !== props.step,
-  }));
-});
-
 </script>
 
 <style lang="less">
