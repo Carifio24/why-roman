@@ -1,10 +1,13 @@
 <template>
   <v-snackbar
     v-model="show"
+    class="gesture-preview-overlay"
     :content-class="['gesture-preview', smallScreen ? 'small' : '']"
     rounded="large"
     :timeout="6000000"
-    location="left center"
+    location="bottom left"
+    attach="#main-content"
+    contained
     close-on-content-click
     :min-width="0"
   >
@@ -95,9 +98,13 @@ onUnmounted(() => {
 
 
 <style>
+.v-overlay.gesture-preview-overlay {
+  margin: 0;
+  padding: 0 0 1rem 1rem;
+}
+
 .v-overlay__content.v-snackbar__wrapper.v-snackbar--variant-elevated.gesture-preview {
   border: 1px solid var(--accent-color);
-  margin-top: 1em;
   padding-inline: 0.75em;
   background-color: #502752ee;
   color: white;
