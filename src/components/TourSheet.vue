@@ -3,16 +3,45 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
-    <template v-if="tourId === 'andromeda'">
+    <div
+      v-if="tourId === 'andromeda'"
+      class="selected-info-tour"
+    >
       <h3>Andromeda</h3>
-      <p v-if="step === 0">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-        Illo eligendi at accusantium, corporis, vitae est dolorem 
-        suscipit aut, inventore dignissimos ab! Ipsa ab cupiditate 
-        quae voluptas, molestias repudiandae necessitatibus natus!
-      </p>
-    </template>
-    <template v-if="tourId === 'carina'">
+      <div v-if="step === 0">
+        <p>
+          The Andromeda Galaxy, our nearest neighboring spiral galaxy is located over 2 million light years away. 
+        </p>
+        
+        <p>
+          Visible to the unaided eye as a faint smudge in the constellation of Andromeda, it is spans
+          3 degrees, or the width of 6 ful moons, on the night sky. 
+        </p>
+        
+        <p>
+          The current view shows an optical image of the galaxy from the Digitized Sky Survey. 
+          The data was taken from a 1.2 m telescope at Palomar Observatory. 
+        </p>
+      </div>
+      <div v-if="step === 1">
+        <p></p>
+      </div>
+      <div v-if="step === 2">
+        <p></p>
+      </div>
+      <div v-if="step === 3">
+        <p></p>
+      </div>
+      <div v-if="step === 4">
+        <p></p>
+      </div>
+      <div v-if="step === 4">
+        <p></p>
+      </div>
+    </div>
+    <div
+      v-if="tourId === 'carina'"
+      class="selected-info-tour">
       <h3>Carina</h3>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. 
@@ -20,7 +49,7 @@
         suscipit aut, inventore dignissimos ab! Ipsa ab cupiditate 
         quae voluptas, molestias repudiandae necessitatibus natus!
       </p>
-    </template>
+    </div>
     <v-spacer />
     <div class="tour-text-controls">
       <v-btn
@@ -56,7 +85,7 @@
       </v-btn>
     </div>
     <v-breadcrumbs 
-      class="justify-space-between"
+      class="justify-space-evenly"
       :items="items"
       divider=""
     >

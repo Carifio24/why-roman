@@ -20,7 +20,8 @@
             On August 30, 2026, NASA will launch the Nancy Grace Roman Space Telescope into orbit.
           </p>
           <p>
-            It will travel to “L2” where the James Webb Space Telescope is already stationed. 
+            <!-- It will travel to “L2” X miles from Earth, near the James Webb Space Telescope.  -->
+            Let's start with Andromeda to see why it's so great!
           </p>
           <!-- <v-img
             src="/Trailer_still_1-1.jpg"
@@ -28,7 +29,7 @@
             height="150px"
             cover
           /> -->
-          <video loop src="/JWST_L2_Orbit_Animation_HD.webm" />
+          <!-- <video loop src="/JWST_L2_Orbit_Animation_HD.webm" /> -->
         </v-window-item>
         <v-window-item
           class="intro-slides-window-item"
@@ -57,7 +58,7 @@
           v-bind="buttonProps"
           @click="window = Math.min(NUM_SLIDES, window + 1)"
         >
-          Next
+          Go!
         </v-btn>
         <v-btn
           v-else
@@ -112,7 +113,7 @@ const NUM_SLIDES = 2;
   display: flex;
   background-color: rgba(0, 0, 0, 0.9);
   border: 4px solid var(--background-color);
-  padding: 2rem;
+  padding: 1.7rem;
 }
 
 .intro-slides {
@@ -120,7 +121,7 @@ const NUM_SLIDES = 2;
 }
 .intro-slides-window-item {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: var(--text-color);
   
   p {

@@ -21,7 +21,8 @@
         @close="handleSplashClose"
       >
         <div id="startup-screen-content">
-          <h1 class="startup-screen-title">Why the Roman Space Telescope</h1>
+          <h1 class="startup-screen-title">Why Roman</h1>
+          <span>Learn why NASA is launching the  Nancy Grace Roman Space Telescope</span>
           <!-- <v-btn
             v-for="tour in tours"
             :key="tour.id"
@@ -106,7 +107,7 @@
 
             <div class="d-flex flex-direction-row ga-2">
               <icon-button
-                v-if="!inTour"
+                v-if="!inTour || true"
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
@@ -706,8 +707,8 @@ import { corners as hlwasFootprint } from "./footprints/hlwas";
 import { corners as gbtdsFootprint } from "./footprints/gbtds_wfi";
 import { corners as m31HiDiskFootprint } from "./footprints/roman_2002_m31_hi_disk";
 */
-// import { corners as m31SfDiskChips } from "./footprints/roman_2002_m31_sf_disk";
-import { corners as m31SfDiskFootprint } from "./footprints/roman_2002_m31_sf_disk_display";
+import { corners as m31SfDiskFootprint } from "./footprints/roman_2002_m31_sf_disk";
+import { corners as m31SfDiskFootprintOutline } from "./footprints/roman_2002_m31_sf_disk_display";
 import IntroSlides from "./components/IntroSlides.vue";
 
 const roman = useFootprint({
@@ -742,7 +743,7 @@ const jwst = useFootprint({
   footprint: jwstFootprint,
   color: "#002aff",
   offsetXDeg: -0.075, // left
-  // offsetYDeg: 0.2, // down
+  offsetYDeg: 0.2, // down
   // linewidth: 2,
   show: false,
 });
@@ -752,7 +753,7 @@ const hubble = useFootprint({
   footprint: hubbleFootprint,
   color: "#e100ff",
   offsetXDeg: 0.1,
-  // offsetYDeg: 0.2,
+  offsetYDeg: 0.2,
   // linewidth: 2,
   show: false,
 });
@@ -837,6 +838,14 @@ const m31SfDisk = useFootprint({
   fixed: true,
   show: false,
 });
+const m31SfDiskOutline = useFootprint({
+  id: "m31-sf-disk-footprint",
+  label: "M31 SF disk (2002)",
+  footprint: m31SfDiskFootprintOutline,
+  color: "#bd93f9",
+  fixed: true,
+  show: false,
+});
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [
@@ -852,7 +861,7 @@ const footprints = [
   // gps,
   // m31HiDisk,
   m31SfDisk,
-  
+  m31SfDiskOutline,
 ];
 
 // the currently visible footprints. 
@@ -1034,7 +1043,7 @@ const andromedaTitles = [
 
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(phast, phastI, roman);
+    onlyFootprints(phast, phastI, roman, hubble, jwst, m31SfDisk, m31SfDiskOutline);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
     return;
@@ -1062,7 +1071,7 @@ function andromedaTour(n: number, tour = true) {
     // showImagesets(andromedaWtml);
     return;
   }
-  if (n === 2) { // who PHAST andromeda 
+  if (n === 2) { // TODO: zoom in. show opacity slider
     onlyFootprints(phast);
     showImagesets(andromedaWtml, 0);
     // goToImageset(andromedaWtml, 0, { zoom: 2 });
