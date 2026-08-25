@@ -59,7 +59,15 @@ declare module "@wwtelescope/engine" {
     clear(): void;
   }
 
+  class Text3d {
+    constructor(center: Vector3d, up: Vector3d, text: string, fontsize: number, scale: number);
+  }
+
   class Text3dBatch {
+    constructor(height: number);
+    add(text: Text3d): void;
+    draw(renderContext: RenderContext, opacity: number, color: Color): void;
+    prepareBatch(): void;
   }
 
 }

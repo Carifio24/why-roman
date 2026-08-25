@@ -1,4 +1,10 @@
-import { Matrix3d, type RenderContext } from "@wwtelescope/engine";
+import { D2R } from "@wwtelescope/astro";
+import { Matrix3d, Vector3d, type RenderContext } from "@wwtelescope/engine";
+
+interface PositionDeg {
+  raDeg: number;
+  decDeg: number;
+}
 
 export function executeWithTransforms(renderContext: RenderContext, callable: CallableFunction, transforms: {
   world?: Matrix3d,
@@ -29,4 +35,36 @@ export function executeWithTransforms(renderContext: RenderContext, callable: Ca
   renderContext.set_view(oldView);
   renderContext.set_projection(oldProjection);
   renderContext.makeFrustum();
+}
+
+export function getWorldMatrixForPosition(position: PositionDeg): Matrix3d {
+  return Matrix3d.rotationYawPitchRoll(-(position.raDeg - 90) * D2R, -position.decDeg * D2R, 0);
+}
+
+export function getViewMatrixForRotation(angleDeg: number): Matrix3d {
+  return Matrix3d.lookAtLH(
+    Vector3d.create(0, 0, 0),
+    Vector3d.create(0, 0, -1), 
+    Vector3d.create(Math.sin(angleDeg * D2R), Math.cos(angleDeg * D2R), 0),
+  );
+}
+
+export interface CreateTransformsOptions {
+  position: PositionDeg;
+  rotationDeg: number;
+  renderContext: RenderContext;
+}
+
+export function createTransformsForCamera(options: CreateTransformsOptions) {
+  const initWorld = getWorldMatrixForPosition(options.position);
+  const initView = getViewMatrixForRotation(options.rotationDeg);
+  const currentWorld = options.renderContext.get_world().clone();
+  currentWorld.invert();
+  const currentView = options.renderContext.get_view().clone();
+  currentView.invert();
+
+  return {
+    world: Matrix3d.multiplyMatrix(initWorld, currentWorld),
+    view: Matrix3d.multiplyMatrix(initView, currentView),
+  };
 }

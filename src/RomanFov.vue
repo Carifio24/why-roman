@@ -885,6 +885,7 @@ const visibleFootprints = computed(() =>
 );
 
 import { useLocalStorage } from "@vueuse/core";
+import { useTextOverlays } from "./text";
 
 const hasSeenIntroSlides = useLocalStorage("why-roman:hasSeenIntroSlides", false);
 const hasSeenFullTour = useLocalStorage("why-roman:hasSeenFullTour", false);
@@ -1442,6 +1443,8 @@ const settings = Settings.get_active();
 
 const webglDisabled = ref(false);
 
+let show: Ref<boolean>;
+
 const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 // onBeforeMount(() => {
 //   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
@@ -1452,7 +1455,7 @@ onMounted(() => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
       positionSet.value = true;
-      // eslint-disable-next-lint @typescript-eslint/ban-ts-comment
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error `canvas` is defined
       WWTControl.singleton.canvas.setAttribute("hidden", "true");
       WWTControl.singleton.renderOneFrame = function () {
@@ -1464,6 +1467,10 @@ onMounted(() => {
     // allow zoom out to 90deg
     WWTControl.singleton.set_zoomMax(6 * 90);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error Modifying window object
+    window.Matrix3d = wwtlib.Matrix3d; window.wwt = WWTControl.singleton;
+
     settings.set_galacticMode(galactic.value);
     settings.set_showCrosshairs(crosshairs.value);
     settings.set_crosshairsColor(crosshairsColor.value);
@@ -1471,8 +1478,31 @@ onMounted(() => {
     settings.set_showEquatorialGridText(true);
 
     const control = WWTControl.singleton;
+    const renderContext = control.renderContext;
     control.renderOneFrame();
     control.renderOneFrame = renderOneFrame.bind(control);
+
+    const overlayResults = useTextOverlays(store, renderContext);
+    show = overlayResults.show;
+    const createTextOverlay = overlayResults.createTextOverlay;
+
+    createTextOverlay({
+      text: "Roman",
+      center: Coordinates.raDecTo3d(0, 10),
+      renderContext,
+    });
+    // createTextOverlay({
+    //   text: "Hubble",
+    //   center: Coordinates.raDecTo3d(0, 0),
+    //   renderContext,
+    // });
+    // createTextOverlay({
+    //   text: "JWST",
+    //   center: Coordinates.raDecTo3d(1, 10),
+    //   renderContext,
+    // });
+
+    // show.value = true;
 
     const cameraParams = { ...props.initialCameraParams };
     const query = new URLSearchParams(window.location.search);

@@ -1,10 +1,9 @@
-import { Color, Coordinates, Dates, Matrix3d, RenderContext, SimpleLineList, TriangleList, Vector3d, WWTControl } from "@wwtelescope/engine";
+import { Color, Coordinates, Dates, RenderContext, SimpleLineList, TriangleList, Vector3d, WWTControl } from "@wwtelescope/engine";
 import { flat } from "./utils";
-import { executeWithTransforms } from "./display";
+import { createTransformsForCamera, executeWithTransforms } from "./overlays";
 
 import { Point } from "./footprints/types";
 import earcut, {refine} from 'earcut';
-import { D2R } from "@cosmicds/vue-toolkit";
 
 
 function samePoint(p1: Point, p2: Point): boolean {
@@ -13,10 +12,10 @@ function samePoint(p1: Point, p2: Point): boolean {
 
 function getScreenPoints(wwt: WWTControl, worldPts: Point[]): Point[] {
   return worldPts.map(pt => {
-    
     const screen = wwt.getScreenPointForCoordinates(pt[0] / 15, pt[1]);
     return [screen.x, screen.y];
   });
+}
 
 
 function shiftCorners(corners: Point[][], offsetXDeg: number = 0, offsetYDeg: number = 0): Point[][] {
@@ -124,21 +123,12 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
 
   const renderContext = wwt.renderContext;
   let onePixSquare = [] as Point[][];
-  const worldZeros = Matrix3d.rotationYawPitchRoll(90 * D2R, 0, 0);
-  const currentWorld = renderContext.get_world().clone();
-  currentWorld.invert();
-  const viewZeros = Matrix3d.lookAtLH(
-    Vector3d.create(0, 0, 0),
-    Vector3d.create(0, 0, -1), 
-    Vector3d.create(0, 1, 0)
-  );
-  const currentView = renderContext.get_view().clone();
-  currentView.invert();
 
-  const zeroTransforms = {
-    world: Matrix3d.multiplyMatrix(worldZeros, currentWorld),
-    view: Matrix3d.multiplyMatrix(viewZeros, currentView),
-  };
+  const zeroTransforms = createTransformsForCamera({
+    position: { raDeg: 0, decDeg: 0 },
+    rotationDeg: 0,
+    renderContext,
+  });
 
   const getOnePxSquare = (rc: RenderContext) => {
     onePixSquare = convertScreenPointsToClip(rc, [[[0, 0], [1, 1]]]);
@@ -248,7 +238,6 @@ function getOutline(id: string, footprint: Point[][]): SimpleLineList {
   outlineCache.set(id, lineList);
   return lineList;
 }
-
 
 
 export function drawStaticFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
