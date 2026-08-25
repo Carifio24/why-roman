@@ -9,8 +9,8 @@
     "@mdi/font": "^7.4.47",
     "@vueuse/core": "^14.4.0",
     "@wwtelescope/astro": "^0.3.3",
-    "@wwtelescope/engine": "^7.39.0",
-    "@wwtelescope/engine-pinia": "^0.15.0",
+    "@wwtelescope/engine": "^7.40.0",
+    "@wwtelescope/engine-pinia": "^0.16.0",
     "earcut": "^3.2.3",
     "focus-trap": "^7.0.0",
     "focus-trap-vue": "^4.1.0",
@@ -59,7 +59,7 @@
   "name": "@cosmicds/why-roman",
   "packageManager": "yarn@4.12.0",
   "resolutions": {
-    "@wwtelescope/engine-pinia": "^0.15.0",
+    "@wwtelescope/engine-pinia": "^0.16.0",
     "pinia": "^3.0.4"
   }
 }
