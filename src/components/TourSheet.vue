@@ -98,6 +98,10 @@ const items = computed(() => {
 
 <style lang="less">
 
+p {
+  margin-top: 0.25rem;
+}
+
 .info-box {
   font-size: 0.9rem;
   color: white;

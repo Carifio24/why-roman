@@ -6,21 +6,29 @@ export const andromedaExperience: TourExperience = [
   {
     title: "Andromeda",
     tourSheetText: [
-      "The Andromeda Galaxy, our nearest neighboring spiral galaxy is located over 2 million light years away.",
-      "Visible to the unaided eye as a faint smudge in the constellation of Andromeda, it is spans 3 degrees, or the width of 6 ful moons, on the night sky.",
-      "The current view shows an optical image of the galaxy from the Digitized Sky Survey. The data was taken from a 1.2 m telescope at Palomar Observatory.",
+      "Andromeda (M31) is our nearest neighboring spiral galaxy.",
+      "It spans 3 degrees (or 6 full Moons!) across the sky.",
+      "By studying Andromeda, astronomers can better understand our own Milky Way galaxy.",
     ],
     instaText: "Andromeda covers a huge amount of sky",
+
   },
   {
-    title: "Hubble",
-    tourSheetText: [],
+    title: "View from the ground",
+    tourSheetText: [
+      "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
+      "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
+    ],
     instaText: "A telescope on the ground sees this...",
   },
   {
-    title: "PHAST",
-    tourSheetText: [],
-    instaText: "",
+    title: "Hubble's view from space",
+    tourSheetText: [
+      "The Hubble Space Telescope has provided the clearest view to date of Andromeda in visible light (that we can see with our eyes).",
+      "Zoom in to see how much more detail you can notice with Hubble.",
+      "Use the slider to cross-fade between the 2 images.",
+    ],
+    instaText: "Hubble sees this...",
   },
   {
     title: "PHAST Frames",
