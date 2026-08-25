@@ -731,6 +731,8 @@ const roman = useFootprint({
   color: "#ff1900",
   // linewidth: 2, // faking the linewidth can leave artifacts
   show: true,
+  offsetXDeg: 0.05,
+  offsetYDeg: 0,
 });
 const testFootprint = useFootprint({
   id: "roman-fixed-footprint",
