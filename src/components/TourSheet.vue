@@ -46,6 +46,7 @@
       >
         <template #item="{index}">
           <button
+            :class="{ 'tour-dot-active': index === step }"
             @click="() => emit('step', index)"
           >
             ⬤
@@ -161,6 +162,13 @@ p {
       background: none;
       border: none;
       cursor: pointer;
+    }
+    
+    button.tour-dot-active {
+      color: var(--accent-color);
+      --font-delta: 0.5em;
+      font-size: calc(0.5rem + var(--font-delta));
+      margin: calc(-1*var(--font-delta));
     }
   }
 }
