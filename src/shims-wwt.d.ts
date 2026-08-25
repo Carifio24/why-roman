@@ -1,24 +1,43 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Color, RenderContext } from "@wwtelescope/engine";
+import "@wwtelescope/engine";
 
 declare module "@wwtelescope/engine" {
 
-  export namespace Coordinates {
+  namespace Coordinates {
     function parse(data: string): number;
     function parseRA(ra: string, degrees: boolean): number;
     function parseDec(dec: string): number;
   }
 
-  export const ss;
-
-  export class Matrix3d {}
-
-  export class Vector3d {
-    static create(x: number, y: number, z: number): Vector3d;
+  interface Matrix3d {
+    clone(): Matrix3d;
+    invert(): void;
   }
 
-  export class SimpleLineList {
+  namespace Matrix3d {
+    function multiplyMatrix(matrix1: Matrix3d, matrix2: Matrix3d): Matrix3d;
+    function rotationYawPitchRoll(yaw: number, pitch: number, roll: number): Matrix3d;
+    function lookAtLH(cameraPosition: Vector3d, cameraTarget: Vector3d, cameraUpVector: Vector3d): Matrix3d;
+  }
+
+  namespace Vector3d {
+    function create(x: number, y: number, z: number): Vector3d;
+  }
+
+  interface RenderContext {
+    makeFrustum(): void;
+    set_projection(mat: Matrix3d): void;
+    set_view(mat: Matrix3d): void;
+    set_world(mat: Matrix3d): void;
+    set_worldBase(mat: Matrix3d): void;
+    get_projection(): Matrix3d;
+    get_view(): Matrix3d;
+    get_world(): Matrix3d;
+    get_worldBase(): Matrix3d;
+  }
+
+  class SimpleLineList {
     pure2D: boolean;
     viewTransform: Matrix3d;
     set_depthBuffered(buffered: boolean): void;
@@ -27,11 +46,11 @@ declare module "@wwtelescope/engine" {
     clear(): void;
   }
 
-  export class Dates {
+  class Dates {
     constructor(start: number, end: number);
   }
 
-  export class TriangleList {
+  class TriangleList {
     pure2D: boolean | undefined;
     depthBuffered: boolean;
     addTriangle(v1: Vector3d, v2: Vector3d, v3: Vector3d, color: Color, date: Dates): void;
@@ -39,4 +58,5 @@ declare module "@wwtelescope/engine" {
     draw(renderContext: RenderContext, opacity: number, cull: boolean): void;
     clear(): void;
   }
+
 }

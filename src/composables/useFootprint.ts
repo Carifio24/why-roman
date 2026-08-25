@@ -4,11 +4,6 @@ import { Color, WWTControl } from "@wwtelescope/engine";
 import { drawFootprint, drawStaticFootprint } from "../footprint";
 import type { Point } from "../footprints/types";
 
-// the shadow canvas the moving footprints project through, matching the
-// #shadow-roman-footprint element in RomanFov.vue. they all share it, since
-// footprint.ts keeps one fake WWTControl per canvas
-const SHADOW_CANVAS_ID = "shadow-footprint";
-
 export interface FootprintOptions {
   id: string; // must be unique, or else will 2nd+ instance of id will not get rendered
   footprint: Point[][]; // [ [box1], [box2], ... ] in degrees, each box is a loop of points (no longer needs to be self-closing)
@@ -31,7 +26,6 @@ export interface FootprintOptions {
    * this for real observation footprints
    */
   fixed?: boolean;
-  canvasId?: string; // vestigial - override the default shadow canvas#shadow
   linewidth?: number; // outline width. in pixels. only for floating footprints
 }
 
@@ -46,7 +40,6 @@ export function useFootprint(options: FootprintOptions) {
   // Geometry and placement are fixed for the life of the footprint, so they
   // stay in the closure and out of the settings the UI writes to.
   const { id, footprint, offsetXDeg, offsetYDeg } = options;
-  const canvasId = options.canvasId ?? SHADOW_CANVAS_ID;
   const drawWith = options.fixed ? drawStaticFootprint : drawFootprint;
 
   // shallowReactive, not reactive: every setting here is a primitive, so deep
@@ -64,7 +57,6 @@ export function useFootprint(options: FootprintOptions) {
     draw(wwt: WWTControl) {
       drawWith(wwt, {
         id,
-        canvasId,
         footprint,
         color: Color.load(this.color),
         fill: this.fill,
