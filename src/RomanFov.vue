@@ -2212,8 +2212,6 @@ body {
   width: 40%;
 }
 
-
-
 // small devices in portrait: side panel becomes a bottom panel instead of a
 // side column
 #app.app-is-small.app-is-portrait {
@@ -2741,6 +2739,10 @@ h1.startup-screen-title {
 /* Its own set of definitions, deliberately duplicating #side-drawer's, so the
    tour sheet can float in landscape without dragging the drawer along. */
 #side-drawer-tour-sheet {
+  // the box TourSheet.vue sizes its text against, per layout
+  --container-width: 34vw;
+  --container-height: 100vh;
+
   flex: 0 0 auto;
   order: -1;
   width: 0;
@@ -2756,6 +2758,9 @@ h1.startup-screen-title {
 #app.app-is-small.app-is-portrait {
 
   #side-drawer-tour-sheet {
+    --container-width: 100vw;
+    --container-height: 34vh;
+
     order: 1;
     width: 100%;
     height: 0;
@@ -2773,6 +2778,9 @@ h1.startup-screen-title {
 // viewport 1:1, so position: fixed here lands in the same place as
 // anchoring to #app would.
 #app.app-is-landscape #side-drawer-tour-sheet {
+  --container-width: 34vw;
+  --container-height: 50vh; // matches max-height below
+
   position: fixed;
   left: 0;
   bottom: 0;

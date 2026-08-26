@@ -143,15 +143,26 @@ p {
   margin-top: 0.5rem;
 }
 
-// large-landscape's box is a fixed ~34% of the screen height (see
-// RomanFov.vue's #app.app-is-large-landscape #side-drawer), so a step with a
-// full paragraph of text needs a smaller size to fit without scrolling
-#app.app-is-large-landscape #tour-text {
-  font-size: calc(1.3 * var(--default-font-size));
+// Sizes text off the box's own dimensions (--container-width/-height, set per
+// layout on #side-drawer-tour-sheet in RomanFov.vue) instead of the raw
+// viewport, so it scales with how much room TourSheet actually has rather than
+// the whole screen. Averages width and height rather than picking either
+// extreme: the large-portrait column is narrow but full height, the portrait
+// bottom panel is wide but short, and the landscape box is narrow and short --
+// sizing off only the generous dimension overflows the tight one, and off only
+// the tight one looks needlessly small.
+#tour-text {
+  font-size: clamp(
+    1rem,
+    calc(0.025 * (var(--container-width) + var(--container-height))),
+    2rem
+  );
+}
 
-  p {
-    margin-top: 0.25rem;
-  }
+// the landscape box is the short floating one (~50vh), so a step with a full
+// paragraph needs tighter spacing to fit
+#app.app-is-landscape #tour-text p {
+  margin-top: 0.25rem;
 }
 
 #tour-text {
@@ -177,10 +188,6 @@ p {
   height: calc(100% - 0.5rem);
 }
 
-.selected-info-tall.info-box {
-  font-size: calc(1.3 * var(--default-font-size));
-}
-
 // Copied from rubin-first-look. Positions the floating tour text against
 // #wwt-overlay, in the corner the place cards vacate during a tour.
 // Sizing lives on #tour-text; this is just the box itself.
@@ -200,7 +207,7 @@ p {
   width: 100%;
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: visible;
+  overflow-y: auto;
 }
 
 .selected-info-scroll {
@@ -258,21 +265,14 @@ p {
   }
 }
 
-// .selected-info-tall (small+portrait bottom panel) and #app.app-is-large-landscape
-// (large-screen lower-left overlay, from RomanFov.vue) are the two short-box
-// cases -- .selected-info-tall doesn't actually shorten the box in landscape
-// on its own, but the rule stays scoped this way rather than to width alone
-// since a plain landscape media query would also hit the full-height small
-// side-column case, which doesn't need shrunk buttons.
-@media (orientation: landscape) {
-  .selected-info.selected-info-tall .tour-text-controls .v-btn,
-  #app.app-is-large-landscape .tour-text-controls .v-btn {
-    --v-btn-size: 0.75rem;
-    --v-btn-height: 28px;
-    font-size: var(--v-btn-size);
-    min-width: 50px;
-    padding: 0 12px;
-  }
+// landscape is the short floating box in every size now, so the buttons shrink
+// to leave the step's text as much of it as possible
+#app.app-is-landscape .tour-text-controls .v-btn {
+  --v-btn-size: 0.75rem;
+  --v-btn-height: 28px;
+  font-size: var(--v-btn-size);
+  min-width: 50px;
+  padding: 0 12px;
 }
 
 
