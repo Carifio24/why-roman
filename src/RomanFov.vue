@@ -1043,8 +1043,8 @@ const tourParam = searchParams.get("tour");
 // a step without a tour to put it in means nothing. the param is 1-indexed,
 const tourStepParam = tourParam === null ? 0 : +(searchParams.get("tourStep") ?? 1) - 1;
 
-// const showStartup = ref(!returning && tourParam === null);
-const showStartup = ref(false);
+const showStartup = ref(!returning && tourParam === null);
+// const showStartup = ref(false);
 const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
