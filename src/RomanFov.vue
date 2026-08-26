@@ -2303,6 +2303,13 @@ body {
   // runs off the bottom of the screen.
   align-self: stretch;
   min-height: 0;
+
+  // just keep the icons as cicles
+  // it is usually sized by the icon, but for some reason the (i)
+  // one was starting skinny then becoming a circle
+  .icon-wrapper {
+    aspect-ratio: 1 / 1;
+  }
 }
 
 // #top-content is pointer-events: none so drags fall through to WWT, so the
