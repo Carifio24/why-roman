@@ -2721,6 +2721,13 @@ h1.startup-screen-title {
   width: min(100%, 320px);
 }
 
+#startup-screen-content > span {
+  text-shadow: 0 2px 8px black; //var(--background-color);
+  filter: drop-shadow(0px 2px 6px black);
+  font-weight: 600;
+  
+}
+
 // Fill and contrast text come from the `color` prop, shape from `rounded`.
 // Only the casing needs overriding.
 .v-btn.startup-button {
