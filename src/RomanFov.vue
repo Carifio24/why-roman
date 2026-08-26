@@ -702,6 +702,7 @@ const textColor = ref("#F5F0FF");
  */
 import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
 import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
+import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
 import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
 import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint";
@@ -733,6 +734,15 @@ const roman = useFootprint({
   show: true,
   offsetXDeg: 0.05,
   offsetYDeg: 0,
+});
+
+console.log(romanPixelFootprint);
+const romanPixel = useFootprint({
+  id: "roman-pixel-grid",
+  label: "Roman Pixel Grid",
+  footprint: romanPixelFootprint,
+  color: "#0000ff",
+  show: true,
 });
 const testFootprint = useFootprint({
   id: "roman-fixed-footprint",
@@ -865,6 +875,7 @@ const m31SfDiskOutline = useFootprint({
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [
   roman,
+  romanPixel,
   jwst,
   hubble,
   
@@ -905,7 +916,7 @@ function handleSplashClose() {
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
-  startTourFromStartup("andromeda");
+  // startTourFromStartup("andromeda");
   hasSeenIntroSlides.value = true;
 }
 
@@ -1059,7 +1070,7 @@ const andromedaTitles = [
 
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(phast, phastI, roman, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
     return;
@@ -1386,7 +1397,7 @@ function selectPlace(id: string) {
     leaveTour();
   }
   selectedPlaceId.value = id;
-  goToStep(0);
+  goToStep(1);
 }
 
 /* bring up an experience's layers */
