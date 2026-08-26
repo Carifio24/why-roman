@@ -3,67 +3,38 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
-    <div
-      v-if="tourId === 'andromeda'"
-      class="selected-info-tour"
-    >
-      <h3>Andromeda</h3>
-      <div v-if="step === 0">
-        <p>
-          The Andromeda Galaxy, our nearest neighboring spiral galaxy is located over 2 million light years away. 
-        </p>
-        
-        <p>
-          Visible to the unaided eye as a faint smudge in the constellation of Andromeda, it is spans
-          3 degrees, or the width of 6 ful moons, on the night sky. 
-        </p>
-        
-        <p>
-          The current view shows an optical image of the galaxy from the Digitized Sky Survey. 
-          The data was taken from a 1.2 m telescope at Palomar Observatory. 
-        </p>
-      </div>
-      <div v-if="step === 1">
-        <p></p>
-      </div>
-      <div v-if="step === 2">
-        <p></p>
-      </div>
-      <div v-if="step === 3">
-        <p></p>
-      </div>
-      <div v-if="step === 4">
-        <p></p>
-      </div>
-      <div v-if="step === 4">
-        <p></p>
-      </div>
-    </div>
-    <div
-      v-if="tourId === 'carina'"
-      class="selected-info-tour">
-      <h3>Carina</h3>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-        Illo eligendi at accusantium, corporis, vitae est dolorem 
-        suscipit aut, inventore dignissimos ab! Ipsa ab cupiditate 
-        quae voluptas, molestias repudiandae necessitatibus natus!
-      </p>
-    </div>
-    <v-spacer />
-    <div class="tour-text-controls">
-      <v-btn
-        v-if="step > 0"
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('previous')"
+    <!-- fill either slot to replace the step's own content, so callers can put
+     something else in this box without passing it all in as props -->
+    <slot>
+      <div
+        v-if="currentStep"
+        class="selected-info-tour"
       >
-        Previous
-      </v-btn>
-      
-      <!-- <v-btn
+        <h3 v-if="currentStep.title">
+          {{ currentStep.title }}
+        </h3>
+        <p
+          v-for="(paragraph, i) in currentStep.tourSheetText"
+          :key="i"
+        >
+          {{ paragraph }}
+        </p>
+      </div>
+    </slot>
+    <v-spacer />
+    <slot name="controls">
+      <div class="tour-text-controls">
+        <v-btn
+          :class="{ 'tour-back-button-hidden': step === 0 }"
+          variant="flat"
+          color="#502752"
+          rounded="lg"
+          @click="emit('previous')"
+        >
+          Back
+        </v-btn>
+
+        <!-- <v-btn
         variant="flat"
         color="#502752"
         size="small"
@@ -72,59 +43,62 @@
       >
         Leave Tour
       </v-btn> -->
-      <v-spacer />
-      <v-btn
-        v-if="step < totalSteps - 1"
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('next')"
-      >
-        Next
-      </v-btn>
-    </div>
-    <v-breadcrumbs 
-      class="justify-space-evenly"
-      :items="items"
-      divider=""
-    >
-      <template #item="{index}"> 
-        <button 
-          @click="() => emit('step', index)">
-          ⬤ 
-        </button>
-      </template>
-    </v-breadcrumbs>
-    <v-progress-linear
-      :model-value="progress"
-      class="mt-2"
-      height="6"
-      rounded
-    />
+        <v-breadcrumbs
+          v-if="showBreadcrumbs"
+          class="tour-dots"
+          :items="items"
+          divider=""
+        >
+          <template #item="{index}">
+            <!-- get rid of {{  index +1 }} for production -->
+            <button
+              :class="{ 'tour-dot-active': index === step }"
+              @click="() => emit('step', index)"
+            >
+              ⬤
+            </button>
+          </template>
+        </v-breadcrumbs>
+        <v-btn
+          v-if="step < totalSteps - 1"
+          variant="flat"
+          color="#502752"
+          rounded="lg"
+          @click="emit('next')"
+        >
+          Next
+        </v-btn>
+      </div>
+    </slot>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { tourExperiences } from '../experiences';
 interface Props {
   tourId: string,
   smallSize: boolean,
   step: number,
-  totalSteps: number,
-  progress: number,
+  /** the step dots. off once the tour is done stepping */
+  showBreadcrumbs?: boolean,
 }
 
-const props = defineProps<Props>();
-  
+const props = withDefaults(defineProps<Props>(), {
+  showBreadcrumbs: true,
+});
+
 // const emit = defineEmits(['previous', 'next', 'leave',]);
 const emit = defineEmits<{
   (e: 'previous' | 'next' | 'leave'): void;
   (e: 'step', index: number): void;
 }>();
 
+const currentStep = computed(() => tourExperiences[props.tourId]?.[props.step]);
+const totalSteps = computed(() => tourExperiences[props.tourId]?.length ?? 0);
+
 const items = computed(() => {
-  return Array.from({ length: props.totalSteps }).map((_, index) => ({
+  return Array.from({ length: totalSteps.value }).map((_, index) => ({
     title: '',
     disabled: index !== props.step,
   }));
@@ -134,17 +108,22 @@ const items = computed(() => {
 
 <style lang="less">
 
+p {
+  margin-top: 0.5rem;
+}
+
 .info-box {
-  font-size: 0.9rem;
+  font-size: calc(1.5 * var(--default-font-size));
   color: white;
   background: rgba(10, 5, 21, 0.7);
-  border: 1px solid;
+  border: 2px solid;
   border-radius: 5px;
   padding: 0.5rem;
+  margin: 0.25rem;
   pointer-events: auto;
   border-color: var(--border-color);
   // width: 100%;
-  height: 100%;
+  height: calc(100% - 0.5rem);
 }
 
 // Copied from rubin-first-look. Positions the floating tour text against
@@ -156,19 +135,58 @@ const items = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 100%;
-}
-.selected-info.selected-info-tall {
-  // max-width: 60%;
-  // top: 20px;
+  height: calc(100% - 0.5rem);
+  overflow-y: auto;
 }
 
 .tour-text-controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin-top: 0.5rem;
+
+  .tour-back-button-hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .tour-dots {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 14rem;
+    margin: 0 auto;
+    justify-content: space-evenly;
+    padding: 0;
+
+    .v-breadcrumbs-item {
+      padding: 0 1px;
+    }
+
+    // divider="" still renders the divider items, and their padding is what
+    // made the row too wide to fit
+    .v-breadcrumbs-divider {
+      padding: 0 2px;
+    }
+
+    button {
+      padding: 0;
+      font-size: 0.5rem;
+      line-height: 1;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    button.tour-dot-active {
+      color: var(--accent-color);
+      --font-delta: 0.25em;
+      font-size: calc(0.5rem + var(--font-delta));
+      margin: calc(-1*var(--font-delta));
+      z-index: 10;
+    }
+  }
 }
 
 </style>

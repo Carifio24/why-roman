@@ -37,7 +37,7 @@
           />
         </label>
       </div>
-      <div>
+      <div v-if="showOpacity">
         <input
           v-model.number="opacity"
           type="range"
@@ -58,10 +58,13 @@ interface Props {
   label: string;
   /** offer the fill toggle. most footprints aren't filled */
   showFill?: boolean;
+  /** the per-footprint opacity slider. off where the box is already busy */
+  showOpacity?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   showFill: false,
+  showOpacity: true,
 });
 
 const opacity = defineModel<number>("opacity", { required: true });
@@ -94,7 +97,6 @@ const shown = computed({
   padding: 0.5em;
   pointer-events: auto;
   user-select: none;
-  width: 250px;
 }
 
 /* The slider sits under the label rather than beside it. */

@@ -1,10 +1,13 @@
 <template>
   <v-snackbar
     v-model="show"
+    class="gesture-preview-overlay"
     :content-class="['gesture-preview', smallScreen ? 'small' : '']"
     rounded="large"
     :timeout="6000000"
-    location="left center"
+    location="bottom left"
+    attach="#main-content"
+    contained
     close-on-content-click
     :min-width="0"
   >
@@ -53,18 +56,15 @@
       </div>
     </template>
     <template
-      v-if="!smallScreen"
       #actions
     >
-      <v-btn
+      <v-icon
         class="mx-2"
-        density="comfortable"
-        rounded="lg"
-        text="Close"
-        variant="tonal"
-        @click.stop="show = false"
-        @keyup.enter.stop="show = false"
-      ></v-btn>
+        icon="mdi-close"
+        tabindex="0"
+        @click.stop="handleClose"
+        @keyup.enter.stop="handleClose"
+      ></v-icon>
     </template>
   </v-snackbar>
 </template>
@@ -76,17 +76,32 @@ import { supportsTouchscreen } from '@cosmicds/vue-toolkit';
 const touchscreen = supportsTouchscreen();
 // const iconSize = ref('large');
 import { useDisplay } from 'vuetify';
-const show = ref(true);
+const show = defineModel<boolean>({default: true});
 const smallScreen = useDisplay().smAndDown;
 const iconSize = ref(smallScreen.value ? 'small' : 'large');
+
+const props = defineProps({
+  closeOnClick: {
+    type: Boolean,
+    default: true,
+  }, 
+});
 const hide = () => show.value = false;
 
 onMounted(() => {
   console.log('showing gesture preview');
-  setTimeout(() => {
-    window.addEventListener('pointerdown', hide, { once: true });
-  }, 0);
+  if (props.closeOnClick) {
+    setTimeout(() => {
+      window.addEventListener('pointerdown', hide, { once: true });
+    }, 0);
+  }
 });
+
+const emit = defineEmits(['close']);
+const handleClose = () => {
+  show.value = false;
+  emit('close');
+};
 
 onUnmounted(() => {
   window.removeEventListener('pointerdown', hide);
@@ -95,9 +110,13 @@ onUnmounted(() => {
 
 
 <style>
+.v-overlay.gesture-preview-overlay {
+  margin: 0;
+  padding: 0 0 1rem 1rem;
+}
+
 .v-overlay__content.v-snackbar__wrapper.v-snackbar--variant-elevated.gesture-preview {
   border: 1px solid var(--accent-color);
-  margin-top: 1em;
   padding-inline: 0.75em;
   background-color: #502752ee;
   color: white;

@@ -3,11 +3,12 @@
     id="intro-slides"
     v-model="open"
     class="intro-slides-dialog"
-    :width="500"
-    max-width="50vw"
+    :width="smallSize ? '90vw' : 500"
+    :max-width="smallSize ? '90vw' : '50vw'"
+    :height="smallSize ? '90vh' : undefined"
     :persistent="true"
   >
-    <v-card class="intro-slides-container">
+    <v-card :class="['intro-slides-container', smallSize ? 'intro-slides-small' : '']">
       <v-window 
         v-model="window" 
         class="intro-slides pa-2"
@@ -17,11 +18,11 @@
           :value="0"
         >
           <p>
-            On August 30, 2026, NASA will launch the Nancy Grace Roman Space Telescope into orbit.
+            On August 30, 2026, NASA and SpaceX will launch the Nancy Grace Roman Space Telescope into orbit.
           </p>
           <p>
             <!-- It will travel to “L2” X miles from Earth, near the James Webb Space Telescope.  -->
-            Let's start with Andromeda to see why it's so great!
+            Using the Andromeda Galaxy, let's learn about Roman's capabilities and how they are different from the Hubble and Webb Space Telescopes.
           </p>
           <!-- <v-img
             src="/Trailer_still_1-1.jpg"
@@ -73,8 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useDisplay } from 'vuetify';
 import type { VBtn } from 'vuetify/components/VBtn';
+
+// the dialog is teleported out of #app, so app-is-small can't reach it
+const { smAndDown } = useDisplay();
+const smallSize = computed(() => smAndDown.value);
 
 
 
@@ -96,7 +102,7 @@ const buttonProps = {
 } as Partial<InstanceType<typeof VBtn>['$props']>;
 
 const window = ref(0);
-const NUM_SLIDES = 2;
+const NUM_SLIDES = 1;
 </script>
 
 
@@ -114,6 +120,20 @@ const NUM_SLIDES = 2;
   background-color: rgba(0, 0, 0, 0.9);
   border: 4px solid var(--background-color);
   padding: 1.7rem;
+}
+
+.intro-slides-container.intro-slides-small {
+  height: 100%;
+  min-height: 0;
+  padding: 0.75rem;
+
+  .intro-slides-window-item {
+    font-size: 1.1rem;
+  }
+
+  .intro-slide-button {
+    font-size: 1rem;
+  }
 }
 
 .intro-slides {
