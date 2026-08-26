@@ -25,10 +25,9 @@
             Using the Andromeda Galaxy, let's learn about Roman's capabilities and how they are different from the Hubble and Webb Space Telescopes.
           </p>
           <v-img
+            class="mx-auto"
             src="/nancy_grace_roman.jpeg"
-            aspect-ratio="1"
-            height="150px"
-            cover
+            width="90%"
           />
           <!-- <video loop src="/JWST_L2_Orbit_Animation_HD.webm" /> -->
         </v-window-item>
