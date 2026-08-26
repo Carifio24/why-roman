@@ -27,7 +27,7 @@ const gridRight = gridLeft + GRID_SIZE * PIXEL_SIZE_DEG;
 const gridBottom = gridTop - GRID_SIZE * PIXEL_SIZE_DEG;
 console.log(gridLeft, gridTop);
 
-function createPixelGridLines() {
+function _createPixelGridLines() {
   const lines: PolyLine[] = [];
   for (let i = 0; i <= GRID_SIZE; i++) {
     const verticalLineX = gridLeft + i * PIXEL_SIZE_DEG;
