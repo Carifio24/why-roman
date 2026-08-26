@@ -9,7 +9,11 @@
       density="compact"
       align-tabs="end"
     >
-      <v-tab v-for="tabName in tabs" :key="tabName">
+      <v-tab 
+        v-for="tabName in tabs" 
+        :key="tabName"
+        class="info-sheet-tab" 
+      >
         <h3>{{ tabName }}</h3>
       </v-tab>
     </v-tabs>
@@ -139,6 +143,11 @@ function handleClose() {
   font-size: 0.9em;
 }
 
+.v-tab.v-btn.info-sheet-tab {
+  font-size: 0.9em;
+  padding-inline: 8px;
+}
+
 .info-text {
   display: flex !important;
   flex-direction: column;
@@ -246,6 +255,13 @@ function handleClose() {
       cursor: pointer;
     }
   }
+  
+
+  #close-text-icon {
+    top: 0.25em;
+    right: calc((2em - 0.6875em) / 3);
+  }
+
 
   // This prevents the tabs from having some extra space to the left when the screen is small
   // (around 400px or less)

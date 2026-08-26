@@ -131,7 +131,7 @@ function closeSplashScreen() {
     inset: 0;
     // background-image: url('/roman_early_universe.jpg');
     background-image: url("/Trailer_still_1-1.jpg");
-    filter: grayscale(0.8);
+    filter: grayscale(0.8) brightness(0.8);
 
     background-size: cover;
     background-position: center;

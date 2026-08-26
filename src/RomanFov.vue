@@ -154,22 +154,18 @@
               ></icon-button>
 
               <!-- icon-button owns its own tooltip model, so the close-out
-               call-outs are separate tooltips anchored to its generated id -->
+               call-out is a separate tooltip anchored to its generated id -->
               <v-tooltip
-                :model-value="inTour && showExploreUi"
+                id="callout-tooltip"
+                :model-value="showCallout"
                 activator="#options-closed-button"
-                location="bottom"
+                location="bottom start"
                 :open-on-hover="false"
-                text="Controls"
-              />
-              <v-tooltip
-                :model-value="inTour && showExploreUi"
-                activator="#info-icon-button"
-                location="bottom"
-                :offset="34"
-                :open-on-hover="false"
-                text="Learn more"
-              />
+              >
+                <div><v-icon icon="mdi-tune-variant" /> settings and fields of view</div>
+                <div><v-icon icon="mdi-information-outline" /> more about Roman</div>
+                <div><v-icon icon="mdi-replay" /> play the tour again</div>
+              </v-tooltip>
 
               <!-- <icon-button
                 v-if="showExploreUi"
@@ -320,7 +316,7 @@
             id="position-layout"
             align="start"
             justify="center"
-            class="mb-1 pt-4"
+            class="pt-4"
           >
             <div
               v-if="opacitySliders.length > 0"
@@ -450,19 +446,20 @@
       :class="[(showTextSheet || inTour || showOptions) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
       <TourSheet
-        v-if="activeTour && !showOptions"
+        v-if="activeTour && !showOptions && !showTextSheet"
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
-        :show-breadcrumbs="!showExploreUi"
-        @next="goToStep(tourStep + 1)"
+        show-next-on-last-step
+        :next-text="showExploreUi ? 'Explore' : 'Next'"
+        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
         @step="(index) => goToStep(index)"
       >
         <!-- the close-out step keeps the text but trades the stepper for the
          way out -->
-        <template
+        <!-- <template
           v-if="showExploreUi"
           #controls
         >
@@ -478,11 +475,11 @@
               Explore
             </v-btn>
           </div>
-        </template>
+        </template> -->
       </TourSheet>
 
       <TourSheet
-        v-if="showOptions"
+        v-if="showOptions && !showTextSheet"
         :tour-id="lastTourId"
         :step="tourStep"
         :small-size="smallSize"
@@ -490,13 +487,13 @@
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
-            <h3>Scale</h3>
+            <h3>Zoom level</h3>
             <v-btn
               variant="flat"
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(9, false)"
+              @click="goToScale('galaxy')"
             >
               Galaxy
             </v-btn>
@@ -505,7 +502,7 @@
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(8, false)"
+              @click="goToScale('roman')"
             >
               Roman
             </v-btn>
@@ -514,13 +511,13 @@
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(7, false)"
+              @click="goToScale('pixel')"
             >
               Pixel
             </v-btn>
           </div>
           <div class="tour-controls-column">
-            <h3>FOV</h3>
+            <h3>Field of View</h3>
             <MiniFootprintSettings
               v-for="footprint in visibleFootprints"
               :key="footprint.id"
@@ -573,111 +570,10 @@
         :accent-color="roman.color"
         tab-title="WWT Why Roman"
       >
-        <InfoPage title="Tour">
-          <template v-if="selectedPlaceId === 'eagle'">
-            <h4 class="user-guide-header">The Eagle Nebula (M16)</h4>
-            <p>
-              Hubble's <em>Pillars of Creation</em> captures a few light-years
-              of towering gas and dust where new stars are forming. It's one of
-              the most recognizable images in astronomy, and it covers a tiny
-              patch of sky.
-            </p>
-            <p class="mt-3">
-              Step the slider to <strong>Roman</strong> to bring in the wider
-              view. Roman sees the whole star-forming region at once, at
-              Hubble-like sharpness.
-            </p>
-          </template>
-
-          <template v-else-if="selectedPlaceId">
-            <h4 class="user-guide-header">
-              {{ activeTour?.label }}
-            </h4>
-            <p>
-              Step through with the slider to bring in the wider, Roman-scale
-              view behind the current image.
-            </p>
-          </template>
-
-          <template v-else>
-            <h4 class="user-guide-header">Why Roman</h4>
-            <p>
-              This
-              <a
-                href="https://www.worldwidetelescope.org/home"
-                target="_blank"
-                rel="noopener noreferrer"
-              >WorldWide Telescope</a>
-              (WWT) interactive provides a view of the Roman Space Telescope
-              footprint on the sky.
-            </p>
-            <p class="mt-3">
-              Pick a target from the cards on the right to compare what today's
-              telescopes see with what Roman would.
-            </p>
-          </template>
+        <InfoPage title="View Finder Info">
+          <ViewFinderHelp />
         </InfoPage>
         <InfoPage
-          v-if="showExploreUi"
-          title="Controls"
-        >
-          <div class="d-flex flex-column ga-2">
-            <v-btn
-              v-for="tour in tours"
-              :key="tour.id"
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToPlace(tour.id)"
-            >
-              {{ tour.label }}
-            </v-btn>
-          </div>
-
-          <h3
-            v-if="visibleFootprints.length > 0"
-            class="mt-4"
-          >
-            Satellite fields of view
-          </h3>
-          <MiniFootprintSettings
-            v-for="footprint in visibleFootprints"
-            :key="footprint.id"
-            v-model:opacity="footprint.opacity"
-            v-model:fill="footprint.fill"
-            v-model:color="footprint.color"
-            :label="footprint.label"
-            :show-fill="footprint.id === 'roman-footprint' || true"
-          />
-
-          <div
-            v-for="slider in layerSliders"
-            :key="slider.index"
-          >
-            <label :for="`explore-opacity-${slider.index}`">{{
-              slider.name
-            }}</label>
-            <v-slider
-              :id="`explore-opacity-${slider.index}`"
-              :model-value="opacityOf(slider.index)"
-              :min="0"
-              :max="1"
-              :step="0.01"
-              :color="roman.color"
-              density="compact"
-              hide-details
-              @update:model-value="
-                (value: number) => setOpacity(slider.index, value)
-              "
-            />
-          </div>
-        </InfoPage>
-        <!-- <InfoPage title="View Finder Info">
-                    <ViewFinderHelp />
-                  </InfoPage> -->
-        <InfoPage
-          v-if="selectedPlaceId"
           title="User Guide"
         >
           <UserGuide />
@@ -897,7 +793,7 @@ const testFootprint = useFootprint({
 });
 const jwst = useFootprint({
   id: "jwst-footprint",
-  label: "JWST",
+  label: "Webb",
   footprint: jwstFootprint,
   color: "#002aff",
   offsetXDeg: -0.075, // left
@@ -907,7 +803,7 @@ const jwst = useFootprint({
 });
 const hubble = useFootprint({
   id: "hubble-footprint",
-  label: "WFC3",
+  label: "Hubble",
   footprint: hubbleFootprint,
   color: "#e100ff",
   offsetXDeg: 0.1,
@@ -927,7 +823,7 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "PHAST",
+  label: "M31 Hubble Outline",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
@@ -936,7 +832,7 @@ const phast = useFootprint({
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "PHAST (individual)",
+  label: "M31 Hubble Grid",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
@@ -991,7 +887,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Grid",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -999,7 +895,7 @@ const m31SfDisk = useFootprint({
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Outlines",
   footprint: m31SfDiskFootprintOutline,
   color: "#f58d42",  // TODO: Feel free to change this
   fixed: true,
@@ -1008,6 +904,8 @@ const m31SfDiskOutline = useFootprint({
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [  
+  m31SfDisk,
+  m31SfDiskOutline,
   phast,
   phastI,
   // gbtds,
@@ -1015,12 +913,10 @@ const footprints = [
   // hltds,
   // gps,
   // m31HiDisk,
-  m31SfDisk,
-  m31SfDiskOutline,
   romanPixel,
   roman,
-  jwst,
   hubble,
+  jwst,
 ];
 
 // the currently visible footprints. 
@@ -1028,6 +924,15 @@ const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
 
+const visibleAndShownFootprints = computed(() =>
+  footprints.filter((footprint) => footprint.show && footprint.opacity > 0),
+);
+function hideVisibleFootprints() {
+  // set their opacity to 0
+  footprints.forEach((footprint) => {
+    footprint.opacity = 0;
+  });
+}
 import { useLocalStorage } from "@vueuse/core";
 import { createTextOverlay } from "./text";
 
@@ -1075,10 +980,24 @@ const showTextSheet = ref(false);
 const infoSheetTab = ref(0);
 
 
-function onlyFootprints(...visible: Footprint[]) {
+function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
   footprints.forEach(
-    (footprint) => (footprint.show = visible.includes(footprint)),
+    (footprint, index) => {
+      footprint.show = visible.includes(footprint);
+      if (show) {
+        footprint.opacity = show[visible.indexOf(footprint)] === true ? 1 : 0;
+      }
+    },
   );
+}
+
+function showOnlyFootprints(...visible: Footprint[]) {
+  // hide all "shown" footprints by opacity, and make only visible opacity 1
+  footprints.forEach((footprint) => {
+    if (footprint.show) {
+      footprint.opacity = visible.includes(footprint) ? 1 : 0;
+    }
+  });
 }
 
 const { setOrderForLayers } = useLayerOrdering();
@@ -1210,6 +1129,7 @@ function replayTour() {
 function enterExplore() {
   leaveTour();
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
+  showOptions.value = true; // show the options box by default
 }
 
 // opening the controls at the close-out step ends the tour
@@ -1246,7 +1166,7 @@ const currentViewRad = computed(() => {
 
 function carinaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, jwst, roman);
+    onlyFootprints([hubble, jwst, roman]);
     showImagesets(carinaWtml, 0, 1, 2);
     showOpacitySliders(1, 2);
     goToImageset(carinaWtml, 2, {
@@ -1257,28 +1177,28 @@ function carinaTour(n: number, tour = true) {
     return;
   }
   if (n === 0) { // Andromeda
-    onlyFootprints(); // no footprints
+    onlyFootprints([]); // no footprints
     showImagesets(carinaWtml, 0); // eso widefield image
     showOpacitySliders();
     goToImageset(carinaWtml, 0, { zoom: 0.9, instant: false }); //
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble); // hst cosmic cliffs
+    onlyFootprints([hubble]); // hst cosmic cliffs
     showImagesets(carinaWtml, 0, 1); // wide + hst
     showOpacitySliders(1);
     goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
     return;
   }
   if (n === 2) {
-    onlyFootprints(hubble, jwst);
+    onlyFootprints([hubble, jwst]);
     showImagesets(carinaWtml, 0, 1, 2); // wide + hst + jwst
     showOpacitySliders(1, 2);
     goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
     return;
   }
   if (n === 3) {
-    onlyFootprints(hubble, jwst, roman);
+    onlyFootprints([hubble, jwst, roman]);
     showImagesets(carinaWtml, 0, 1, 2);
     showOpacitySliders(1, 2);
     store.gotoRADecZoom({
@@ -1307,14 +1227,18 @@ const ats = {
 
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints(
+      [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
+      // eslint-disable-next-line no-sparse-arrays
+      [,,true,,,,,]
+    );
     // handle undefined warning buy using the setter
     textVisibilitySetters["roman"]?.(true);
     textVisibilitySetters["hubble"]?.(false);
     textVisibilitySetters["jwst"]?.(false);
-    showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3.4, instant: false });
+    showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
     return;
   }
   /* each step should explicitly set
@@ -1323,9 +1247,10 @@ function andromedaTour(n: number, tour = true) {
    - visible imagesets
    - camera position
    */
+  ats.setMaxStep(n);
   if (n === 0 || n === 1) { // Andromeda & View from the ground
     ats.setMaxStep(0);
-    onlyFootprints(); // no footprints
+    onlyFootprints([]); // no footprints
     showOpacitySliders();
     showImagesets(andromedaWtml); // load wtml, but don't show anything yet
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1345,7 +1270,7 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(phast);
+    onlyFootprints([phast]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1368,12 +1293,12 @@ function andromedaTour(n: number, tour = true) {
         showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
       }
     });
-    ats.setMaxStep(1);
+    
     return;
   }
 
   if (n === 3) {  // "Hubble Took this many images"
-    onlyFootprints(phast); // just show PHAST outlines
+    onlyFootprints([phast]); // just show PHAST outlines
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1383,13 +1308,13 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     }).then(async () => {
-      onlyFootprints(phast, phastI); 
+      onlyFootprints([phast, phastI]); 
     }); // zoom back out
-    ats.setMaxStep(2);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints(jwst);
+    onlyFootprints([jwst]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1399,11 +1324,11 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     });
-    ats.setMaxStep(3);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 5) { // Compare Roman, JWST, and Hubble
-    onlyFootprints(roman, jwst, hubble);
+    onlyFootprints([roman, jwst, hubble]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1413,22 +1338,22 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     });
-    ats.setMaxStep(4);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints([phast, phastI, m31SfDisk, m31SfDiskOutline]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
     if (tour) showEndTourOverlay();
-    ats.setMaxStep(5);
+    ats.setMaxStep(n);
     return;
   }
   
   // step 8
   if (n === 7) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints(romanPixel /* show pixel grid when ready */);
+    onlyFootprints([romanPixel]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1439,7 +1364,7 @@ function andromedaTour(n: number, tour = true) {
       instant: false,
       duration: 3,
     }).then(async () => {
-      onlyFootprints(romanPixel, roman);
+      onlyFootprints([romanPixel, roman]);
       await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
       if (tourStep.value === 7) {
@@ -1452,7 +1377,7 @@ function andromedaTour(n: number, tour = true) {
         });
       }
     });
-    ats.setMaxStep(6);
+    ats.setMaxStep(n);
     return;
   }
   
@@ -1468,7 +1393,7 @@ function andromedaTour(n: number, tour = true) {
   //     rollRad: store.rollRad, // keep the roll we are at
   //     instant: false,
   //   });
-  //   ats.setMaxStep(7);
+  //   ats.setMaxStep(n);
   //   return;
   // }
   
@@ -1485,7 +1410,7 @@ function andromedaTour(n: number, tour = true) {
   //     rollRad: store.rollRad, // keep the roll we are at
   //     instant: false,
   //   });
-  //   ats.setMaxStep(8);
+  //   ats.setMaxStep(n);
   //   return;
   // }
   
@@ -1493,13 +1418,46 @@ function andromedaTour(n: number, tour = true) {
   if (n === 8) {// close out
     tourCloseOut();
     showOpacitySliders();
-    onlyFootprints();
-    ats.setMaxStep(7);
+    onlyFootprints([]);
+    ats.setMaxStep(n);
     return;
   }
   
   
   console.error("andromeda tour does not have step", n);
+}
+
+function goToScale(scale: 'galaxy' | 'roman' | 'pixel') {
+  if (scale === 'galaxy') {
+    // show these 3 and whatever else the user has visible
+    showOnlyFootprints(phast, romanPixel, roman, ...visibleAndShownFootprints.value);
+    store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 3 * 6,
+      instant: false,
+    });
+    return;
+  }  
+  
+  if (scale === 'roman') {
+    // show these 2 and whatever else the user has visible
+    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
+    return store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 2 * 6,
+      instant: false,
+    });
+  } 
+  if (scale === 'pixel') {
+    // show these 3 and whatever else the user has visible
+    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
+    return store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 0.01,
+      instant: false,
+    });
+    
+  }
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
@@ -1509,7 +1467,7 @@ const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
 
 function eagleTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(eagleWtml, 0, 1);
     store.gotoRADecZoom({
       raRad: 274.7457 * D2R,
@@ -1521,7 +1479,7 @@ function eagleTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(hubble);
+    onlyFootprints([hubble]);
     showImagesets(eagleWtml, 1);
     store.gotoRADecZoom({
       raRad: 274.7457 * D2R,
@@ -1533,7 +1491,7 @@ function eagleTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(eagleWtml, 0, 1);
     if (tour) showEndTourOverlay();
     return;
@@ -1548,7 +1506,7 @@ const smacsWtml = useWtmlLoader("SMAC_0723_all_loose.wtml", {
 
 function smacsTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(jwst, roman);
+    onlyFootprints([jwst, roman]);
     showImagesets(smacsWtml, 1, 0);
     goToImageset(smacsWtml, 1, {
       zoom: 0.15,
@@ -1558,7 +1516,7 @@ function smacsTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(jwst);
+    onlyFootprints([jwst]);
     showImagesets(smacsWtml, 1);
     goToImageset(smacsWtml, 1, {
       zoom: 0.15,
@@ -1569,7 +1527,7 @@ function smacsTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(jwst, roman);
+    onlyFootprints([jwst, roman]);
     showImagesets(smacsWtml, 1, 0);
     if (tour) showEndTourOverlay();
     return;
@@ -1584,7 +1542,7 @@ const helixWtml = useWtmlLoader("helix_hst.wtml", {
 
 function helixTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(helixWtml, 0);
     store.gotoRADecZoom({
       raRad: 337.4167 * D2R,
@@ -1596,7 +1554,7 @@ function helixTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(hubble);
+    onlyFootprints([hubble]);
     showImagesets(helixWtml, 0);
     store.gotoRADecZoom({
       raRad: 337.4167 * D2R,
@@ -1608,7 +1566,7 @@ function helixTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(helixWtml, 0);
     if (tour) showEndTourOverlay();
     return;
@@ -1642,6 +1600,23 @@ const activeTour = computed(
 );
 const inTour = computed(() => activeTour.value != null);
 
+// the close-out points at the two buttons it wants you to notice, briefly
+const showCallout = ref(false);
+watch(() => inTour.value && showExploreUi.value, (closingOut) => {
+  if (!closingOut) {
+    showCallout.value = false;
+    return;
+  }
+  // the icons render this tick, so let them land or the tooltip has nothing
+  // to anchor itself to
+  setTimeout(() => (showCallout.value = true), 100);
+});
+watch(showCallout, (shown) => {
+  if (shown) {
+    setTimeout(() => (showCallout.value = false), 7000);
+  }
+});
+
 function leaveTour() {
   if (activeTour.value) {
     activeTour.value.wtml.hide();
@@ -1650,7 +1625,7 @@ function leaveTour() {
   tourStep.value = 0;
   endTourOverlay.value = false;
   showExploreUi.value = true;
-  onlyFootprints();
+  onlyFootprints([]);
   showOptions.value = false;
   // the wtml was just hidden, so nothing is left to put a slider on
   shownImagesets.value = [];
@@ -1674,6 +1649,12 @@ const tourStepTitle = computed(
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
 
 function goToStep(n: number) {
+  // if going backwards, we need undo the tour close out steps
+  if (n < tourStep.value && n < (tourTotalSteps.value - 1)) {
+    if (showExploreUi.value) {
+      showExploreUi.value = false;
+    }
+  }
   tourStep.value = n;
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
@@ -2298,7 +2279,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  font-size: 11pt;
+  font-size: var(--default-font-size);
 
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
@@ -2319,6 +2300,7 @@ body {
   position: absolute;
   inset: 0;
   padding: 1rem;
+  padding-bottom: 0.5rem;
   pointer-events: none;
 
   display: flex;
@@ -2365,6 +2347,13 @@ body {
   // runs off the bottom of the screen.
   align-self: stretch;
   min-height: 0;
+
+  // just keep the icons as cicles
+  // it is usually sized by the icon, but for some reason the (i)
+  // one was starting skinny then becoming a circle
+  .icon-wrapper {
+    aspect-ratio: 1 / 1;
+  }
 }
 
 // #top-content is pointer-events: none so drags fall through to WWT, so the
@@ -2732,6 +2721,13 @@ h1.startup-screen-title {
   width: min(100%, 320px);
 }
 
+#startup-screen-content > span {
+  text-shadow: 0 2px 8px black; //var(--background-color);
+  filter: drop-shadow(0px 2px 6px black);
+  font-weight: 600;
+  
+}
+
 // Fill and contrast text come from the `color` prop, shape from `rounded`.
 // Only the casing needs overriding.
 .v-btn.startup-button {
@@ -2760,6 +2756,7 @@ h1.startup-screen-title {
 
 .opacity-slider-label {
   font-weight: bold;
+  font-size: 0.9em;
   text-align: center;
   color: white;
   background: var(--background-color-darkest);
