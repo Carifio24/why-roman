@@ -26,10 +26,14 @@
     <slot name="controls">
       <div class="tour-text-controls">
         <v-btn
-          :class="{ 'tour-back-button-hidden': step === 0 && !showBackOnFirstStep }"
+          :class="{ 
+            'tour-back-button-hidden': step === 0 && !showBackOnFirstStep,
+            'px-2': smallSize,
+            'mr-1': smallSize,
+          }"
           variant="flat"
+          :density="smallSize ? 'compact' : 'default'"
           color="#502752"
-          rounded="lg"
           @click="emit('previous')"
         >
           {{ backText }}
@@ -64,9 +68,13 @@
         <v-spacer v-else />
         <v-btn
           v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
+          :class="{ 
+            'px-2': smallSize,
+            'ml-1': smallSize
+          }"
           variant="flat"
           color="#502752"
-          rounded="lg"
+          :density="smallSize ? 'compact' : 'default'"
           @click="emit('next')"
         >
           {{ nextText }}
@@ -126,6 +134,7 @@ function simpleMarkdownParse(text: string): string {
   return italicReplaced;
   
 }
+
 </script>
 
 <style lang="less">
@@ -157,6 +166,10 @@ p {
   border-color: var(--border-color);
   // width: 100%;
   height: calc(100% - 0.5rem);
+}
+
+.selected-info-tall.info-box {
+  font-size: calc(1.3 * var(--default-font-size));
 }
 
 // Copied from rubin-first-look. Positions the floating tour text against
