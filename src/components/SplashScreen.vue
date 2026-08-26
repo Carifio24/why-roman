@@ -30,8 +30,9 @@
           <div id="splash-screen-logos">
             <credit-logos
               id="splash-screen-credit-logos"
-              logo-size="5vmin"
-              :default-logos="['cosmicds', 'wwt', 'sciact', 'nasa']"
+              logo-size="clamp(36px, 5vmin, 65px)"
+              :default-logos="['cosmicds', 'wwt', 'nasa']"
+              :extra-logos="cfaExtraLogo"
             />
           </div>
         </div>
@@ -44,6 +45,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { FocusTrap } from "focus-trap-vue";
+import cfaLogo from '../assets/CfA_Logo_Vertical_Reverse.png';
+
+const cfaExtraLogo = [{
+  src: cfaLogo,
+  href: 'https://www.cfa.harvard.edu/',
+  alt: 'Center for Astrophysics | Harvard & Smithsonian Logo',
+  name: 'cfa',
+}];
 
 export interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -258,12 +267,14 @@ function closeSplashScreen() {
     // height: 65px;
     vertical-align: middle;
     margin-inline: 0.5em;
-    }
+    margin-block: 0.25em;
+  }
 
-    @media only screen and (max-width: 600px) {
-      img {
-        // height: 40px;
-      }
+    // the CfA wordmark is a wide, thin image, so at the shared logo-size
+    // height its text reads much smaller than the other (roughly square)
+    // logos
+    .logo-cfa img {
+      height: clamp(39px, 7vmin, 91px);
     }
 
     svg {

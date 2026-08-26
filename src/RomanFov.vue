@@ -399,7 +399,11 @@
               <div>ra deg: {{ (store.raRad * R2D).toFixed(4) }}</div>
               <div>dec deg: {{ (store.decRad * R2D).toFixed(4) }}</div>
             </template>
-            <credit-logos v-if="!smallSize" />
+            <credit-logos
+              v-if="!smallSize"
+              :default-logos="['cosmicds', 'wwt', 'nasa']"
+              :extra-logos="cfaExtraLogo"
+            />
           </footer>
         </div>
       </div>
@@ -755,6 +759,14 @@ import { corners as m31HiDiskFootprint } from "./footprints/roman_2002_m31_hi_di
 import { corners as m31SfDiskFootprint } from "./footprints/roman_2002_m31_sf_disk";
 import { corners as m31SfDiskFootprintOutline } from "./footprints/roman_2002_m31_sf_disk_display";
 import IntroSlides from "./components/IntroSlides.vue";
+import cfaLogo from "./assets/CfA_Logo_Vertical_Reverse.png";
+
+const cfaExtraLogo = [{
+  src: cfaLogo,
+  href: "https://www.cfa.harvard.edu/",
+  alt: "Center for Astrophysics | Harvard & Smithsonian Logo",
+  name: "cfa",
+}];
 
 const roman = useFootprint({
   id: "roman-footprint",
@@ -2417,6 +2429,15 @@ body {
     height: 32px !important;
   }
 
+  #logo-credits .logo-cfa img {
+    height: 44px !important;
+  }
+
+  #logo-credits .logo-nasa {
+    margin-right: 0.5em;
+    margin-left: 0.25em;
+  }
+
   @media (max-height: 599px) {
     img {
       display: none;
@@ -2718,7 +2739,7 @@ h1.startup-screen-title {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  width: min(100%, 320px);
+  width: min(100%, 360px);
 }
 
 #startup-screen-content > span {
