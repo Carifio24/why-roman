@@ -2,7 +2,7 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize && isPortrait ? 'app-is-small' : '', smallSize && !isPortrait ? 'app-is-small-landscape' : '']"
+    :class="[smallSize && isPortrait ? 'app-is-small' : '', smallSize && !isPortrait ? 'app-is-small-landscape' : '', !smallSize && !isPortrait ? 'app-is-large-landscape' : '']"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -2224,10 +2224,10 @@ body {
 }
 
 // a flex sibling of #main-content, so opening it shrinks the WWT view.
-// This is the landscape arrangement (side column, drawer to the left via
-// order: -1) -- it's what both small and large devices use in landscape
-// (app-is-small-landscape only widens it below); app-is-small (portrait)
-// switches to a bottom panel instead.
+// This is the small-device landscape arrangement (side column, drawer to
+// the left via order: -1); app-is-large-landscape overrides it below to an
+// overlay instead (a full-height column is mostly deadspace on a big
+// screen), and app-is-small (portrait) switches to a bottom panel.
 #side-drawer {
   flex: 0 0 auto;
   overflow: hidden;
@@ -2243,6 +2243,24 @@ body {
 // less absolute width to work with than on a large screen
 #app.app-is-small-landscape #side-drawer.side-drawer-open {
   width: 40%;
+}
+
+// large screens in landscape: give #main-content (and so WWT) the full
+// canvas, and float the drawer as a fixed-size box over its lower-left
+// corner instead of a full-height column full of deadspace. #app fills the
+// viewport 1:1, so position: fixed here lands in the same place as
+// anchoring to #app would.
+#app.app-is-large-landscape #side-drawer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+
+  &.side-drawer-open {
+    width: 34%;
+    height: 34%;
+  }
 }
 
 // small devices in portrait: side panel becomes a bottom panel instead of a

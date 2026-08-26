@@ -5,23 +5,24 @@
   >
     <!-- fill either slot to replace the step's own content, so callers can put
      something else in this box without passing it all in as props -->
-    <slot>
-      <div
-        v-if="currentStep"
-        class="selected-info-tour"
-      >
-        <h3 v-if="currentStep.title">
-          {{ currentStep.title }}
-        </h3>
-        <p
-          v-for="(paragraph, i) in currentStep.tourSheetText"
-          :key="i"
+    <div class="selected-info-scroll">
+      <slot>
+        <div
+          v-if="currentStep"
+          class="selected-info-tour"
         >
-          {{ paragraph }}
-        </p>
-      </div>
-    </slot>
-    <v-spacer />
+          <h3 v-if="currentStep.title">
+            {{ currentStep.title }}
+          </h3>
+          <p
+            v-for="(paragraph, i) in currentStep.tourSheetText"
+            :key="i"
+          >
+            {{ paragraph }}
+          </p>
+        </div>
+      </slot>
+    </div>
     <slot name="controls">
       <div class="tour-text-controls">
         <v-btn
@@ -112,6 +113,17 @@ p {
   margin-top: 0.5rem;
 }
 
+// large-landscape's box is a fixed ~34% of the screen height (see
+// RomanFov.vue's #app.app-is-large-landscape #side-drawer), so a step with a
+// full paragraph of text needs a smaller size to fit without scrolling
+#app.app-is-large-landscape #tour-text {
+  font-size: calc(1.3 * var(--default-font-size));
+
+  p {
+    margin-top: 0.25rem;
+  }
+}
+
 .info-box {
   font-size: calc(1.5 * var(--default-font-size));
   color: white;
@@ -136,6 +148,16 @@ p {
   flex-direction: column;
   align-items: flex-start;
   height: calc(100% - 0.5rem);
+}
+
+// the scrollable region: grows to fill whatever space tour-text-controls
+// doesn't need, and scrolls on its own so the controls stay visible even
+// when a step's text doesn't fit (notably in the large-landscape overlay,
+// where the box is a fixed ~34% of the screen height, not full height)
+.selected-info-scroll {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -189,15 +211,22 @@ p {
   }
 }
 
+// .selected-info-tall (small+portrait bottom panel) and #app.app-is-large-landscape
+// (large-screen lower-left overlay, from RomanFov.vue) are the two short-box
+// cases -- .selected-info-tall doesn't actually shorten the box in landscape
+// on its own, but the rule stays scoped this way rather than to width alone
+// since a plain landscape media query would also hit the full-height small
+// side-column case, which doesn't need shrunk buttons.
 @media (orientation: landscape) {
-  .selected-info.selected-info-tall .tour-text-controls .v-btn {
+  .selected-info.selected-info-tall .tour-text-controls .v-btn,
+  #app.app-is-large-landscape .tour-text-controls .v-btn {
     --v-btn-size: 0.75rem;
     --v-btn-height: 28px;
     font-size: var(--v-btn-size);
     min-width: 50px;
     padding: 0 12px;
   }
-}  
+}
 
 
 </style>
