@@ -35,6 +35,14 @@ declare module "@wwtelescope/engine" {
     get_view(): Matrix3d;
     get_world(): Matrix3d;
     get_worldBase(): Matrix3d;
+    executeWithTransforms(
+      transforms: {
+        world?: Matrix3d,
+        view?: Matrix3d,
+        projection?: Matrix3d,
+      },
+      callable: CallableFunction, 
+    );
   }
 
   class SimpleLineList {

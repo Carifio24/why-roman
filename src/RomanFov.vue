@@ -198,10 +198,11 @@
                     v-for="footprint in footprints"
                     :key="footprint.id"
                     v-model:footprint-color="footprint.color"
-                    v-model:fill="footprint.fill"
+                    v-model:fill="footprint.filshow"
                     v-model:fill-opacity="footprint.fillOpacity"
                     v-model:show="footprint.show"
                     :label="footprint.label"
+                    @show="(show: boolean) => showTextOverlay(footprint.id, show)"
                   />
                   <!--                   
                   <div
@@ -731,17 +732,15 @@ const roman = useFootprint({
   footprint: romanFootprint,
   color: "#ff1900",
   // linewidth: 2, // faking the linewidth can leave artifacts
-  show: true,
   offsetXDeg: 0.05,
   offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
 });
 
-console.log(romanPixelFootprint);
 const romanPixel = useFootprint({
   id: "roman-pixel-grid",
   label: "Roman Pixel Grid",
   footprint: romanPixelFootprint,
-  color: "#0000ff",
+  color: "#108de0",
   show: true,
 });
 const testFootprint = useFootprint({
@@ -896,7 +895,7 @@ const visibleFootprints = computed(() =>
 );
 
 import { useLocalStorage } from "@vueuse/core";
-import { useTextOverlays } from "./text";
+import { createTextOverlay } from "./text";
 
 const hasSeenIntroSlides = useLocalStorage("why-roman:hasSeenIntroSlides", false);
 const hasSeenFullTour = useLocalStorage("why-roman:hasSeenFullTour", false);
@@ -931,7 +930,6 @@ function onlyFootprints(...visible: Footprint[]) {
 }
 
 const { setOrderForLayers } = useLayerOrdering();
-
 
 const shownImagesets = ref<number[]>([]);
 const layerOpacities = ref<Record<number, number>>({});
@@ -1071,6 +1069,9 @@ const andromedaTitles = [
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
     onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    setRomanTextVisible(true);
+    setHubbleTextVisible(false);
+    setJWSTTextVisible(false);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
     return;
@@ -1454,7 +1455,14 @@ const settings = Settings.get_active();
 
 const webglDisabled = ref(false);
 
-let show: Ref<boolean>;
+const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
+
+function showTextOverlay(id: string, show: boolean) {
+  const setter = textVisibilitySetters[id];
+  if (setter) {
+    setter(show);
+  }
+}
 
 const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 // onBeforeMount(() => {
@@ -1493,27 +1501,33 @@ onMounted(() => {
     control.renderOneFrame();
     control.renderOneFrame = renderOneFrame.bind(control);
 
-    const overlayResults = useTextOverlays(store, renderContext);
-    show = overlayResults.show;
-    const createTextOverlay = overlayResults.createTextOverlay;
-
-    createTextOverlay({
-      text: "Roman",
-      center: Coordinates.raDecTo3d(0, 10),
+    const { setVisible: setRomanTextVisible } = createTextOverlay({
+      store,
       renderContext,
+      text: "Roman",
+      center: Coordinates.raDecTo3d(-0.001, 0.4),
+      color: "#ff1900",
     });
-    // createTextOverlay({
-    //   text: "Hubble",
-    //   center: Coordinates.raDecTo3d(0, 0),
-    //   renderContext,
-    // });
-    // createTextOverlay({
-    //   text: "JWST",
-    //   center: Coordinates.raDecTo3d(1, 10),
-    //   renderContext,
-    // });
+    const { setVisible: setHubbleTextVisible } = createTextOverlay({
+      store,
+      renderContext,
+      text: "Hubble",
+      center: Coordinates.raDecTo3d(-0.01, -0.3),
+      color: "#e100ff",
+      scale: 0.0005,
+    });
+    const { setVisible: setJWSTTextVisible } = createTextOverlay({
+      store,
+      renderContext,
+      text: "JWST",
+      center: Coordinates.raDecTo3d(0.01, -0.3),
+      color: "#002aff",
+      scale: 0.0005,
+    });
 
-    // show.value = true;
+    textVisibilitySetters[roman.id] = setRomanTextVisible;
+    textVisibilitySetters[hubble.id] = setHubbleTextVisible;
+    textVisibilitySetters[jwst.id] = setJWSTTextVisible;
 
     const cameraParams = { ...props.initialCameraParams };
     const query = new URLSearchParams(window.location.search);

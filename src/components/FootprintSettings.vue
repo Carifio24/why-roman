@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { useId } from "vue";
+import { useId, watch } from "vue";
 
 interface Props {
   /** footprint label, e.g. "Roman" */
@@ -55,12 +55,18 @@ withDefaults(defineProps<Props>(), {
   label: "Footprint",
 });
 
+const emit = defineEmits<{
+  show: [shown: boolean]
+}>();
+
 // hex string
 const footprintColor = defineModel<string>("footprintColor", { required: true });
 const fill = defineModel<boolean>("fill", { required: true });
 const fillOpacity = defineModel<number>("fillOpacity", { required: true });
 // whether the footprint is drawn at all
 const show = defineModel<boolean>("show", { default: true });
+
+watch(show, (shown: boolean) => emit("show", shown));
 
 /* several of these render at once, and a hardcoded id would duplicate and
    break the id/aria association */
