@@ -23,8 +23,8 @@
         @close="handleSplashClose"
       >
         <div id="startup-screen-content">
-          <h1 class="startup-screen-title">Why Roman</h1>
-          <span>Learn why NASA is launching the  Nancy Grace Roman Space Telescope</span>
+          <h1 class="startup-screen-title">Why Roman?</h1>
+          <span>Learn why NASA is launching a new space telescope</span>
           <!-- <v-btn
             v-for="tour in tours"
             :key="tour.id"
@@ -366,7 +366,7 @@
                 />
               </template>
             </div>
-            <template v-if="true">
+            <template v-if="false">
               <div>zoom deg: {{ (store.zoomDeg / 6).toFixed(2) }}</div>
               <div>ra deg: {{ (store.raRad * R2D).toFixed(4) }}</div>
               <div>dec deg: {{ (store.decRad * R2D).toFixed(4) }}</div>
