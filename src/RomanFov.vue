@@ -2,7 +2,7 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize ? 'app-is-small' : '']"
+    :class="[smallSize && isPortrait ? 'app-is-small' : '']"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -674,7 +674,9 @@ const backgroundImagesetName = computed({
 
 useWWTKeyboardControls(store);
 
-const { smAndDown } = useDisplay();
+const { height, width, smAndDown } = useDisplay();
+
+const isPortrait = computed(() => height.value >= width.value);
 
 const props = withDefaults(defineProps<RomanFovProps>(), {
   wwtNamespace: "roman-fov",
@@ -2179,6 +2181,10 @@ body {
 #app.app-is-small > .v-application__wrap {
   flex-direction: column; // side panel becomes a bottom panel
   max-height: 100svh;
+
+  #side-drawer {
+    order: 1;
+  }
 }
 
 #main-content {
@@ -2199,6 +2205,7 @@ body {
   flex: 0 0 auto;
   overflow: hidden;
   width: 0;
+  order: -1;
 
   &.side-drawer-open {
     width: 34%;
