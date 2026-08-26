@@ -730,7 +730,7 @@ const roman = useFootprint({
   label: "Roman",
   footprint: romanFootprint,
   color: "#ff1900",
-  linewidth: 2, // faking the linewidth can leave artifacts
+  // linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
   offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
 });
@@ -767,7 +767,7 @@ const jwst = useFootprint({
   color: "#002aff",
   offsetXDeg: -0.075, // left
   offsetYDeg: 0.2, // down
-  linewidth: 2,
+  // linewidth: 2,
   show: false,
 });
 const hubble = useFootprint({
@@ -777,7 +777,7 @@ const hubble = useFootprint({
   color: "#e100ff",
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
-  linewidth: 2, 
+  // linewidth: 2, 
   show: false,
 });
 // const wfpc2 = useFootprint({
