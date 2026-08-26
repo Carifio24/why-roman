@@ -497,7 +497,7 @@
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(9, false)"
+              @click="goToScale('galaxy')"
             >
               Galaxy
             </v-btn>
@@ -506,7 +506,7 @@
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(8, false)"
+              @click="goToScale('roman')"
             >
               Roman
             </v-btn>
@@ -515,7 +515,7 @@
               color="#502752"
               size="small"
               rounded="lg"
-              @click="andromedaTour(7, false)"
+              @click="goToScale('pixel')"
             >
               Pixel
             </v-btn>
@@ -1026,6 +1026,10 @@ const footprints = [
 const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
+
+const visibleAndShownFootprints = computed(() =>
+  footprints.filter((footprint) => footprint.show && footprint.opacity > 0),
+);
 function hideVisibleFootprints() {
   // set their opacity to 0
   footprints.forEach((footprint) => {
@@ -1088,6 +1092,15 @@ function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
       }
     },
   );
+}
+
+function showOnlyFootprints(...visible: Footprint[]) {
+  // hide all "shown" footprints by opacity, and make only visible opacity 1
+  footprints.forEach((footprint) => {
+    if (footprint.show) {
+      footprint.opacity = visible.includes(footprint) ? 1 : 0;
+    }
+  });
 }
 
 const { setOrderForLayers } = useLayerOrdering();
@@ -1508,6 +1521,39 @@ function andromedaTour(n: number, tour = true) {
   
   
   console.error("andromeda tour does not have step", n);
+}
+
+function goToScale(scale: 'galaxy' | 'roman' | 'pixel') {
+  if (scale === 'galaxy') {
+    // show these 3 and whatever else the user has visible
+    showOnlyFootprints(phast, romanPixel, roman, ...visibleAndShownFootprints.value);
+    store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 3 * 6,
+      instant: false,
+    });
+    return;
+  }  
+  
+  if (scale === 'roman') {
+    // show these 2 and whatever else the user has visible
+    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
+    return store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 2 * 6,
+      instant: false,
+    });
+  } 
+  if (scale === 'pixel') {
+    // show these 3 and whatever else the user has visible
+    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
+    return store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 0.01,
+      instant: false,
+    });
+    
+  }
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
