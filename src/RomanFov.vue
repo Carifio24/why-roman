@@ -2211,11 +2211,6 @@ body {
       height: 34%;
     }
   }
-
-  // the drawer is wide and short here, so the columns fit side by side
-  #tour-controls {
-    flex-direction: row;
-  }
 }
 
 #app {
@@ -2599,6 +2594,14 @@ video {
   }
 }
 
+// short drawers: columns side by side, so the height goes to the content
+// rather than to stacking, and the close button stays in the corner instead of
+// dropping below both columns
+#app.app-is-small #tour-controls,
+#app.app-is-landscape #tour-controls {
+  flex-direction: row;
+}
+
 #tour-controls {
   display: flex;
   flex-direction: column;
@@ -2739,11 +2742,6 @@ h1.startup-screen-title {
     &.side-drawer-open {
       height: 34%;
     }
-  }
-
-  // the drawer is wide and short here, so the columns fit side by side
-  #tour-controls {
-    flex-direction: row;
   }
 }
 
