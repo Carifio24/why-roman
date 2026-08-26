@@ -533,32 +533,6 @@
             @click="showOptions = false"
           />
         </div>
-        <template #controls>
-          <!-- an empty slot falls back to the stepper, so this div always renders -->
-          <div>
-            <div
-              v-for="slider in layerSliders"
-              :key="slider.index"
-            >
-              <label :for="`controls-opacity-${slider.index}`">{{
-                slider.name
-              }}</label>
-              <v-slider
-                :id="`controls-opacity-${slider.index}`"
-                :model-value="opacityOf(slider.index)"
-                :min="0"
-                :max="1"
-                :step="0.01"
-                :color="roman.color"
-                density="compact"
-                hide-details
-                @update:model-value="
-                  (value: number) => setOpacity(slider.index, value)
-                "
-              />
-            </div>
-          </div>
-        </template>
       </TourSheet>
       <InformationSheet
         v-if="showTextSheet"
