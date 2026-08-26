@@ -154,22 +154,18 @@
               ></icon-button>
 
               <!-- icon-button owns its own tooltip model, so the close-out
-               call-outs are separate tooltips anchored to its generated id -->
+               call-out is a separate tooltip anchored to its generated id -->
               <v-tooltip
-                :model-value="inTour && showExploreUi"
+                id="callout-tooltip"
+                :model-value="showCallout"
                 activator="#options-closed-button"
-                location="bottom"
+                location="bottom start"
                 :open-on-hover="false"
-                text="Controls"
-              />
-              <v-tooltip
-                :model-value="inTour && showExploreUi"
-                activator="#info-icon-button"
-                location="bottom"
-                :offset="34"
-                :open-on-hover="false"
-                text="Learn more"
-              />
+              >
+                <div><v-icon icon="mdi-tune-variant" /> settings and fields of view</div>
+                <div><v-icon icon="mdi-information-outline" /> more about Roman</div>
+                <div><v-icon icon="mdi-replay" /> play the tour again</div>
+              </v-tooltip>
 
               <!-- <icon-button
                 v-if="showExploreUi"
@@ -1274,7 +1270,7 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(phast);
+    onlyFootprints([phast]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1603,6 +1599,23 @@ const activeTour = computed(
   () => tours.find((t) => t.id === selectedPlaceId.value) ?? null,
 );
 const inTour = computed(() => activeTour.value != null);
+
+// the close-out points at the two buttons it wants you to notice, briefly
+const showCallout = ref(false);
+watch(() => inTour.value && showExploreUi.value, (closingOut) => {
+  if (!closingOut) {
+    showCallout.value = false;
+    return;
+  }
+  // the icons render this tick, so let them land or the tooltip has nothing
+  // to anchor itself to
+  setTimeout(() => (showCallout.value = true), 100);
+});
+watch(showCallout, (shown) => {
+  if (shown) {
+    setTimeout(() => (showCallout.value = false), 7000);
+  }
+});
 
 function leaveTour() {
   if (activeTour.value) {
@@ -2266,7 +2279,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  font-size: 11pt;
+  font-size: var(--default-font-size);
 
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
@@ -2706,6 +2719,13 @@ h1.startup-screen-title {
   align-items: center;
   gap: 1rem;
   width: min(100%, 320px);
+}
+
+#startup-screen-content > span {
+  text-shadow: 0 2px 8px black; //var(--background-color);
+  filter: drop-shadow(0px 2px 6px black);
+  font-weight: 600;
+  
 }
 
 // Fill and contrast text come from the `color` prop, shape from `rounded`.
