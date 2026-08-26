@@ -320,7 +320,7 @@
             id="position-layout"
             align="start"
             justify="center"
-            class="mb-1 pt-4"
+            class="pt-4"
           >
             <div
               v-if="opacitySliders.length > 0"
@@ -1026,7 +1026,12 @@ const footprints = [
 const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
-
+function hideVisibleFootprints() {
+  // set their opacity to 0
+  footprints.forEach((footprint) => {
+    footprint.opacity = 0;
+  });
+}
 import { useLocalStorage } from "@vueuse/core";
 import { createTextOverlay } from "./text";
 
@@ -1074,9 +1079,14 @@ const showTextSheet = ref(false);
 const infoSheetTab = ref(0);
 
 
-function onlyFootprints(...visible: Footprint[]) {
+function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
   footprints.forEach(
-    (footprint) => (footprint.show = visible.includes(footprint)),
+    (footprint, index) => {
+      footprint.show = visible.includes(footprint);
+      if (show && show[index] === false) {
+        footprint.opacity = 0;
+      }
+    },
   );
 }
 
@@ -1209,6 +1219,7 @@ function replayTour() {
 function enterExplore() {
   leaveTour();
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
+  showOptions.value = true; // show the options box by default
 }
 
 // opening the controls at the close-out step ends the tour
@@ -1245,7 +1256,7 @@ const currentViewRad = computed(() => {
 
 function carinaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, jwst, roman);
+    onlyFootprints([hubble, jwst, roman]);
     showImagesets(carinaWtml, 0, 1, 2);
     showOpacitySliders(1, 2);
     goToImageset(carinaWtml, 2, {
@@ -1256,28 +1267,28 @@ function carinaTour(n: number, tour = true) {
     return;
   }
   if (n === 0) { // Andromeda
-    onlyFootprints(); // no footprints
+    onlyFootprints([]); // no footprints
     showImagesets(carinaWtml, 0); // eso widefield image
     showOpacitySliders();
     goToImageset(carinaWtml, 0, { zoom: 0.9, instant: false }); //
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble); // hst cosmic cliffs
+    onlyFootprints([hubble]); // hst cosmic cliffs
     showImagesets(carinaWtml, 0, 1); // wide + hst
     showOpacitySliders(1);
     goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
     return;
   }
   if (n === 2) {
-    onlyFootprints(hubble, jwst);
+    onlyFootprints([hubble, jwst]);
     showImagesets(carinaWtml, 0, 1, 2); // wide + hst + jwst
     showOpacitySliders(1, 2);
     goToImageset(carinaWtml, 2, { zoom: 0.15, roll: "imageset" });
     return;
   }
   if (n === 3) {
-    onlyFootprints(hubble, jwst, roman);
+    onlyFootprints([hubble, jwst, roman]);
     showImagesets(carinaWtml, 0, 1, 2);
     showOpacitySliders(1, 2);
     store.gotoRADecZoom({
@@ -1306,14 +1317,17 @@ const ats = {
 
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints(
+      [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
+      Array(8).fill(false) // hide them all
+    );
     // handle undefined warning buy using the setter
     textVisibilitySetters["roman"]?.(true);
     textVisibilitySetters["hubble"]?.(false);
     textVisibilitySetters["jwst"]?.(false);
-    showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3.4, instant: false });
+    showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
     return;
   }
   /* each step should explicitly set
@@ -1324,7 +1338,7 @@ function andromedaTour(n: number, tour = true) {
    */
   if (n === 0 || n === 1) { // Andromeda & View from the ground
     ats.setMaxStep(0);
-    onlyFootprints(); // no footprints
+    onlyFootprints([]); // no footprints
     showOpacitySliders();
     showImagesets(andromedaWtml); // load wtml, but don't show anything yet
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1344,7 +1358,7 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(phast);
+    onlyFootprints([phast]);
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
       raRad: 10.6847 * D2R,
@@ -1369,7 +1383,7 @@ function andromedaTour(n: number, tour = true) {
   }
 
   if (n === 3) {  // "Hubble Took this many images"
-    onlyFootprints(phast); // just show PHAST outlines
+    onlyFootprints([phast]); // just show PHAST outlines
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1379,13 +1393,13 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     }).then(async () => {
-      onlyFootprints(phast, phastI); 
+      onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(2);
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints(jwst);
+    onlyFootprints([jwst]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1399,7 +1413,7 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 5) { // Compare Roman, JWST, and Hubble
-    onlyFootprints(roman, jwst, hubble);
+    onlyFootprints([roman, jwst, hubble]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
@@ -1413,7 +1427,7 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints([phast, phastI, m31SfDisk, m31SfDiskOutline]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
@@ -1424,7 +1438,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 7) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints(romanPixel /* show pixel grid when ready */);
+    onlyFootprints([romanPixel]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1435,7 +1449,7 @@ function andromedaTour(n: number, tour = true) {
       instant: false,
       duration: 3,
     }).then(async () => {
-      onlyFootprints(romanPixel, roman);
+      onlyFootprints([romanPixel, roman]);
       await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
       await store.gotoRADecZoom({
@@ -1487,7 +1501,7 @@ function andromedaTour(n: number, tour = true) {
   if (n === 8) {// close out
     tourCloseOut();
     showOpacitySliders();
-    onlyFootprints();
+    onlyFootprints([]);
     ats.setMaxStep(7);
     return;
   }
@@ -1503,7 +1517,7 @@ const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
 
 function eagleTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(eagleWtml, 0, 1);
     store.gotoRADecZoom({
       raRad: 274.7457 * D2R,
@@ -1515,7 +1529,7 @@ function eagleTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(hubble);
+    onlyFootprints([hubble]);
     showImagesets(eagleWtml, 1);
     store.gotoRADecZoom({
       raRad: 274.7457 * D2R,
@@ -1527,7 +1541,7 @@ function eagleTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(eagleWtml, 0, 1);
     if (tour) showEndTourOverlay();
     return;
@@ -1542,7 +1556,7 @@ const smacsWtml = useWtmlLoader("SMAC_0723_all_loose.wtml", {
 
 function smacsTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(jwst, roman);
+    onlyFootprints([jwst, roman]);
     showImagesets(smacsWtml, 1, 0);
     goToImageset(smacsWtml, 1, {
       zoom: 0.15,
@@ -1552,7 +1566,7 @@ function smacsTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(jwst);
+    onlyFootprints([jwst]);
     showImagesets(smacsWtml, 1);
     goToImageset(smacsWtml, 1, {
       zoom: 0.15,
@@ -1563,7 +1577,7 @@ function smacsTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(jwst, roman);
+    onlyFootprints([jwst, roman]);
     showImagesets(smacsWtml, 1, 0);
     if (tour) showEndTourOverlay();
     return;
@@ -1578,7 +1592,7 @@ const helixWtml = useWtmlLoader("helix_hst.wtml", {
 
 function helixTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(helixWtml, 0);
     store.gotoRADecZoom({
       raRad: 337.4167 * D2R,
@@ -1590,7 +1604,7 @@ function helixTour(n: number, tour = true) {
     return;
   }
   if (n === 0) {
-    onlyFootprints(hubble);
+    onlyFootprints([hubble]);
     showImagesets(helixWtml, 0);
     store.gotoRADecZoom({
       raRad: 337.4167 * D2R,
@@ -1602,7 +1616,7 @@ function helixTour(n: number, tour = true) {
     return;
   }
   if (n === 1) {
-    onlyFootprints(hubble, roman);
+    onlyFootprints([hubble, roman]);
     showImagesets(helixWtml, 0);
     if (tour) showEndTourOverlay();
     return;
@@ -1644,7 +1658,7 @@ function leaveTour() {
   tourStep.value = 0;
   endTourOverlay.value = false;
   showExploreUi.value = true;
-  onlyFootprints();
+  onlyFootprints([]);
   showOptions.value = false;
   // the wtml was just hidden, so nothing is left to put a slider on
   shownImagesets.value = [];
@@ -2288,6 +2302,7 @@ body {
   position: absolute;
   inset: 0;
   padding: 1rem;
+  padding-bottom: 0.5rem;
   pointer-events: none;
 
   display: flex;
@@ -2729,6 +2744,7 @@ h1.startup-screen-title {
 
 .opacity-slider-label {
   font-weight: bold;
+  font-size: 0.9em;
   text-align: center;
   color: white;
   background: var(--background-color-darkest);
