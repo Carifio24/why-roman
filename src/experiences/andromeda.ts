@@ -31,18 +31,45 @@ export const andromedaExperience: TourExperience = [
     instaText: "Hubble sees this...",
   },
   {
-    title: "PHAST Frames",
+    title: "Hubble Took this many images",
     tourSheetText: [],
     instaText: "",
   },
   {
-    title: "SF Disk",
+    title: "JWST only sees this",
     tourSheetText: [],
     instaText: "",
   },
   {
-    title: "Roman",
+    title: "Compare Roman, JWST, and Hubble",
     tourSheetText: [],
     instaText: "",
   },
+  {
+    title: "What Hubble did, Roman can do in 3 hours",
+    tourSheetText: [],
+    instaText: "",
+  },
+  {
+    title: "Zoom in to Hubble",
+    tourSheetText: [],
+    instaText: "",
+  },
+  {
+    title: "So many pixels",
+    tourSheetText: [],
+    instaText: "",
+  },
+  {
+    title: "Zoomed all the way out",
+    tourSheetText: [],
+    instaText: "",
+  },
+  {
+    title: "The end",
+    tourSheetText: [],
+    instaText: "",
+  }
+  
+  
 ];
