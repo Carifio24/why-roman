@@ -154,6 +154,15 @@ p {
   }
 }
 
+#tour-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  overflow-y: auto;
+}
+
 .info-box {
   font-size: calc(1.5 * var(--default-font-size));
   color: white;
@@ -174,15 +183,14 @@ p {
 
 // Copied from rubin-first-look. Positions the floating tour text against
 // #wwt-overlay, in the corner the place cards vacate during a tour.
+// Sizing lives on #tour-text; this is just the box itself.
 .selected-info {
   position: relative;
   padding: 10px;
   // max-width: 30%;
-  display: flex;
-  flex-direction: column;
   align-items: flex-start;
-  height: calc(100% - 0.5rem);
 }
+
 
 // the scrollable region: grows to fill whatever space tour-text-controls
 // doesn't need, and scrolls on its own so the controls stay visible even
@@ -192,7 +200,11 @@ p {
   width: 100%;
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: visible;
+}
+
+.selected-info-scroll {
+  flex: 0 1 auto;
 }
 
 .tour-text-controls {

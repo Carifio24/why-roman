@@ -2,7 +2,7 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize && isPortrait ? 'app-is-small' : '', smallSize && !isPortrait ? 'app-is-small-landscape' : '', !smallSize && !isPortrait ? 'app-is-large-landscape' : '']"
+    :class="[smallSize && isPortrait ? 'app-is-small' : '', !isPortrait ? 'app-is-landscape' : '']"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -317,6 +317,9 @@
             align="start"
             justify="center"
             class="pt-4"
+            :style="{
+              'margin-left': !isPortrait && (inTour || showOptions) ? '34%' : '0',
+            }"
           >
             <div
               v-if="opacitySliders.length > 0"
@@ -441,9 +444,9 @@
       </v-dialog>
     </div>
 
-    <div
-      id="side-drawer"
-      :class="[(showTextSheet || inTour || showOptions) ? 'side-drawer-open' : 'side-drawer-closed']"
+    <div 
+      id="side-drawer-tour-sheet"
+      :class="[(inTour || showOptions) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
       <TourSheet
         v-if="activeTour && !showOptions && !showTextSheet"
@@ -456,31 +459,12 @@
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
         @step="(index) => goToStep(index)"
-      >
-        <!-- the close-out step keeps the text but trades the stepper for the
-         way out -->
-        <!-- <template
-          v-if="showExploreUi"
-          #controls
-        >
-          <div class="tour-text-controls">
-            <v-spacer />
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="enterExplore"
-            >
-              Explore
-            </v-btn>
-          </div>
-        </template> -->
-      </TourSheet>
-
+      />
+      
+    
       <TourSheet
         v-if="showOptions && !showTextSheet"
-        :tour-id="lastTourId"
+        tour-id="there-is-no-tour-just-showing-options"
         :step="tourStep"
         :small-size="smallSize"
         :show-breadcrumbs="false"
@@ -533,33 +517,13 @@
             @click="showOptions = false"
           />
         </div>
-        <template #controls>
-          <!-- an empty slot falls back to the stepper, so this div always renders -->
-          <div>
-            <div
-              v-for="slider in layerSliders"
-              :key="slider.index"
-            >
-              <label :for="`controls-opacity-${slider.index}`">{{
-                slider.name
-              }}</label>
-              <v-slider
-                :id="`controls-opacity-${slider.index}`"
-                :model-value="opacityOf(slider.index)"
-                :min="0"
-                :max="1"
-                :step="0.01"
-                :color="roman.color"
-                density="compact"
-                hide-details
-                @update:model-value="
-                  (value: number) => setOpacity(slider.index, value)
-                "
-              />
-            </div>
-          </div>
-        </template>
       </TourSheet>
+    </div>
+    
+    <div
+      id="side-drawer"
+      :class="[(showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
       <InformationSheet
         v-if="showTextSheet"
         v-model="showTextSheet"
@@ -808,7 +772,7 @@ const hubble = useFootprint({
   color: "#e100ff",
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
-  // linewidth: 2,
+  linewidth: 2, 
   show: false,
 });
 // const wfpc2 = useFootprint({
@@ -2210,10 +2174,6 @@ body {
 }
 
 // a flex sibling of #main-content, so opening it shrinks the WWT view.
-// This is the small-device landscape arrangement (side column, drawer to
-// the left via order: -1); app-is-large-landscape overrides it below to an
-// overlay instead (a full-height column is mostly deadspace on a big
-// screen), and app-is-small (portrait) switches to a bottom panel.
 #side-drawer {
   flex: 0 0 auto;
   overflow: hidden;
@@ -2227,27 +2187,11 @@ body {
 
 // small devices in landscape get a wider share of the row, since there's
 // less absolute width to work with than on a large screen
-#app.app-is-small-landscape #side-drawer.side-drawer-open {
+#app.app-is-small.app-is-landscape #side-drawer.side-drawer-open {
   width: 40%;
 }
 
-// large screens in landscape: give #main-content (and so WWT) the full
-// canvas, and float the drawer as a fixed-size box over its lower-left
-// corner instead of a full-height column full of deadspace. #app fills the
-// viewport 1:1, so position: fixed here lands in the same place as
-// anchoring to #app would.
-#app.app-is-large-landscape #side-drawer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
 
-  &.side-drawer-open {
-    width: 34%;
-    height: 34%;
-  }
-}
 
 // small devices in portrait: side panel becomes a bottom panel instead of a
 // side column
@@ -2766,6 +2710,62 @@ h1.startup-screen-title {
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+
+/* Its own set of definitions, deliberately duplicating #side-drawer's, so the
+   tour sheet can float in landscape without dragging the drawer along. */
+#side-drawer-tour-sheet {
+  flex: 0 0 auto;
+  order: -1;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // the sheet inside does the scrolling
+
+  &.side-drawer-open {
+    width: 34%;
+  }
+}
+
+#app.app-is-small {
+
+  #side-drawer-tour-sheet {
+    order: 1;
+    width: 100%;
+    height: 0;
+
+    &.side-drawer-open {
+      height: 34%;
+    }
+  }
+
+  // the drawer is wide and short here, so the columns fit side by side
+  #tour-controls {
+    flex-direction: row;
+  }
+}
+
+
+// large screens in landscape: give #main-content (and so WWT) the full
+// canvas, and float the drawer as a fixed-size box over its lower-left
+// corner instead of a full-height column full of deadspace. #app fills the
+// viewport 1:1, so position: fixed here lands in the same place as
+// anchoring to #app would.
+#app.app-is-landscape #side-drawer-tour-sheet {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  z-index: 1000;
+
+  &.side-drawer-open {
+    width: 34%;
+    height: min-content;
+    max-height: 50vh;
+    bottom: 1rem;
   }
 }
 </style>
