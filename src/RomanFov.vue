@@ -1270,7 +1270,7 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(phast);
+    onlyFootprints([phast]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
