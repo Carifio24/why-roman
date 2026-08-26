@@ -491,7 +491,7 @@
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
-            <h3>Scale</h3>
+            <h3>Zoom level</h3>
             <v-btn
               variant="flat"
               color="#502752"
@@ -521,7 +521,7 @@
             </v-btn>
           </div>
           <div class="tour-controls-column">
-            <h3>FOV</h3>
+            <h3>Field of View</h3>
             <MiniFootprintSettings
               v-for="footprint in visibleFootprints"
               :key="footprint.id"
@@ -797,7 +797,7 @@ const testFootprint = useFootprint({
 });
 const jwst = useFootprint({
   id: "jwst-footprint",
-  label: "JWST",
+  label: "Webb",
   footprint: jwstFootprint,
   color: "#002aff",
   offsetXDeg: -0.075, // left
@@ -807,7 +807,7 @@ const jwst = useFootprint({
 });
 const hubble = useFootprint({
   id: "hubble-footprint",
-  label: "WFC3",
+  label: "Hubble",
   footprint: hubbleFootprint,
   color: "#e100ff",
   offsetXDeg: 0.1,
@@ -827,7 +827,7 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "PHAST",
+  label: "M31 Hubble Outline",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
@@ -836,7 +836,7 @@ const phast = useFootprint({
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "PHAST (individual)",
+  label: "M31 Hubble Grid",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
@@ -891,7 +891,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Grid",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -899,7 +899,7 @@ const m31SfDisk = useFootprint({
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Outlines",
   footprint: m31SfDiskFootprintOutline,
   color: "#f58d42",  // TODO: Feel free to change this
   fixed: true,
@@ -908,6 +908,8 @@ const m31SfDiskOutline = useFootprint({
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [  
+  m31SfDisk,
+  m31SfDiskOutline,
   phast,
   phastI,
   // gbtds,
@@ -915,12 +917,10 @@ const footprints = [
   // hltds,
   // gps,
   // m31HiDisk,
-  m31SfDisk,
-  m31SfDiskOutline,
   romanPixel,
   roman,
-  jwst,
   hubble,
+  jwst,
 ];
 
 // the currently visible footprints. 
