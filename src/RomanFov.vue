@@ -733,7 +733,7 @@ const roman = useFootprint({
   // linewidth: 2, // faking the linewidth can leave artifacts
   show: true,
   offsetXDeg: 0.05,
-  offsetYDeg: 0,
+  offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
 });
 
 console.log(romanPixelFootprint);
