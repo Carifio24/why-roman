@@ -189,4 +189,15 @@ p {
   }
 }
 
+@media (orientation: landscape) {
+  .selected-info.selected-info-tall .tour-text-controls .v-btn {
+    --v-btn-size: 0.75rem;
+    --v-btn-height: 28px;
+    font-size: var(--v-btn-size);
+    min-width: 50px;
+    padding: 0 12px;
+  }
+}  
+
+
 </style>
