@@ -1043,7 +1043,8 @@ const tourParam = searchParams.get("tour");
 // a step without a tour to put it in means nothing. the param is 1-indexed,
 const tourStepParam = tourParam === null ? 0 : +(searchParams.get("tourStep") ?? 1) - 1;
 
-const showStartup = ref(!returning && tourParam === null);
+// const showStartup = ref(!returning && tourParam === null);
+const showStartup = ref(false);
 const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
@@ -1321,42 +1322,57 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(hubble, phast);
+    onlyFootprints(phast);
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
       raRad: 10.6847 * D2R,
       decRad: 41.269 * D2R,
-      zoomDeg: 3.5 * 6,
+      zoomDeg: 2.9 * 6,
       rollRad: 0,
       instant: ats.maxStep < 1, // if we have been here before, don't animate
-    }).then(() => {
-      showOpacitySliders(0);
+    }).then(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      store.gotoRADecZoom({
+      await store.gotoRADecZoom({
         raRad: 11.0743 * D2R,
         decRad: 41.6521 * D2R,
         zoomDeg: 0.04 * 6,
-        instant: ats.maxStep < 1,
-        duration: 2.5,
+        instant: false,
+        duration: 4,
       });
+      showOpacitySliders(0);
     });
     ats.setMaxStep(1);
     return;
   }
   
   if (n === 3) {  // "Hubble Took this many images"
-    onlyFootprints(hubble, phast, phastI); // just show PHAST outlines
+    onlyFootprints(phast); // just show PHAST outlines
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 2, instant: false }); // zoom back out
+    store.gotoRADecZoom({
+      raRad: 10.6847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 2 * 6, 
+      rollRad: 0,
+      instant: false,
+    }).then(async () => {
+      onlyFootprints(phast, phastI); 
+    }); // zoom back out
     ats.setMaxStep(2);
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints(jwst, phast);
+    onlyFootprints(jwst);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 1, instant: false }); // make sure we are zoomed where we want to be
+    store.gotoRADecZoom({ // center M31, zoomed to 
+      raRad: 10.6847 * D2R,
+      decRad: 41.469 * D2R,
+      zoomDeg: 2 * 6,
+      rollRad: 0,
+      instant: false,
+    });
     ats.setMaxStep(3);
     return;
   }
@@ -1364,14 +1380,21 @@ function andromedaTour(n: number, tour = true) {
     onlyFootprints(roman, jwst, hubble);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
+    store.gotoRADecZoom({ // center M31, zoomed to 
+      raRad: 10.5847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 2 * 6, 
+      rollRad: 0,
+      instant: false,
+    });
     ats.setMaxStep(4);
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline, roman);
+    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
+    goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
     if (tour) showEndTourOverlay();
     ats.setMaxStep(5);
     return;
@@ -1379,7 +1402,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 7) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready */);
+    onlyFootprints(psuedoPixelFootprint /* show pixel grid when ready */);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1389,50 +1412,61 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
       duration: 3,
+    }).then(async () => {
+      onlyFootprints(psuedoPixelFootprint, roman);
+      await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
+      // zoom into some point where the user can change opacity
+      await store.gotoRADecZoom({
+        raRad: 10.13 * D2R,
+        decRad: 40.71 * D2R,
+        zoomDeg: 2 * 6,
+        instant: false,
+        duration: 3,
+      });
     });
     ats.setMaxStep(6);
     return;
   }
   
+  // // step 9
+  // if (n === 8) { // So many pixels
+  //   onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready, */ roman);
+  //   showOpacitySliders();
+  //   showImagesets(andromedaWtml, 0);
+  //   store.gotoRADecZoom({
+  //     raRad: 10.13 * D2R,
+  //     decRad: 40.71 * D2R,
+  //     zoomDeg: (10/60) * 6, // keep the zoom we are at
+  //     rollRad: store.rollRad, // keep the roll we are at
+  //     instant: false,
+  //   });
+  //   ats.setMaxStep(7);
+  //   return;
+  // }
+  
+  // // step 10
+  // if (n === 9) {  // Zoomed all the way out 
+  //   onlyFootprints(phast, m31SfDiskOutline,psuedoPixelFootprint,/* show pixel grid when ready, */ roman);
+  //   showOpacitySliders();
+  //   showImagesets(andromedaWtml, 0);
+  //   // goToImageset(andromedaWtml, 0, { zoom: 2.5, instant: false });
+  //   store.gotoRADecZoom({
+  //     raRad: 10.13 * D2R,
+  //     decRad: 40.71 * D2R,
+  //     zoomDeg: 2 * 6, // keep the zoom we are at
+  //     rollRad: store.rollRad, // keep the roll we are at
+  //     instant: false,
+  //   });
+  //   ats.setMaxStep(8);
+  //   return;
+  // }
+  
   // step 9
-  if (n === 8) { // So many pixels
-    onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready, */ roman);
-    showOpacitySliders();
-    showImagesets(andromedaWtml, 0);
-    store.gotoRADecZoom({
-      raRad: 10.13 * D2R,
-      decRad: 40.71 * D2R,
-      zoomDeg: (10/60) * 6, // keep the zoom we are at
-      rollRad: store.rollRad, // keep the roll we are at
-      instant: false,
-    });
-    ats.setMaxStep(7);
-    return;
-  }
-  
-  // step 10
-  if (n === 9) {  // Zoomed all the way out 
-    onlyFootprints(phast, m31SfDiskOutline,psuedoPixelFootprint,/* show pixel grid when ready, */ roman);
-    showOpacitySliders();
-    showImagesets(andromedaWtml, 0);
-    // goToImageset(andromedaWtml, 0, { zoom: 2.5, instant: false });
-    store.gotoRADecZoom({
-      raRad: 10.13 * D2R,
-      decRad: 40.71 * D2R,
-      zoomDeg: 2 * 6, // keep the zoom we are at
-      rollRad: store.rollRad, // keep the roll we are at
-      instant: false,
-    });
-    ats.setMaxStep(8);
-    return;
-  }
-  
-  // step 11
-  if (n === 10) {// close out
+  if (n === 8) {// close out
     tourCloseOut();
     showOpacitySliders();
     onlyFootprints();
-    ats.setMaxStep(9);
+    ats.setMaxStep(7);
     return;
   }
   
