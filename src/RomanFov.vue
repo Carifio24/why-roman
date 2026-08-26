@@ -198,7 +198,7 @@
                     v-for="footprint in footprints"
                     :key="footprint.id"
                     v-model:footprint-color="footprint.color"
-                    v-model:fill="footprint.filshow"
+                    v-model:fill="footprint.fill"
                     v-model:fill-opacity="footprint.fillOpacity"
                     v-model:show="footprint.show"
                     :label="footprint.label"
@@ -1069,9 +1069,10 @@ const andromedaTitles = [
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
     onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
-    setRomanTextVisible(true);
-    setHubbleTextVisible(false);
-    setJWSTTextVisible(false);
+    // handle undefined warning buy using the setter
+    textVisibilitySetters["roman"]?.(true);
+    textVisibilitySetters["hubble"]?.(false);
+    textVisibilitySetters["jwst"]?.(false);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
     return;
