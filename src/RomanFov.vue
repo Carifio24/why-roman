@@ -1211,9 +1211,9 @@ function andromedaTour(n: number, tour = true) {
    - visible imagesets
    - camera position
    */
-  ats.setMaxStep(n);
+
   if (n === 0 || n === 1) { // Andromeda & View from the ground
-    ats.setMaxStep(0);
+    
     onlyFootprints([]); // no footprints
     showOpacitySliders();
     showImagesets(andromedaWtml); // load wtml, but don't show anything yet
@@ -1225,10 +1225,13 @@ function andromedaTour(n: number, tour = true) {
       instant: false,
     });
     
-    if (n===1) {
-      ats.setMaxStep(1);
-    }
-    
+    // if (n == 0) {
+    //   ats.setMaxStep(0);
+    // }
+    // if (n===1) {
+    //   ats.setMaxStep(1);
+    // }
+    ats.setMaxStep(n);
     return;
   }
   
@@ -1257,7 +1260,7 @@ function andromedaTour(n: number, tour = true) {
         showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
       }
     });
-    
+    ats.setMaxStep(n);
     return;
   }
 
@@ -1623,6 +1626,7 @@ function goToStep(n: number) {
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
   if (activeTour.value) {
+    console.log("goToStep", n, "for tour", activeTour.value.id);
     activeTour.value.step(n);
   }
 }
