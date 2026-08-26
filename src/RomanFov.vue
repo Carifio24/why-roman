@@ -1832,6 +1832,7 @@ onMounted(() => {
       text: "Roman",
       center: Coordinates.raDecTo3d(-0.001, 0.4),
       color: "#ff1900",
+      scale: 0.0005,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
       store,
