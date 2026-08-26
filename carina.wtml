@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="carina" Searchable="True">
+  <!-- eta car -->
+  <!-- <Place Angle="0" AngularSize="1" Classification="Star" Constellation="CAR" DataSetType="Sky" Dec="-59.6847222222222" Magnitude="0" Name="Eta Carinae: A Star On the Brink of Destruction" Opacity="100" RA="10.7511111111111" Rotation="0" ZoomLevel="0.281666666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0282051613017553" BaseTileLevel="0" BottomsUp="False" CenterX="161.2650836" CenterY="-59.6847142" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Eta Carinae: A Star On the Brink of Destruction" Projection="Tan" QuadTreeMap="0123" Rotation="173.44015848717" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000000213{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1994-09a" Xcxstatus="queue:hubble">
+        <Credits>Credit: J. Hester/Arizona state University NASA.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1994/news-1994-09.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=477678583</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place> -->
+  
+  
+  <!-- HST Mystic Mountains -->
+  <!-- <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-59.4952288836" Magnitude="0" Name="Carina Nebula" Opacity="100" RA="10.7347401134" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1007c.jpg" ZoomLevel="0.361596629277082">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0903991573192704" BaseTileLevel="0" BottomsUp="False" CenterX="161.021101701" CenterY="-59.4952288836" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Carina Nebula" Projection="Tan" QuadTreeMap="" Rotation="-165.4" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic1007cL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic1007c" Xcorepipe_ids="hst|heic1007c" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA and M. Livio and the H; This craggy fantasy mountaintop enshrouded by wispy clouds looks like a bizarre landscape from Tolkien’s The Lord of the Rings. ...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1007c/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1007c.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place> -->
+  
+  <!-- ESO widefield image -->
+  <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-58.664455644717385" Magnitude="0" Name="NGC 3324" Opacity="100" RA="10.63276661999588" Rotation="0" Thumbnail="https://raw.githubusercontent.com/johnarban/data_repo/main/eso1207a/thumb.jpg" ZoomLevel="4.492757867519987">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.5415430317663499" BaseTileLevel="0" BottomsUp="False" CenterX="159.320327" CenterY="-58.629867" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 3324" OffsetX="-0.08904101338786836" OffsetY="-0.03459108583626769" Projection="Tan" QuadTreeMap="" Rotation="0.09277899186999046" Sparse="True" StockSet="False" TileLevels="5" Url="https://raw.githubusercontent.com/johnarban/data_repo/main/eso1207a/{1}/{3}/{3}_{2}.png" WidthFactor="2">
+        <Credits>ESO</Credits>
+        <CreditsUrl>https://www.eso.org/public/images/eso1207a/</CreditsUrl>
+        <Description>The Wide Field Imager on the MPG/ESO 2.2-metre telescope at the La Silla Observatory has imaged a region of star formation called NGC 3324. The intense radiation from several of NGC 3324's massive, blue-white stars has carved out a cavity in the surrounding gas and dust. The ultraviolet radiation from these young hot stars also cause the gas cloud to glow in rich colours.</Description>
+        <ThumbnailUrl>https://raw.githubusercontent.com/johnarban/data_repo/main/eso1207a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  
+  <!-- hst cosmic cliffs -->
+  <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-58.6368735" Magnitude="0" Name="Carina Nebula" Opacity="100" RA="10.61572424" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0834a.jpg" ZoomLevel="0.226476556288">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.056619139072" BaseTileLevel="0" BottomsUp="False" CenterX="159.2358636" CenterY="-58.6368735" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Carina Nebula" Projection="Tan" QuadTreeMap="" Rotation="99.95" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0834aL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0834a" Xcorepipe_ids="hst|opo0834a" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, and The Hubble Herita; Located in the Southern Hemisphere, NGC 3324 is at the northwest corner of the Carina Nebula (NGC 3372), home of the Keyhole Neb...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0834a/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0834a.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+    
+    <!-- jwst cosmic cliffs -->
+  <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-58.62016759655853" Magnitude="0" Name="NIRCam Image of the “Cosmic Cliffs” in Carina" Opacity="100" RA="10.614202486597234" Rotation="0" Thumbnail="https://data1.wwtassets.org/feeds/jwst/weic2205a/thumb.jpg" ZoomLevel="0.7175139863940001">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.13653884928" BaseTileLevel="0" BottomsUp="False" CenterX="159.21261854583" CenterY="-58.62001801087" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NIRCam Image of the “Cosmic Cliffs” in Carina" OffsetX="-9.260001991184237e-05" OffsetY="0.0002419173874739555" Projection="Tan" QuadTreeMap="" Rotation="102.98495181249" Sparse="True" StockSet="False" TileLevels="6" Url="https://data1.wwtassets.org/feeds/jwst/weic2205a/L{1}X{2}Y{3}.png" WidthFactor="2">
+        <Credits>NASA, ESA, CSA, and STScI</Credits>
+        <CreditsUrl>https://esawebb.org/images/weic2205a/</CreditsUrl>
+        <ThumbnailUrl>https://data1.wwtassets.org/feeds/jwst/weic2205a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  
+  
+  
+  </Folder>

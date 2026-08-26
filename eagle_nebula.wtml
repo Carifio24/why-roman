@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="Eagle" Searchable="True">
+  <Place Angle="0" AngularSize="6.758814239469666" Annotation="{&quot;channel&quot;: &quot;noirlab&quot;, &quot;itemid&quot;: &quot;noao-04086&quot;, &quot;publishedUTCISO8601&quot;: &quot;2002-09-18T09:49:04+00:00&quot;}" Constellation="SER2" DataSetType="Sky" Dec="-13.830500385808618" Magnitude="0" Name="The Eagle Nebula, M16" Opacity="100" RA="18.316377287914136" Rotation="0" Thumbnail="http://data1.wwtassets.org/feeds/noirlab/noao-04086/thumb.jpg" ZoomLevel="6.758814239469666">
+    <Description>This wide-field image of the Eagle Nebula was taken at the National Science Foundation&amp;#x27;s 0.9-meter telescope on Kitt Peak with the NOAO Mosaic CCD camera. Located in the constellation of Serpens, the Serpent, the Eagle Nebula is a very luminous open cluster of stars surrounded by dust and gas. The three pillars at the center of the image, made famous in an image by the Hubble Space Telescope, are being sculpted by the intense radiation from the hot stars in the cluster. This image was created by combining emission-line images in Hydrogen-alpha (green), Oxygen [O III] (blue) and Sulfur [S II] (red).</Description>
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.967603478552576" BaseTileLevel="0" BottomsUp="False" CenterX="274.7459737717998" CenterY="-13.830242585811856" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Eagle Nebula, M16" OffsetX="0.000118115659003" OffsetY="0.000118115659003" Projection="Tan" QuadTreeMap="" Rotation="-89.80000000000004" Sparse="True" StockSet="False" TileLevels="5" Url="http://data1.wwtassets.org/feeds/noirlab/noao-04086/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="noirlab|noao-04086" Xcxstatus="in:64276288975014bc743f1689">
+        <Credits>T.A.Rector (NRAO/AUI/NSF and NOIRLab/NSF/AURA) and B.A.Wolpa (NOIRLab/NSF/AURA)</Credits>
+        <CreditsUrl>https://noirlab.edu/public/images/noao-04086/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/feeds/noirlab/noao-04086/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SER2" DataSetType="Sky" Dec="-13.8311111111111" Magnitude="0" Name="Pillars of Creation in a Star-Forming Region (Gas Pillars in M16 - Eagle Nebula)" Opacity="100" RA="18.3141666666667" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0564827275663313" BaseTileLevel="0" BottomsUp="False" CenterX="274.710260073837" CenterY="-13.8301471408532" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Pillars of Creation in a Star-Forming Region (Gas Pillars in M16 - Eagle Nebula)" Projection="Tan" QuadTreeMap="0123" Rotation="-42.2693731582635" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003302{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1995-44a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, STScI, J. Hester and P. Scowen (Arizona State University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1995/news-1995-44.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=206860488</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  </Folder>

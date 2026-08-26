@@ -1,0 +1,852 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Folder Browseable="True" Group="Explorer" Name="fov 0.3 to 1.2 deg" Searchable="True">
+  <Place Angle="0" AngularSize="0" Constellation="BOO" DataSetType="Sky" Dec="52.549315586" Magnitude="0" Name="Extended Groth Strip (EGS)" Opacity="100" RA="14.2961411611333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0706e.jpg" ZoomLevel="1.81868240915661">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.454670602289152" BaseTileLevel="0" BottomsUp="False" CenterX="214.442117417" CenterY="52.549315586" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Extended Groth Strip (EGS)" Projection="Tan" QuadTreeMap="" Rotation="219.98" Sparse="True" StockSet="False" TileLevels="6" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0706eL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0706e" Xcorepipe_ids="hst|opo0706e" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, M. Davis (University ; This image, taken by NASA/ESA Hubble Space Telescope, represents a small section of a larger panoramic view of the heavens, wher...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0706e/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0706e.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SGR" DataSetType="Sky" Dec="-28.9882482738" Magnitude="0" Name="Milky Way" Opacity="100" RA="17.7583534726" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0902b.jpg" ZoomLevel="1.81901928533852">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.45475482133463" BaseTileLevel="0" BottomsUp="False" CenterX="266.375302089" CenterY="-28.9882482738" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Milky Way" Projection="Tan" QuadTreeMap="" Rotation="-58.56" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0902bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0902b" Xcorepipe_ids="hst|opo0902b" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA and Q.D. Wang (Univers; This NASA/ESA Hubble Space Telescope infrared mosaic image represents the sharpest survey of the galactic centre to date. It rev...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0902b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0902b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SGR" DataSetType="Sky" Dec="-28.913897852" Magnitude="0" Name="Sagittarius" Opacity="100" RA="17.7629361226" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-ann0912a.jpg" ZoomLevel="1.82065523743785">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.455163809359462" BaseTileLevel="0" BottomsUp="False" CenterX="266.444041839" CenterY="-28.913897852" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Sagittarius" Projection="Tan" QuadTreeMap="" Rotation="-58.66" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-ann0912aL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|ann0912a" Xcorepipe_ids="hst|ann0912a" Xcxstatus="queue:hubble">
+        <Credits>NASA &amp; ESA; A never-before-seen view of the turbulent heart of our Milky Way galaxy provided by the NASA/ESA Hubble Space Telescope and its ...</Credits>
+        <CreditsUrl>https://esahubble.org/images/ann0912a/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-ann0912a.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SGR" DataSetType="Sky" Dec="-28.913897852" Magnitude="0" Name="Sagittarius" Opacity="100" RA="17.7629361226" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0928b.jpg" ZoomLevel="1.82065523743785">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.455163809359462" BaseTileLevel="0" BottomsUp="False" CenterX="266.444041839" CenterY="-28.913897852" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Sagittarius" Projection="Tan" QuadTreeMap="" Rotation="-58.66" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0928bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0928b" Xcorepipe_ids="hst|opo0928b" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, SSC, CXC and STScI; In celebration of the International Year of Astronomy 2009, the NASA/ESA Hubble Space Telescope and its companion Great Observat...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0928b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0928b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="DOR" DataSetType="Sky" Dec="-59.2455555555556" Magnitude="0" Name="Hubble’s View of Barred Spiral Galaxy NGC 1672" Opacity="100" RA="4.76166666666667" Rotation="0" ZoomLevel="1.895">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113258048295818" BaseTileLevel="0" BottomsUp="False" CenterX="71.4289181039239" CenterY="-59.245064538476" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble’s View of Barred Spiral Galaxy NGC 1672" Projection="Tan" QuadTreeMap="0123" Rotation="-34.0328862916369" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000000301{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2007-15a" Xcxstatus="in:661fef63befbe21fbdf49b99">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA)-ESA/Hubble Collaboration</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2007/news-2007-15.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1235636389</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="2.82833333333333" Classification="SpiralGalaxy" Constellation="CVN" DataSetType="Sky" Dec="47.2" Magnitude="0" Name="Out of This Whirl: the Whirlpool Galaxy (M51) and Companion Galaxy" Opacity="100" RA="13.497777777777799" Rotation="0" ZoomLevel="1.9">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.22793807538088" BaseTileLevel="0" BottomsUp="False" CenterX="202.46787245183" CenterY="47.213820301169" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Out of This Whirl: the Whirlpool Galaxy (M51) and Companion Galaxy;Messier 51;M51" Projection="Tan" QuadTreeMap="0123" Rotation="91.9752188189093" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003102{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-12a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, S. Beckwith (STScI), and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-12.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1016568421</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="ERI" DataSetType="Sky" Dec="-19.41" Magnitude="0" Name="Barred Spiral Galaxy NGC 1300" Opacity="100" RA="3.32777777777778" Rotation="0" ZoomLevel="1.915">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.1134045574734" BaseTileLevel="0" BottomsUp="False" CenterX="49.9189503486534" CenterY="-19.411192968644" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Barred Spiral Galaxy NGC 1300" Projection="Tan" QuadTreeMap="0123" Rotation="29.9219353015939" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000003133{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-01a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA) Acknowledgment: P. Knezek (WIYN)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-01.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=595276612</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="TRI" DataSetType="Sky" Dec="30.7838888888889" Magnitude="0" Name="Firestorm of Star Birth In Galaxy NGC 604" Opacity="100" RA="1.57583333333333" Rotation="0" ZoomLevel="1.93">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0570308519546673" BaseTileLevel="0" BottomsUp="False" CenterX="23.6354980985943" CenterY="30.7842525381567" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Firestorm of Star Birth In Galaxy NGC 604" Projection="Tan" QuadTreeMap="0123" Rotation="20.781199545066" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000001212{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-30a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (AURA/STScI) Acknowledgment: D. Garnett (U. Arizona), J. Hester (ASU), and J. Westphal (Caltech)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-30.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1424292271</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CRV" DataSetType="Sky" Dec="-18.8914159176" Magnitude="0" Name="Antennae" Opacity="100" RA="12.0301017463333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo9734p.jpg" ZoomLevel="1.94071629939302">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.485179074848256" BaseTileLevel="0" BottomsUp="False" CenterX="180.451526195" CenterY="-18.8914159176" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Antennae" Projection="Tan" QuadTreeMap="" Rotation="89.7800000000001" Sparse="True" StockSet="False" TileLevels="1" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo9734pL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo9734p" Xcorepipe_ids="hst|opo9734p" Xcxstatus="queue:hubble">
+        <Credits>Francois Schweizer (CIW/DTM); The spiral galaxies NGC 4038 and NGC 4039 form together the famous Antennae Galaxies, named after  the long tails of gas, dust a...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo9734p/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo9734p.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SupernovaRemnant" Constellation="CYG" DataSetType="Sky" Dec="38.4541666666667" Magnitude="0" Name="Star WR 136 Tears Apart a Shell of Gas" Opacity="100" RA="20.2088888888889" Rotation="0" ZoomLevel="1.955">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0565962215709833" BaseTileLevel="0" BottomsUp="False" CenterX="303.13402118248" CenterY="38.454827037832" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Star WR 136 Tears Apart a Shell of Gas" Projection="Tan" QuadTreeMap="0123" Rotation="9.71270741695688" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000002012{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2000-23b" Xcxstatus="queue:hubble">
+        <Credits>Credit: Brian D. Moore and J. Jeff Hester (Arizona State University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2000/news-2000-23.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=115854051</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="CAM" DataSetType="Sky" Dec="65.6030555555556" Magnitude="0" Name="A Bright Supernova in the Nearby Galaxy NGC 2403" Opacity="100" RA="7.61611111111111" Rotation="0" ZoomLevel="1.96166666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0568296848657551" BaseTileLevel="0" BottomsUp="False" CenterX="114.242818246862" CenterY="65.6030133443601" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="A Bright Supernova in the Nearby Galaxy NGC 2403" Projection="Tan" QuadTreeMap="0123" Rotation="140.033173313374" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000001031{Q}?g=138" WidthFactor="2" Xcxstatus="in:661fef68befbe21fbdf49ba5">
+        <Credits>Credit: NASA, ESA, A.V. Filippenko (University of California,  Berkeley), P. Challis (Harvard-Smithsonian Center for Astrophysics), et al.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2004/news-2004-23.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1017025472</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="GiantMolecularCloud" Constellation="MEN" DataSetType="Sky" Dec="-70.075" Magnitude="0" Name="N 180B in the Large Magellanic Cloud" Opacity="100" RA="5.81388888888889" Rotation="0" ZoomLevel="1.96166666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.056607824729104" BaseTileLevel="0" BottomsUp="False" CenterX="87.2052776874828" CenterY="-70.0743054425991" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="N 180B in the Large Magellanic Cloud" Projection="Tan" QuadTreeMap="0123" Rotation="175.952839285081" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003311{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-41a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and the Hubble Heritage Team (STScI/AURA) Acknowledgment: Y.-H. Chu (University of Illinois, Urbana - Champaign) and Y. Nazé (Universite de Liège, Belgium)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-41.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=2121009947</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="UMA" DataSetType="Sky" Dec="55.6805555555556" Magnitude="0" Name="Galaxy NGC 3079" Opacity="100" RA="10.0325" Rotation="0" ZoomLevel="1.965">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0808613821136442" BaseTileLevel="0" BottomsUp="False" CenterX="150.4875281" CenterY="55.6805392" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Galaxy NGC 3079" Projection="Tan" QuadTreeMap="0123" Rotation="42.4339822710912" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000001221{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2001-28b" Xcxstatus="in:661fef6fbefbe21fbdf49bb3">
+        <Credits>Credits: NASA, Gerald Cecil (University of North Carolina), Sylvain Veilleux (University of Maryland), Joss Bland-Hawthorn (Anglo- Australian Observatory), and Alex Filippenko (University of California at Berkeley).</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2001/news-2001-28.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1556423762</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="COM" DataSetType="Sky" Dec="30.73" Magnitude="0" Name="'The Mice' (NGC 4676): Colliding Galaxies Stream Stars and Gas" Opacity="100" RA="12.7697222222222" Rotation="0" ZoomLevel="1.975">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113177455593818" BaseTileLevel="0" BottomsUp="False" CenterX="191.545519652158" CenterY="30.7299094473763" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="'The Mice' (NGC 4676): Colliding Galaxies Stream Stars and Gas" Projection="Tan" QuadTreeMap="0123" Rotation="62.7797008405855" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000010131{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-11d" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, H. Ford (JHU), G. Illingworth (UCSC/LO), M.Clampin (STScI), G. Hartig (STScI), the ACS Science Team, and ESA  The ACS Science Team:  H. Ford, G. Illingworth, M. Clampin, G. Hartig, T. Allen, K. Anderson, F. Bartko, N. Benitez, J. Blakeslee, R. Bouwens, T. Broadhurst, R. Brown, C. Burrows, D. Campbell, E. Cheng, N. Cross, P. Feldman, M. Franx, D. Golimowski, C. Gronwall, R. Kimble, J. Krist, M. Lesser, D. Magee, A. Martel, W. J. McCann, G. Meurer, G. Miley, M. Postman, P. Rosati, M. Sirianni, W. Sparks, P. Sullivan, H. Tran, Z. Tsvetanov, R. White, and R. Woodruff.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-11.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1816569261</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="RET" DataSetType="Sky" Dec="-66.4975" Magnitude="0" Name="Barred Spiral Galaxy NGC 1313 - HST" Opacity="100" RA="3.30444444444444" Rotation="0" ZoomLevel="1.98666666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0568614164094226" BaseTileLevel="0" BottomsUp="False" CenterX="49.5708320766738" CenterY="-66.4977822408532" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Barred Spiral Galaxy NGC 1313 - HST" Projection="Tan" QuadTreeMap="0123" Rotation="1.98254122241342" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000001303{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2007-05c" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and A. Pellerin (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2007/news-2007-05.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=2113988973</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="VEL" DataSetType="Sky" Dec="-45.9258333333333" Magnitude="0" Name="The Pencil Nebula: Remnants of an Exploded Star (NGC 2736);NGC 2736" Opacity="100" RA="9.005" Rotation="0" ZoomLevel="1.99">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0682099669808579" BaseTileLevel="0" BottomsUp="False" CenterX="135.079334768316" CenterY="-45.915899507511" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Pencil Nebula: Remnants of an Exploded Star (NGC 2736);NGC 2736" Projection="Tan" QuadTreeMap="0123" Rotation="-5.0224831291901" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000001000{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-16a" Xcxstatus="in:6573279f5077f2f4480b0039">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA) Acknowledgment: W. Blair (JHU) and D. Malin (David Malin Images)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-16.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=464350015</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="CRV" DataSetType="Sky" Dec="-18.8744444444444" Magnitude="0" Name="Fireworks Show in Collision of Antennae Galaxies (NGC 4038/4039)" Opacity="100" RA="12.0313888888889" Rotation="0" ZoomLevel="1.99">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0563245864517298" BaseTileLevel="0" BottomsUp="False" CenterX="180.466018903062" CenterY="-18.8728605852133" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Fireworks Show in Collision of Antennae Galaxies (NGC 4038/4039)" Projection="Tan" QuadTreeMap="0123" Rotation="-119.996620582316" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000002322{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1997-34d" Xcxstatus="queue:hubble">
+        <Credits>Credit: Brad Whitmore (STScI) and NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1997/news-1997-34.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1745837569</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="CMA" DataSetType="Sky" Dec="-21.3730555555556" Magnitude="0" Name="A Grazing Encounter Between Two Spiral Galaxies (NGC 2207 and IC2163)" Opacity="100" RA="6.27305555555556" Rotation="0" ZoomLevel="1.99333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.11337088010411" BaseTileLevel="0" BottomsUp="False" CenterX="94.1041728688303" CenterY="-21.3756128581537" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="A Grazing Encounter Between Two Spiral Galaxies (NGC 2207 and IC2163)" Projection="Tan" QuadTreeMap="0123" Rotation="-168.834489195244" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000010011{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1999-41a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA and The Hubble Heritage Team (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1999/news-1999-41.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1938488390</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="DOR" DataSetType="Sky" Dec="-69.12" Magnitude="0" Name="Hubble's panoramic view of a star-forming region" Opacity="100" RA="5.638" Rotation="0" Thumbnail="http://data1.wwtassets.org/packages/2020/07_hubble30/heic1206a/thumb.jpg" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.360484108176589" BaseTileLevel="0" BottomsUp="False" CenterX="84.5711688876" CenterY="-69.1258976867" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble's panoramic view of a star-forming region" OffsetX="1.10011019341e-05" OffsetY="1.10011019341e-05" Projection="Tan" QuadTreeMap="0123" Rotation="-35.0199999999999" Sparse="True" StockSet="False" TileLevels="7" Url="http://data1.wwtassets.org/packages/2020/07_hubble30/heic1206a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="esahubble|heic1206a" Xcorepipe_ids="hst|heic1206a" Xcxstatus="in:6537c3dcb493728d11b82bae">
+        <Credits>NASA, ESA, ESO, D. Lennon and E. Sabbi (ESA/STScI), J. Anderson, S. E. de Mink, R. van der Marel, T. Sohn, and N. Walborn (STScI), N. Bastian (Excellence Cluster, Munich), L. Bedin (INAF, Padua), E. Bressert (ESO), P. Crowther (Sheffield), A. de Koter (Amsterdam), C. Evans (UKATC/STFC, Edinburgh), A. Herrero (IAC, Tenerife), N. Langer (AifA, Bonn), I. Platais (JHU) and H. Sana (Amsterdam)</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1206a/</CreditsUrl>
+        <Description>30 Doradus is the brightest star-forming region in our galactic neighbourhood and home to the most massive stars ever seen. The nebula resides 170 000 light-years away in the Large Magellanic Cloud, a small, satellite galaxy of our Milky Way. No known star-forming region in our galaxy is as large or as prolific as 30 Doradus. The image comprises one of the largest mosaics ever assembled from Hubble photos and includes observations taken by Hubble’s Wide Field Camera 3 and Advanced Camera for Surveys, combined with observations from the European Southern Observatory’s MPG/ESO 2.2-metre telescope which trace the location of glowing hydrogen and oxygen. The image is being released to celebrate Hubble's 22nd anniversary.</Description>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_hubble30/heic1206a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SCO" DataSetType="Sky" Dec="-34.1852777777778" Magnitude="0" Name="Pismis 24 and NGC 6357" Opacity="100" RA="17.4122222222222" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.114268303300639" BaseTileLevel="0" BottomsUp="False" CenterX="261.182700889713" CenterY="-34.1853602120985" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Pismis 24 and NGC 6357" Projection="Tan" QuadTreeMap="0123" Rotation="-172.024252583773" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003212{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-54b" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and J. Maíz Apellániz (Instituto de Astrofísica  de Andalucía, Spain)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-54.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=378317252</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="DOR" DataSetType="Sky" Dec="-69.0997222222222" Magnitude="0" Name="R136: A Cluster of Massive Stars in Nebula 30 Doradus" Opacity="100" RA="5.64472222222222" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0566753496124201" BaseTileLevel="0" BottomsUp="False" CenterX="84.6821155526805" CenterY="-69.0999780556399" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="R136: A Cluster of Massive Stars in Nebula 30 Doradus" Projection="Tan" QuadTreeMap="0123" Rotation="-38.4474808768061" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000003210{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1999-33d" Xcxstatus="in:65d8c47faffb32cbf1d96a61">
+        <Credits>Credit: NASA, John Trauger (Jet Propulsion Laboratory) and James Westphal (California Intitute of Technology)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1999/news-1999-33.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1709488516</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="DOR" DataSetType="Sky" Dec="-67.9858333333333" Magnitude="0" Name="Gaseous Streamers from Nebula N44C Flutter in Stellar Breeze" Opacity="100" RA="5.36833333333333" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0565514579581794" BaseTileLevel="0" BottomsUp="False" CenterX="80.5269528589686" CenterY="-67.9848464124487" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Gaseous Streamers from Nebula N44C Flutter in Stellar Breeze" Projection="Tan" QuadTreeMap="0123" Rotation="-87.7393943804082" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003321{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-12a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA)  Acknowledgment: D. Garnett (University of Arizona)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-12.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=245563811</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="ORI" DataSetType="Sky" Dec="-6.46277777777778" Magnitude="0" Name="HH-34" Opacity="100" RA="5.59166666666667" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0564444566985751" BaseTileLevel="0" BottomsUp="False" CenterX="83.8755709465511" CenterY="-6.46190838404428" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="HH-34" Projection="Tan" QuadTreeMap="0123" Rotation="41.9266107596829" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000001001{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1995-24f" Xcxstatus="in:661fef65befbe21fbdf49b9f">
+        <Credits>STScI &amp; NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1995/news-1995-24.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=490210670</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="CAS" DataSetType="Sky" Dec="61.2097222222222" Magnitude="0" Name="The Bubble Nebula: NGC 7635" Opacity="100" RA="23.345" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0564317966331783" BaseTileLevel="0" BottomsUp="False" CenterX="350.172828356681" CenterY="61.2106597307424" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Bubble Nebula: NGC 7635" Projection="Tan" QuadTreeMap="0123" Rotation="-4.07113546537197" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000003130{Q}?g=138" WidthFactor="2" Xcxstatus="in:65d8c47daffb32cbf1d96a5d">
+        <Credits>Credit: NASA, Donald Walter (South Carolina State University), Paul Scowen and Brian Moore (Arizona State University)   Research Team: Donald Walter (South Carolina State University), Paul Scowen, Jeff Hester, Brian Moore (Arizona State University), Reggie Dufour, Patrick Hartigan and Brent Buckalew (Rice University).   Funding: Space Telescope Science Institute, NASA MUSPIN and NASA URC.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2000/news-2000-04.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1988871461</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SER2" DataSetType="Sky" Dec="-13.8311111111111" Magnitude="0" Name="Pillars of Creation in a Star-Forming Region (Gas Pillars in M16 - Eagle Nebula)" Opacity="100" RA="18.3141666666667" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0564827275663313" BaseTileLevel="0" BottomsUp="False" CenterX="274.710260073837" CenterY="-13.8301471408532" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Pillars of Creation in a Star-Forming Region (Gas Pillars in M16 - Eagle Nebula)" Projection="Tan" QuadTreeMap="0123" Rotation="-42.2693731582635" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003302{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1995-44a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, STScI, J. Hester and P. Scowen (Arizona State University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1995/news-1995-44.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=206860488</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="VUL" DataSetType="Sky" Dec="22.7130555555556" Magnitude="0" Name="Close-Up of M27, the Dumbbell Nebula" Opacity="100" RA="19.9922222222222" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.056821245695519" BaseTileLevel="0" BottomsUp="False" CenterX="299.883664927713" CenterY="22.7134743319114" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Close-Up of M27, the Dumbbell Nebula" Projection="Tan" QuadTreeMap="0123" Rotation="14.1411246935087" Sparse="True" StockSet="False" TileLevels="2" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000000133{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-06a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA) Acknowledgment: C.R. O'Dell (Vanderbilt University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-06.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1550435984</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="ERI" DataSetType="Sky" Dec="-15.3952777777778" Magnitude="0" Name="Full ACS Field of NGC 1309" Opacity="100" RA="3.36833333333333" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113828616154123" BaseTileLevel="0" BottomsUp="False" CenterX="50.5225010516223" CenterY="-15.3956808259171" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Full ACS Field of NGC 1309" Projection="Tan" QuadTreeMap="0123" Rotation="-3.00890984061215" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000010202{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-07c" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, The Hubble Heritage Team, (STScI/AURA) and A. Riess (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-07.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=2137405101</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="CAM" DataSetType="Sky" Dec="74.2475" Magnitude="0" Name="Composite Image of Galaxy Cluster MS 0735" Opacity="100" RA="7.695" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113823049285757" BaseTileLevel="0" BottomsUp="False" CenterX="115.425483451642" CenterY="74.2477970051906" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Composite Image of Galaxy Cluster MS 0735" Projection="Tan" QuadTreeMap="0123" Rotation="-0.0847857716663649" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000001213{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-51b" Xcxstatus="queue:hubble">
+        <Credits>Hubble and Chandra Image Credit: NASA, ESA, CXC, STScI, and B. McNamara (University of Waterloo) Very Large Array Telescope Image Credit: NRAO, and L. Birzan and team (Ohio University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-51.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1198895501</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="CAM" DataSetType="Sky" Dec="74.2475" Magnitude="0" Name="Visible-Light Image of Galaxy Cluster MS 0735" Opacity="100" RA="7.695" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113744601075069" BaseTileLevel="0" BottomsUp="False" CenterX="115.425091020498" CenterY="74.2478501839935" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Visible-Light Image of Galaxy Cluster MS 0735" Projection="Tan" QuadTreeMap="0123" Rotation="-0.0863864150592452" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000003233{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-51d" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and B. McNamara (University of Waterloo and Ohio University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-51.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=400514625</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SupernovaRemnant" Constellation="CAS" DataSetType="Sky" Dec="58.8169444444444" Magnitude="0" Name="Supernova Remnant Cassiopeia A - March 2004" Opacity="100" RA="23.3911111111111" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.226871047148239" BaseTileLevel="0" BottomsUp="False" CenterX="350.858168157183" CenterY="58.8157652946464" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Supernova Remnant Cassiopeia A - March 2004" Projection="Tan" QuadTreeMap="0123" Rotation="-0.496688204670829" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000012133{Q}?g=182" WidthFactor="2" Xastropix_ids="stsci|2006-30b" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and the Hubble Heritage (STScI/AURA)-ESA/Hubble Collaboration Acknowledgment: R. Fesen (Dartmouth College) and J. Long (ESA/Hubble)</Credits>
+        <CreditsUrl>http://hubblesite.org/newscenter/archive/releases/2006/2006/30/image/b/results/100/</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1497902212</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SupernovaRemnant" Constellation="CAS" DataSetType="Sky" Dec="58.8169444444444" Magnitude="0" Name="Supernova Remnant Cassiopeia A - December 2004" Opacity="100" RA="23.3911111111111" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.22732569854533" BaseTileLevel="0" BottomsUp="False" CenterX="350.858344062932" CenterY="58.8156770727646" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Supernova Remnant Cassiopeia A - December 2004" Projection="Tan" QuadTreeMap="0123" Rotation="-0.496688204670829" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003021{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-30a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and the Hubble Heritage (STScI/AURA)-ESA/Hubble Collaboration Acknowledgment: R. Fesen (Dartmouth College) and J. Long (ESA/Hubble)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-30.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=287406697</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SupernovaRemnant" Constellation="CAS" DataSetType="Sky" Dec="58.8169444444444" Magnitude="0" Name="Supernova Remnant Cassiopeia A" Opacity="100" RA="23.3911111111111" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113477069679194" BaseTileLevel="0" BottomsUp="False" CenterX="350.864913575652" CenterY="58.8176638591468" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Supernova Remnant Cassiopeia A" Projection="Tan" QuadTreeMap="0123" Rotation="-0.0798713847051804" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000002333{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-15h" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-15.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1970913046</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="DRA" DataSetType="Sky" Dec="55.4319444444444" Magnitude="0" Name="Rich Background of Galaxies Behind the Tadpole Galaxy" Opacity="100" RA="16.1033333333333" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113012181865703" BaseTileLevel="0" BottomsUp="False" CenterX="241.550766545059" CenterY="55.4322218502728" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Rich Background of Galaxies Behind the Tadpole Galaxy" Projection="Tan" QuadTreeMap="0123" Rotation="-142.069934856398" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000002323{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-11e" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, H. Ford (JHU), G. Illingworth (UCSC/LO), M.Clampin (STScI), G. Hartig (STScI), the ACS Science Team, and ESA  The ACS Science Team:  H. Ford, G. Illingworth, M. Clampin, G. Hartig, T. Allen, K. Anderson, F. Bartko, N. Benitez, J. Blakeslee, R. Bouwens, T. Broadhurst, R. Brown, C. Burrows, D. Campbell, E. Cheng, N. Cross, P. Feldman, M. Franx, D. Golimowski, C. Gronwall, R. Kimble, J. Krist, M. Lesser, D. Magee, A. Martel, W. J. McCann, G. Meurer, G. Miley, M. Postman, P. Rosati, M. Sirianni, W. Sparks, P. Sullivan, H. Tran, Z. Tsvetanov, R. White, and R. Woodruff.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-11.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=169500302</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="LEO" DataSetType="Sky" Dec="17.2780555555556" Magnitude="0" Name="Spiral Galaxy NGC 3370, home to Supernova Seen in 1994" Opacity="100" RA="10.7852777777778" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0758704628197503" BaseTileLevel="0" BottomsUp="False" CenterX="161.778590729214" CenterY="17.278928622401" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Spiral Galaxy NGC 3370, home to Supernova Seen in 1994" Projection="Tan" QuadTreeMap="0123" Rotation="-160.882197898645" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000010021{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-24a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, The Hubble Heritage Team and A. Riess (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-24.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1365671883</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="PSC" DataSetType="Sky" Dec="17.1647222222222" Magnitude="0" Name="Hubble Finds Dark Matter Ring in Galaxy Cluster" Opacity="100" RA="0.442777777777778" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0569839205920419" BaseTileLevel="0" BottomsUp="False" CenterX="6.64383680277023" CenterY="17.1638080159557" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble Finds Dark Matter Ring in Galaxy Cluster" Projection="Tan" QuadTreeMap="0123" Rotation="86.5913139448451" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000003310{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2007-17a" Xcxstatus="in:65dccffcaffb32cbf1d96fba">
+        <Credits>Credit: NASA, ESA, M.J. Jee and H. Ford (Johns Hopkins University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2007/news-2007-17.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=903637401</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="VIR" DataSetType="Sky" Dec="-1.33833333333333" Magnitude="0" Name="Galaxy Abell 1689's 'Gravitational Lens' Magnifies Light of Distant Galaxies" Opacity="100" RA="13.1916666666667" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0566848326740156" BaseTileLevel="0" BottomsUp="False" CenterX="197.875021977371" CenterY="-1.33802195447086" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Galaxy Abell 1689's 'Gravitational Lens' Magnifies Light of Distant Galaxies" Projection="Tan" QuadTreeMap="0123" Rotation="115.070264325489" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003131{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-01a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, N. Benitez (JHU), T. Broadhurst (Racah Institute of  Physics/The Hebrew University), H. Ford (JHU), M. Clampin (STScI),  G. Hartig (STScI),  G. Illingworth (UCO/Lick Observatory), the  ACS Science Team and ESA The members of the ACS science team are: H.C. Ford (JHU),  G.D. Illingworth (UCO/Lick Observatory), N. Benitez (JHU),  M. Clampin (STScI), G.F. Hartig (STScI), D.R. Ardila (JHU),  F. Bartko (Bartko Science &amp; Technology), J.P. Blakeslee (JHU),  R.J. Bouwens (UCO/Lick Observatory), T.J. Broadhurst (Racah  Institute of Physics, The Hebrew University), R.A. Brown (STScI),  C.J. Burrows (STScI), E.S. Cheng (NASA-GSFC), N.J.G. Cross (JHU),  P.D. Feldman (JHU), M. Franx (Leiden Observatory), D.A. Golimowski  (JHU), C. Gronwall (Pennsylvania State University), L. Infante  (Pontificia Universidad Catolica de Chile), R.A. Kimble (NASA-GSFC),  J.E. Krist (STScI), M.P. Lesser (Steward Observatory), A.R. Martel  (JHU), F. Menanteau (JHU), G.R. Meurer (JHU), G.K. Miley (Leiden  Observatory), M. Postman (STScI), P. Rosati (European Southern  Observatory), M. Sirianni (JHU), W.B. Sparks (STScI), H.D. Tran  (JHU), Z.I. Tsvetanov (JHU), R.L. White (STScI/JHU), and  W. Zheng (JHU)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-01.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=671562313</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="SCL" DataSetType="Sky" Dec="-37.6822222222222" Magnitude="0" Name="Myriad of Stars in Spiral Galaxy NGC 300" Opacity="100" RA="0.915" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0859437785599977" BaseTileLevel="0" BottomsUp="False" CenterX="13.7250382137908" CenterY="-37.6819324388003" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 300;Myriad of Stars in Spiral Galaxy NGC 300" Projection="Tan" QuadTreeMap="0123" Rotation="172.004223442386" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000003000{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2004-13c" Xcxstatus="in:65aea0703d5676423ec14c12">
+        <Credits>Image Credit: NASA, ESA, and The Hubble Heritage Team (AURA/STScI) Acknowledgment: F. Bresolin (Institute for Astronomy, U. Hawaii)  and the Digitized Sky Survey</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2004/news-2004-13.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=214691552</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="CMA" DataSetType="Sky" Dec="-21.3747222222222" Magnitude="0" Name="Spiral Galaxies NGC 2207 and IC 2163" Opacity="100" RA="6.27333333333333" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.112832483246954" BaseTileLevel="0" BottomsUp="False" CenterX="94.1041869033637" CenterY="-21.3755325840443" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Spiral Galaxies NGC 2207 and IC 2163" Projection="Tan" QuadTreeMap="0123" Rotation="-168.964885595384" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003201{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2004-45a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA, ESA, and The Hubble Heritage Team (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2004/news-2004-45.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=67853438</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="GlobularCluster" Constellation="SCO" DataSetType="Sky" Dec="-22.975" Magnitude="0" Name="Globular Cluster M80: A Swarm of Ancient Stars in the Milky Way" Opacity="100" RA="16.2841666666667" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.057035045063089" BaseTileLevel="0" BottomsUp="False" CenterX="244.260453620117" CenterY="-22.9748180420222" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Globular Cluster M80: A Swarm of Ancient Stars in the Milky Way" Projection="Tan" QuadTreeMap="0123" Rotation="55.4206409810333" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000002313{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1999-26a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: The Hubble Heritage Team (AURA/ STScI/ NASA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1999/news-1999-26.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=677761630</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="COL" DataSetType="Sky" Dec="-37.5108333333333" Magnitude="0" Name="Barred Spiral Galaxy NGC 1808" Opacity="100" RA="5.12888888888889" Rotation="0" ZoomLevel="2">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0563243364661662" BaseTileLevel="0" BottomsUp="False" CenterX="76.9325763" CenterY="-37.5109658" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Barred Spiral Galaxy NGC 1808" Projection="Tan" QuadTreeMap="0123" Rotation="19.1796016028388" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000001223{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1998-12c" Xcxstatus="queue:hubble">
+        <Credits>Credit: Jim Flood (Amateur Astronomers Inc., Sperry Observatory), Max Mutchler (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1998/news-1998-12.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1861837915</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="GlobularCluster" Constellation="ARA" DataSetType="Sky" Dec="-53.7386111111111" Magnitude="0" Name="NGC 6397" Opacity="100" RA="17.6827777777778" Rotation="0" ZoomLevel="2.045">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0568761642060289" BaseTileLevel="0" BottomsUp="False" CenterX="265.242539149181" CenterY="-53.7384306852133" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 6397" Projection="Tan" QuadTreeMap="0123" Rotation="0.240819881864206" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000001012{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-37b" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and H. Richer (University of British Columbia)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-37.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=497424603</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CRU" DataSetType="Sky" Dec="-60.3643130318" Magnitude="0" Name="NGC 4755" Opacity="100" RA="12.8942810264667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0913c.jpg" ZoomLevel="2.16555943801324">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.541389859503309" BaseTileLevel="0" BottomsUp="False" CenterX="193.414215397" CenterY="-60.3643130318" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 4755" Projection="Tan" QuadTreeMap="" Rotation="-0.1" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0913cL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0913c" Xcorepipe_ids="hst|heic0913c" Xcxstatus="queue:hubble">
+        <Credits>ESO; This image of the well-known NGC 4755 cluster or Jewel Box was taken with the Wide Field Imager (WFI) on the MPG/ESO 2.2-metre t...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0913c/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0913c.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="VOL" DataSetType="Sky" Dec="-69.5415291774" Magnitude="0" Name="NGC 2442" Opacity="100" RA="7.60212738126667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1108b.jpg" ZoomLevel="2.16605293247529">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.541513233118822" BaseTileLevel="0" BottomsUp="False" CenterX="114.031910719" CenterY="-69.5415291774" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 2442" Projection="Tan" QuadTreeMap="" Rotation="-180" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic1108bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic1108b" Xcorepipe_ids="hst|heic1108b" Xcxstatus="queue:hubble">
+        <Credits>ESO; This picture of the Meathook Galaxy (NGC 2442) was taken by the Wide Field Imager on the MPG/ESO 2.2-metre telescope at La Silla...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1108b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1108b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="RET" DataSetType="Sky" Dec="-66.4925" Magnitude="0" Name="Barred Spiral Galaxy NGC 1313 - VLT" Opacity="100" RA="3.30583333333333" Rotation="0" ZoomLevel="2.18">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.1138807759461" BaseTileLevel="0" BottomsUp="False" CenterX="49.5859149" CenterY="-66.4923823" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Barred Spiral Galaxy NGC 1313 - VLT" Projection="Tan" QuadTreeMap="0123" Rotation="0.175270530067231" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000002032{Q}?g=138" WidthFactor="2" Xcxstatus="queue:hubble">
+        <Credits>Credit: H. Boffin (FORS/VLT/ESO)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2007/news-2007-05.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=190287536</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="ERI" DataSetType="Sky" Dec="-12.1928686103" Magnitude="0" Name="PKS 0405-123" Opacity="100" RA="4.13008938100667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0910m.jpg" ZoomLevel="2.29317413366989">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.573293533417472" BaseTileLevel="0" BottomsUp="False" CenterX="61.9513407151" CenterY="-12.1928686103" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="PKS 0405-123" Projection="Tan" QuadTreeMap="" Rotation="-0.5" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0910mL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0910m" Xcorepipe_ids="hst|heic0910m" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, the Hubble SM4 ERO Te; This image is a colour composite made from exposures from the Digitized Sky Survey 2 (DSS2). The field of view is slightly more ...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0910m/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0910m.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="LIB" DataSetType="Sky" Dec="-10.9309754957" Magnitude="0" Name="HD 140283" Opacity="100" RA="15.7178608537333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo1308a.jpg" ZoomLevel="2.29603986848973">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.574009967122432" BaseTileLevel="0" BottomsUp="False" CenterX="235.767912806" CenterY="-10.9309754957" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="HD 140283" Projection="Tan" QuadTreeMap="" Rotation="-0.16" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo1308aL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo1308a" Xcorepipe_ids="hst|opo1308a" Xcxstatus="queue:hubble">
+        <Credits>Digitized Sky Survey (DSS), STSc; This is a Digitized Sky Survey image of the oldest star with a well-determined age in our galaxy. The ageing star, catalogued as...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo1308a/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo1308a.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="VIR" DataSetType="Sky" Dec="-11.6441666666667" Magnitude="0" Name="The Sombrero Galaxy in Infrared Light" Opacity="100" RA="12.6658333333333" Rotation="0" ZoomLevel="2.38833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.2174101178432" BaseTileLevel="0" BottomsUp="False" CenterX="189.996771223806" CenterY="-11.622134637357" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Sombrero Galaxy in Infrared Light" Projection="Tan" QuadTreeMap="0123" Rotation="5.04069617292005" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003132{Q}?g=138" WidthFactor="2" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA/JPL-Caltech and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-28.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=2101102818</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SGR" DataSetType="Sky" Dec="-24.3791666666667" Magnitude="0" Name="Giant 'Twisters' and Star Wisps in the Lagoon Nebula" Opacity="100" RA="18.0611111111111" Rotation="0" ZoomLevel="2.42">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0565430711306959" BaseTileLevel="0" BottomsUp="False" CenterX="270.914674048299" CenterY="-24.3783231317495" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Giant 'Twisters' and Star Wisps in the Lagoon Nebula" Projection="Tan" QuadTreeMap="0123" Rotation="55.2189483664636" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000000313{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1996-38a" Xcxstatus="queue:hubble">
+        <Credits>Credit: A. Caulet (ST-ECF, ESA) and NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1996/news-1996-38.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=133232146</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="DOR" DataSetType="Sky" Dec="-67.9436007773" Magnitude="0" Name="N44" Opacity="100" RA="5.36987125123333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0212c.jpg" ZoomLevel="2.43131051804672">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.60782762951168" BaseTileLevel="0" BottomsUp="False" CenterX="80.5480687685" CenterY="-67.9436007773" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="N44" Projection="Tan" QuadTreeMap="" Rotation="0.32" Sparse="True" StockSet="False" TileLevels="2" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0212cL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0212c" Xcorepipe_ids="hst|opo0212c" Xcxstatus="queue:hubble">
+        <Credits>R. Chris Smith (CTIO) and Y.-H. ; Composite image of ground-based [S II] image (white; taken at the Curtis Schmidt Telescope at the Cerro Tololo Inter-American Ob...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0212c/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0212c.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="2.3" Classification="Galaxy" Constellation="TRI" DataSetType="Sky" Dec="30.668333333333333" Magnitude="0" Name="The sharpest view ever of the Triangulum Galaxy" Opacity="100" RA="1.5661111111111126" Rotation="0" Thumbnail="http://data1.wwtassets.org/packages/2020/07_phat_m33/thumb.jpg" ZoomLevel="2.5">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.6413865159570185" BaseTileLevel="0" BottomsUp="False" CenterX="23.501577996385475" CenterY="30.669082629666004" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The sharpest view ever of the Triangulum Galaxy" Projection="Tan" QuadTreeMap="0123" Rotation="0.04935307202296003" Sparse="True" StockSet="False" TileLevels="8" Url="http://data1.wwtassets.org/packages/2020/07_phat_m33/{1}/{3}/{3}_{2}.png" WidthFactor="2" Xastropix_ids="esahubble|heic1901a" Xcxstatus="in:649ba2b71e6961df10c19448">
+        <Credits>NASA, ESA, and M. Durbin, J. Dalcanton, and B. F. Williams (University of Washington)</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1901a/</CreditsUrl>
+        <Description>This gigantic image of the Triangulum Galaxy — also known
+        as Messier 33 — is a composite of about 54 different pointings with
+        Hubble’s Advanced Camera for Surveys. With a staggering size of
+        34,372×19,345 pixels, it is the second-largest image ever released by
+        Hubble. It is only dwarfed by the image of the Andromeda Galaxy,
+        released in 2015. The mosaic of the Triangulum Galaxy showcases the
+        central region of the galaxy and its inner spiral arms. Millions of
+        stars, hundreds of star clusters and bright nebulae are visible.</Description>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_phat_m33/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CRV" DataSetType="Sky" Dec="-18.8980621343" Magnitude="0" Name="Antennae Galaxies" Opacity="100" RA="12.0317363845333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0812c.jpg" ZoomLevel="2.55694978003763">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.639237445009408" BaseTileLevel="0" BottomsUp="False" CenterX="180.476045768" CenterY="-18.8980621343" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Antennae Galaxies" Projection="Tan" QuadTreeMap="" Rotation="-0.34" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0812cL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0812c" Xcorepipe_ids="hst|heic0812c" Xcxstatus="queue:hubble">
+        <Credits>Robert Gendler; This ground-based image was taken by Robert Gendler and shows the two merging Antennae Galaxies (NGC 4038 and NGC 4039) and thei...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0812c/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0812c.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SEX" DataSetType="Sky" Dec="-10.0187811296" Magnitude="0" Name="Abell 901" Opacity="100" RA="9.93851530073333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0802b.jpg" ZoomLevel="2.76971606325658">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.692429015814144" BaseTileLevel="0" BottomsUp="False" CenterX="149.077729511" CenterY="-10.0187811296" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Abell 901" Projection="Tan" QuadTreeMap="" Rotation="-0.0399999999999566" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0802bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0802b" Xcorepipe_ids="hst|heic0802b" Xcxstatus="queue:hubble">
+        <Credits>Credit for the Hubble images: NA; This image reveals the distribution of dark matter in the supercluster Abell 901/902, composed of hundreds of galaxies./p&gt; The i...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0802b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0802b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="ClusterOfGalaxies" Constellation="CAR" DataSetType="Sky" Dec="-55.9441666666667" Magnitude="0" Name="Visible-Light and X-Ray Composite Image of Galaxy Cluster 1E 0657-556" Opacity="100" RA="6.97444444444444" Rotation="0" ZoomLevel="2.79833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.169560555180986" BaseTileLevel="0" BottomsUp="False" CenterX="104.616802249577" CenterY="-55.9434170397582" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Visible-Light and X-Ray Composite Image of Galaxy Cluster 1E 0657-556" Projection="Tan" QuadTreeMap="0123" Rotation="0.0161620722523475" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000010113{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-39a,stsci|2009-18d" Xcxstatus="queue:hubble">
+        <Credits>Credit: X-ray: NASA/CXC/M.Markevitch et al. Optical: NASA/STScI; Magellan/U.Arizona/D.Clowe et al. Lensing Map: NASA/STScI; ESO WFI; Magellan/U.Arizona/D.Clowe et al. </Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-39.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1031792422</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="CVN" DataSetType="Sky" Dec="47.1972222222222" Magnitude="0" Name="Out of This Whirl: the Whirlpool Galaxy (M51) and Companion Galaxy;Messier 51;M51" Opacity="100" RA="13.4977777777778" Rotation="0" ZoomLevel="2.82833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.22793807538088" BaseTileLevel="0" BottomsUp="False" CenterX="202.46787245183" CenterY="47.213820301169" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Out of This Whirl: the Whirlpool Galaxy (M51) and Companion Galaxy;Messier 51;M51" Projection="Tan" QuadTreeMap="0123" Rotation="91.9752188189093" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000003102{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-12a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, S. Beckwith (STScI), and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-12.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1016568421</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="SpiralGalaxy" Constellation="CVN" DataSetType="Sky" Dec="47.1972222222222" Magnitude="0" Name="Whirpool Galaxy Closeup;M51;Messier 51" Opacity="100" RA="13.4977777777778" Rotation="0" ZoomLevel="2.82833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.050543245620284" BaseTileLevel="0" BottomsUp="False" CenterX="202.482256023413" CenterY="47.1930108486877" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Whirpool Galaxy Closeup;M51;Messier 51" Projection="Tan" QuadTreeMap="0123" Rotation="-124.27100461069" Sparse="True" StockSet="False" TileLevels="2" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000002103{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1996-17b" Xcxstatus="queue:hubble">
+        <Credits>Nino Panagia (Space Telescope Science Institute and European Space Agency) and NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1996/news-1996-17.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=876521511</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="StellarGroupings" Constellation="AND" DataSetType="Sky" Dec="40.71" Magnitude="0" Name="Young and Old Stars Found in Andromeda's Halo" Opacity="100" RA="0.768611111111111" Rotation="0" ZoomLevel="2.82833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0682924433387315" BaseTileLevel="0" BottomsUp="False" CenterX="11.5292211794134" CenterY="40.7108535007788" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Young and Old Stars Found in Andromeda's Halo" Projection="Tan" QuadTreeMap="0123" Rotation="77.9278746672465" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000003303{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-15a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA and T.M. Brown (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-15.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1330205328</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="GlobularCluster" Constellation="CEN" DataSetType="Sky" Dec="-47.4816666666667" Magnitude="0" Name="Peering into the Core of  Globular Cluster Omega Centauri" Opacity="100" RA="13.4475" Rotation="0" ZoomLevel="2.82833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0566592331594686" BaseTileLevel="0" BottomsUp="False" CenterX="201.7127702" CenterY="-47.481672" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Peering into the Core of  Globular Cluster Omega Centauri" Projection="Tan" QuadTreeMap="0123" Rotation="36.6568933085419" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000001233{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2001-33a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit:  NASA and The Hubble Heritage Team (STScI/AURA) Acknowledgment: A. Cool (SFSU)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2001/news-2001-33.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1042310781</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="ARA" DataSetType="Sky" Dec="-53.6889304712" Magnitude="0" Name="NGC 6397" Opacity="100" RA="17.6780912010667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0742b.jpg" ZoomLevel="3.20464112949658">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.801160282374144" BaseTileLevel="0" BottomsUp="False" CenterX="265.171368016" CenterY="-53.6889304712" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 6397" Projection="Tan" QuadTreeMap="" Rotation="-91.0477624881404" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0742bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0742b" Xcorepipe_ids="hst|opo0742b" Xcxstatus="queue:hubble">
+        <Credits>D. Verschatse (Antilhue Observat; Ground-based Image of Globular Cluster NGC 6397...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0742b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0742b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="3.2629587138369227" Classification="Unidentified" Constellation="FOR" DataSetType="Sky" Dec="-27.777739733705957" Magnitude="0" Name="Hubble’s Spectacular Wide View of the Universe" Opacity="100" RA="3.541669438106638" Rotation="0" Thumbnail="http://data1.wwtassets.org/packages/2020/07_hubble30/heic1909a/thumb.jpg" ZoomLevel="3.2629587138369227">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.545930671171172" BaseTileLevel="0" BottomsUp="False" CenterX="53.1100744947" CenterY="-27.7909884231" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble’s Spectacular Wide View of the Universe" OffsetX="1.6660481908299927e-05" OffsetY="1.6660481908299927e-05" Projection="Tan" QuadTreeMap="0123" Rotation="0.05999999999998088" Sparse="True" StockSet="False" TileLevels="7" Url="http://data1.wwtassets.org/packages/2020/07_hubble30/heic1909a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="esahubble|heic1909a" Xcorepipe_ids="hst|heic1909a" Xcxstatus="in:655407ad5dff7c3291e3b2a1">
+        <Credits>NASA, ESA, G. Illingworth and D. Magee (University of California, Santa Cruz), K. Whitaker (University of Connecticut), R. Bouwens (Leiden University), P. Oesch (University of Geneva), and the Hubble Legacy Field team.</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1909a/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_hubble30/heic1909a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="FOR" DataSetType="Sky" Dec="-37.2072222222222" Magnitude="0" Name="The Dusty Galaxy NGC 1316" Opacity="100" RA="3.37833333333333" Rotation="0" ZoomLevel="3.305">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0569122144768664" BaseTileLevel="0" BottomsUp="False" CenterX="50.6729579137224" CenterY="-37.2075310840443" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Dusty Galaxy NGC 1316" Projection="Tan" QuadTreeMap="0123" Rotation="98.5549607144229" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000001230{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-11a" Xcxstatus="in:657c642617aa40fc703f3af7">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA) Acknowledgment: P. Goudfrooij (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-11.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1601413419</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="3.36333333333333" Classification="Nebula" Constellation="CAR" DataSetType="Sky" Dec="-59.6" Magnitude="0" Name="Star birth in the extreme" Opacity="100" RA="10.74" Rotation="0" ZoomLevel="3.36333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.45442598901514364" BaseTileLevel="0" BottomsUp="False" CenterX="161.11976851015592" CenterY="-59.59562623532823" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Star birth in the extreme" OffsetX="1.3867980621800038e-05" OffsetY="1.3867980621800038e-05" Projection="Tan" QuadTreeMap="0123" Rotation="50.320000000000306" Sparse="True" StockSet="False" TileLevels="7" Url="http://data1.wwtassets.org/packages/2020/07_hubble30/heic0707a/L{1}X{2}Y{3}.png" WidthFactor="2" Xastropix_ids="esahubble|heic0707a" Xcorepipe_ids="hst|heic0707a" Xcxstatus="in:6537c3d6b493728d11b82ba2">
+        <Credits>NASA, ESA, N. Smith (University of California, Berkeley), and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0707a/</CreditsUrl>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_hubble30/heic0707a/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="CAR" DataSetType="Sky" Dec="-59.6480555555556" Magnitude="0" Name="Light and Shadow in the Carina Nebula (NGC 3372)" Opacity="100" RA="10.745" Rotation="0" ZoomLevel="3.36333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.116951513885838" BaseTileLevel="0" BottomsUp="False" CenterX="161.178898367045" CenterY="-59.6484568272354" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Light and Shadow in the Carina Nebula (NGC 3372)" Projection="Tan" QuadTreeMap="0123" Rotation="177.823624213756" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000002132{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2000-06a" Xcxstatus="queue:hubble">
+        <Credits>Image Credit: NASA, The Hubble Heritage Team (AURA/STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2000/news-2000-06.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1353700001</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="DOR" DataSetType="Sky" Dec="-69.0922222222222" Magnitude="0" Name="Vast Star-Forming Region 30 Doradus" Opacity="100" RA="5.64444444444444" Rotation="0" ZoomLevel="3.36333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.114421860766324" BaseTileLevel="0" BottomsUp="False" CenterX="84.662753464265" CenterY="-69.0917058840443" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Vast Star-Forming Region 30 Doradus" Projection="Tan" QuadTreeMap="0123" Rotation="61.7121230104788" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000010100{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2001-21a" Xcxstatus="in:65dcd002affb32cbf1d96fc8">
+        <Credits>Credit: NASA, N. Walborn and J. Maíz-Apellániz (Space Telescope Science Institute, Baltimore, MD), R. Barbá (La Plata Observatory, La Plata, Argentina)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2001/news-2001-21.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1419172444</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="UMA" DataSetType="Sky" Dec="69.6825" Magnitude="0" Name="Messier 82;Happy Sweet Sixteen, Hubble Telescope!;M82" Opacity="100" RA="9.93194444444444" Rotation="0" ZoomLevel="3.36333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.22703828785745" BaseTileLevel="0" BottomsUp="False" CenterX="148.978164077378" CenterY="69.6825657787881" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Messier 82;Happy Sweet Sixteen, Hubble Telescope!;M82" Projection="Tan" QuadTreeMap="0123" Rotation="-49.9848021444553" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000003121{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-14a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA) Acknowledgment: J. Gallagher (University of Wisconsin), M. Mountain  (STScI), and P. Puxley (National Science Foundation)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-14.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=39734206</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="UMA" DataSetType="Sky" Dec="69.6825" Magnitude="0" Name="Messier 82;Chandra/Hubble/Spitzer X-ray/Visible/Infrared Image of M82" Opacity="100" RA="9.93194444444444" Rotation="0" ZoomLevel="3.36333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.227557415274486" BaseTileLevel="0" BottomsUp="False" CenterX="148.960024153176" CenterY="69.6829021433877" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Messier 82;Chandra/Hubble/Spitzer X-ray/Visible/Infrared Image of M82" Projection="Tan" QuadTreeMap="0123" Rotation="-50.0317230141549" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000001300{Q}?g=138" WidthFactor="2" Xcxstatus="in:657c642717aa40fc703f3af9">
+        <Credits>Credit: NASA, ESA, CXC, and JPL-Caltech</Credits>
+        <CreditsUrl>http://hubblesite.org/newscenter/archive/releases/2006/14/image/f/</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1630413117</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="TUC" DataSetType="Sky" Dec="-60.569712781" Magnitude="0" Name="HDF-S" Opacity="100" RA="22.5605084235333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo9841n.jpg" ZoomLevel="3.49762441777152">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.87440610444288" BaseTileLevel="0" BottomsUp="False" CenterX="338.407626353" CenterY="-60.569712781" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="HDF-S" Projection="Tan" QuadTreeMap="" Rotation="0.08" Sparse="True" StockSet="False" TileLevels="2" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo9841nL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo9841n" Xcorepipe_ids="hst|opo9841n" Xcxstatus="queue:hubble">
+        <Credits>J. Gardner (NOAO/GSFC), Cerro To; After the great success of the origninal Hubble Deep Field, later called Hubble Deep Field North (HDF-N), an identical project f...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo9841n/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo9841n.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Unfiltered" Constellation="SGR" DataSetType="Sky" Dec="-29.48" Magnitude="0" Name="Comet Hale-Bopp (26 Sep 1995)" Opacity="100" RA="18.2727777777778" Rotation="0" ZoomLevel="3.67333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0141976246496765" BaseTileLevel="0" BottomsUp="False" CenterX="274.089833" CenterY="-29.480059" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Comet Hale-Bopp" Projection="Tan" QuadTreeMap="0123" Rotation="-47.0034981896623" Sparse="True" StockSet="False" TileLevels="1" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000010001{Q}?g=138" WidthFactor="2" Xcxstatus="queue:hubble">
+        <Credits>H.A. Weaver (Applied Research Corp.), P.D. Feldman (The Johns Hopkins University), and NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1995/news-1995-41.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1294757692</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="BlackHole" Constellation="CEN" DataSetType="Sky" Dec="-43.0188888888889" Magnitude="0" Name="Nearby Galaxy Centaurus A" Opacity="100" RA="13.4244444444444" Rotation="0" ZoomLevel="3.82166666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.112787858261397" BaseTileLevel="0" BottomsUp="False" CenterX="201.3722414" CenterY="-43.0166201" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Nearby Galaxy Centaurus A" Projection="Tan" QuadTreeMap="0123" Rotation="-20.6255730419822" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000002031{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1998-14c" Xcxstatus="queue:hubble">
+        <Credits>Credit: E.J. Schreier (STScI), and NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1998/news-1998-14.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=366937003</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SCO" DataSetType="Sky" Dec="-22.8856679578" Magnitude="0" Name="AR Scorpii" Opacity="100" RA="16.3631831055333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1616b.jpg" ZoomLevel="3.84262521297884">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.960656303244709" BaseTileLevel="0" BottomsUp="False" CenterX="245.447746583" CenterY="-22.8856679578" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="AR Scorpii" Projection="Tan" QuadTreeMap="" Rotation="-1.08" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic1616bL{1}X{2}Y{3}.png" WidthFactor="1" Xcorepipe_ids="hst|heic1616b" Xcxstatus="queue:hubble">
+        <Credits>Digitized Sky Survey 2. Acknowle; This wide-field image from the Digitized Sky Survey 2 shows the rich starfields surrounding the exotic binary star system AR Sco...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1616b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1616b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CAS" DataSetType="Sky" Dec="56.6239797012" Magnitude="0" Name="bok globules" Opacity="100" RA="0.878261089126667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0613b.jpg" ZoomLevel="3.86127926696346">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.965319816740864" BaseTileLevel="0" BottomsUp="False" CenterX="13.1739163369" CenterY="56.6239797012" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="bok globules" Projection="Tan" QuadTreeMap="" Rotation="0.720000000000001" Sparse="True" StockSet="False" TileLevels="5" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0613bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0613b" Xcorepipe_ids="hst|opo0613b" Xcxstatus="queue:hubble">
+        <Credits>T.A. Rector/University of Alaska; This wide-field view of the star-forming region NGC 281 in the constellation Cassiopeia was taken with the WIYN 0.9-meter telesc...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0613b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0613b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SCL" DataSetType="Sky" Dec="-37.682919551" Magnitude="0" Name="IRAS 00525-3757" Opacity="100" RA="0.915141807833333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0413b.jpg" ZoomLevel="3.86427138296218">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.966067845740544" BaseTileLevel="0" BottomsUp="False" CenterX="13.7271271175" CenterY="-37.682919551" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="IRAS 00525-3757" Projection="Tan" QuadTreeMap="" Rotation="-180.18" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0413bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0413b" Xcorepipe_ids="hst|opo0413b" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, and The Hubble Herita; A ground-based Digitized Sky Survey image NGC 300....</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0413b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0413b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="ORI" DataSetType="Sky" Dec="-5.40527777777778" Magnitude="0" Name="The Orion Nebula: Stellar Birthplace" Opacity="100" RA="5.58833333333333" Rotation="0" ZoomLevel="3.93666666666667">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0561472961221865" BaseTileLevel="0" BottomsUp="False" CenterX="83.8266687" CenterY="-5.4052517" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Orion Nebula: Stellar Birthplace" Projection="Tan" QuadTreeMap="0123" Rotation="75.4179239090172" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000010123{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1995-49b" Xcxstatus="queue:hubble">
+        <Credits>Credit: C.R. O'Dell/Rice University; NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1995/news-1995-49.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=736525265</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="InterstellarDust" Constellation="CAS" DataSetType="Sky" Dec="56.6447222222222" Magnitude="0" Name="Nearby Dust Clouds in the Milky Way" Opacity="100" RA="0.884444444444444" Rotation="0" ZoomLevel="3.945">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0569102255597261" BaseTileLevel="0" BottomsUp="False" CenterX="13.2649828461027" CenterY="56.6454310443601" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Nearby Dust Clouds in the Milky Way" Projection="Tan" QuadTreeMap="0123" Rotation="-113.041650236429" Sparse="True" StockSet="False" TileLevels="4" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000002211{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2006-13a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA) Acknowledgment: P. McCullough (STScI)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-13.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=599717539</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="ORI" DataSetType="Sky" Dec="-5.40555555555556" Magnitude="0" Name="Hubble Probes the Great Orion Nebula" Opacity="100" RA="5.58833333333333" Rotation="0" ZoomLevel="3.97833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0813707558539556" BaseTileLevel="0" BottomsUp="False" CenterX="83.8268692" CenterY="-5.4055466" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble Probes the Great Orion Nebula" Projection="Tan" QuadTreeMap="0123" Rotation="75.4310456965389" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:2}.ortho.tiles.virtualearth.net/tiles/wsa0000000302{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|1994-10a" Xcxstatus="queue:hubble">
+        <Credits>Credit: C.R. O'Dell/ Rice University NASA</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/1994/news-1994-10.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1556539595</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SER2" DataSetType="Sky" Dec="-13.7566666666667" Magnitude="0" Name="The Eagle Has Risen: Stellar Spire in the Eagle Nebula" Opacity="100" RA="18.3211111111111" Rotation="0" ZoomLevel="4">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113558627827542" BaseTileLevel="0" BottomsUp="False" CenterX="274.816548189719" CenterY="-13.7555132120144" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="The Eagle Has Risen: Stellar Spire in the Eagle Nebula" Projection="Tan" QuadTreeMap="0123" Rotation="-96.8426112540869" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000001231{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-12b" Xcxstatus="in:661fef70befbe21fbdf49bb5">
+        <Credits>Credit: NASA, ESA, and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-12.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=2051538110</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="UMA" DataSetType="Sky" Dec="54.3513888888889" Magnitude="0" Name="Hubble's Largest Galaxy Portrait showcases Messier 101;M101" Opacity="100" RA="14.0533333333333" Rotation="0" ZoomLevel="4">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.227796362045779" BaseTileLevel="0" BottomsUp="False" CenterX="210.798477593306" CenterY="54.3512802768778" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Hubble's Largest Galaxy Portrait showcases Messier 101;M101" Projection="Tan" QuadTreeMap="0123" Rotation="3.47976808980042" Sparse="True" StockSet="False" TileLevels="6" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000012020{Q}?g=182" WidthFactor="2" Xastropix_ids="stsci|2006-10a" Xcxstatus="in:65e5f0f6affb32cbf1d97d1a">
+        <Credits>Credit for Hubble Image: NASA and ESA Acknowledgment: K.D. Kuntz (GSFC), F. Bresolin (University of Hawaii), J. Trauger (JPL), J. Mould (NOAO), and Y.-H. Chu (University of Illinois, Urbana) Credit for CFHT Image: Canada-France-Hawaii Telescope/ J.-C. Cuillandre/Coelum Credit for NOAO Image: G. Jacoby, B. Bohannan, M. Hanna/ NOAO/AURA/NSF</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2006/news-2006-10.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=122497807</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Galaxy" Constellation="VIR" DataSetType="Sky" Dec="-11.6197222222222" Magnitude="0" Name="Sombrero Galaxy;Messier 104;M104" Opacity="100" RA="12.6663888888889" Rotation="0" ZoomLevel="4">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.227650552851183" BaseTileLevel="0" BottomsUp="False" CenterX="189.99663401514" CenterY="-11.6221947855201" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Sombrero Galaxy;Messier 104;M104" Projection="Tan" QuadTreeMap="0123" Rotation="5.03860323750491" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000010203{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2003-28a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA and The Hubble Heritage Team (STScI/AURA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2003/news-2003-28.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=950951707</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Star" Constellation="ORI" DataSetType="Sky" Dec="-5.42305555555556" Magnitude="0" Name="Bow Shock Near Young Star LL Ori" Opacity="100" RA="5.58472222222222" Rotation="0" ZoomLevel="4">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0565998124085964" BaseTileLevel="0" BottomsUp="False" CenterX="83.771083" CenterY="-5.4229555" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Bow Shock Near Young Star LL Ori" Projection="Tan" QuadTreeMap="0123" Rotation="-179.719262927482" Sparse="True" StockSet="False" TileLevels="2" Url="http://r{S:1}.ortho.tiles.virtualearth.net/tiles/wsa0000001121{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-05a" Xcxstatus="in:661fef6bbefbe21fbdf49bab">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA)  Acknowledgment: C. R. O'Dell (Vanderbilt University)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-05.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1539525951</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="CEN" DataSetType="Sky" Dec="-63.3436111111111" Magnitude="0" Name="Thackeray's Globules: Dense, Opaque Dust Clouds in Star-Forming Region IC 2944" Opacity="100" RA="11.6394444444444" Rotation="0" ZoomLevel="4.01833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.05661827822785" BaseTileLevel="0" BottomsUp="False" CenterX="174.5922252258" CenterY="-63.3429792556399" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Thackeray's Globules: Dense, Opaque Dust Clouds in Star-Forming Region IC 2944" Projection="Tan" QuadTreeMap="0123" Rotation="-75.6431658954445" Sparse="True" StockSet="False" TileLevels="3" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000010030{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-01a" Xcxstatus="in:65dcd002affb32cbf1d96fc6">
+        <Credits>Image Credit: NASA and The Hubble Heritage Team (STScI/AURA) Acknowledgment: Bo Reipurth (University of Hawaii)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-01.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=175727998</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="TUC" DataSetType="Sky" Dec="-72.1035586412" Magnitude="0" Name="47 Tucanae" Opacity="100" RA="0.397293997144667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0033c.jpg" ZoomLevel="4.01993979427635">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.00498494856909" BaseTileLevel="0" BottomsUp="False" CenterX="5.95940995717" CenterY="-72.1035586412" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="47 Tucanae" Projection="Tan" QuadTreeMap="" Rotation="-0.420385981253808" Sparse="True" StockSet="False" TileLevels="2" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0033cL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0033c" Xcorepipe_ids="hst|opo0033c" Xcxstatus="queue:hubble">
+        <Credits>David Malin (Anglo-Australian Ob; The picture at left, taken by a terrestrial telescope, shows most of the cluster, a tightly packed group of middle-aged stars he...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0033c/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0033c.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="GiantMolecularCloud" Constellation="TUC" DataSetType="Sky" Dec="-72.1758333333333" Magnitude="0" Name="Infant Stars in the Small Magellanic Cloud" Opacity="100" RA="0.985277777777778" Rotation="0" ZoomLevel="4.16333333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.0909538039142343" BaseTileLevel="0" BottomsUp="False" CenterX="14.7800742215381" CenterY="-72.1751720924772" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Infant Stars in the Small Magellanic Cloud" Projection="Tan" QuadTreeMap="0123" Rotation="1.33819012259932" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:3}.ortho.tiles.virtualearth.net/tiles/wsa0000001133{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2005-04a" Xcxstatus="queue:hubble">
+        <Credits>Credit: NASA, ESA and A. Nota (STScI/ESA)</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2005/news-2005-04.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1715849777</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="1" Classification="Nebula" Constellation="SGR" DataSetType="Sky" Dec="-16.1566666666667" Magnitude="0" Name="Omega Nebula;Swan Nebula;M17;Messier 17" Opacity="100" RA="18.3427777777778" Rotation="0" ZoomLevel="4.22833333333333">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="0.113842002764594" BaseTileLevel="0" BottomsUp="False" CenterX="275.142504706497" CenterY="-16.1565827" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Omega Nebula;Swan Nebula;M17;Messier 17" Projection="Tan" QuadTreeMap="0123" Rotation="-93.0146349876386" Sparse="True" StockSet="False" TileLevels="5" Url="http://r{S:0}.ortho.tiles.virtualearth.net/tiles/wsa0000003330{Q}?g=138" WidthFactor="2" Xastropix_ids="stsci|2002-11g" Xcxstatus="in:65dccffeaffb32cbf1d96fbe">
+        <Credits>Credit: NASA, H. Ford (JHU), G. Illingworth (UCSC/LO), M.Clampin (STScI), G. Hartig (STScI), the ACS Science Team, and ESA  The ACS Science Team:  H. Ford, G. Illingworth, M. Clampin, G. Hartig, T. Allen, K. Anderson, F. Bartko, N. Benitez, J. Blakeslee, R. Bouwens, T. Broadhurst, R. Brown, C. Burrows, D. Campbell, E. Cheng, N. Cross, P. Feldman, M. Franx, D. Golimowski, C. Gronwall, R. Kimble, J. Krist, M. Lesser, D. Magee, A. Martel, W. J. McCann, G. Meurer, G. Miley, M. Postman, P. Rosati, M. Sirianni, W. Sparks, P. Sullivan, H. Tran, Z. Tsvetanov, R. White, and R. Woodruff.</Credits>
+        <CreditsUrl>http://hubblesite.org/contents/news-releases/2002/news-2002-11.html</CreditsUrl>
+        <ThumbnailUrl>http://www.worldwidetelescope.org/wwtweb/thumbnail.aspx?name=1646351688</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="LYR" DataSetType="Sky" Dec="37.7462011808" Magnitude="0" Name="NGC 6791" Opacity="100" RA="19.3490065772667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0825b.jpg" ZoomLevel="4.59377556922368">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.14844389230592" BaseTileLevel="0" BottomsUp="False" CenterX="290.235098659" CenterY="37.7462011808" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="NGC 6791" Projection="Tan" QuadTreeMap="" Rotation="1.13999999999998" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo0825bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo0825b" Xcorepipe_ids="hst|opo0825b" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, DSS, and L. Bedin (ST; This is a ground-based telescopic view of NGC 6791, located 13,300 light-years away in the constellation Lyra....</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo0825b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo0825b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="AQR" DataSetType="Sky" Dec="-6.22864398855" Magnitude="0" Name="iPTF16geu" Opacity="100" RA="21.08332826" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1710d.jpg" ZoomLevel="4.59594817075083">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.14898704268771" BaseTileLevel="0" BottomsUp="False" CenterX="316.2499239" CenterY="-6.22864398855" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="iPTF16geu" Projection="Tan" QuadTreeMap="" Rotation="90.14" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic1710dL{1}X{2}Y{3}.png" WidthFactor="1" Xcorepipe_ids="hst|heic1710d" Xcxstatus="queue:hubble">
+        <Credits>ESA/Hubble, Palomar Observatory/; The Palomar Observatory, located on Palomar Mountain, California, created this wide-field view of the night sky. In the lower ce...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1710d/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1710d.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CEN" DataSetType="Sky" Dec="-43.0266185227" Magnitude="0" Name="Centaurus A" Opacity="100" RA="13.4255589245333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1415a.jpg" ZoomLevel="4.6385958040535">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.15964895101338" BaseTileLevel="0" BottomsUp="False" CenterX="201.383383868" CenterY="-43.0266185227" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Centaurus A" Projection="Tan" QuadTreeMap="" Rotation="1.7" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic1415aL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic1415a" Xcorepipe_ids="hst|heic1415a" Xcxstatus="queue:hubble">
+        <Credits>Image credit: ESA/Hubble, NASA, ; This image shows the stunning elliptical galaxy Centaurus A. Recently, astronomers have used the NASA/ESA Hubble Space Telescope...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1415a/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic1415a.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="DRA" DataSetType="Sky" Dec="66.6341511773" Magnitude="0" Name="Cat's Eye Nebula" Opacity="100" RA="17.9765248079333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0414d.jpg" ZoomLevel="4.64220610910618">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.16055152727654" BaseTileLevel="0" BottomsUp="False" CenterX="269.647872119" CenterY="66.6341511773" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Cat's Eye Nebula" Projection="Tan" QuadTreeMap="" Rotation="-5.06000000000001" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0414dL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0414d" Xcorepipe_ids="hst|heic0414d" Xcxstatus="queue:hubble">
+        <Credits>ESA and Digitized Sky Survey 2; The image of the area around the Cat's Eye Nebula was composed from three Digitized Sky Survey 2 images taken through blue, red ...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0414d/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0414d.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-59.9634011966" Magnitude="0" Name="Eta Carinae" Opacity="100" RA="10.7431629714" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo1212e.jpg" ZoomLevel="5.27040668689203">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.31760167172301" BaseTileLevel="0" BottomsUp="False" CenterX="161.147444571" CenterY="-59.9634011966" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Eta Carinae" Projection="Tan" QuadTreeMap="" Rotation="-0.839999999999999" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-opo1212eL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|opo1212e" Xcorepipe_ids="hst|opo1212e" Xcxstatus="queue:hubble">
+        <Credits>NOAO, AURA, NSF, and N. Smith (U; This image shows a giant star-forming region in the southern sky known as the Carina Nebula and combines the light from three di...</Credits>
+        <CreditsUrl>https://esahubble.org/images/opo1212e/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-opo1212e.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="CAR" DataSetType="Sky" Dec="-59.6123251898" Magnitude="0" Name="Carina Nebula" Opacity="100" RA="10.7344598049333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0707g.jpg" ZoomLevel="5.27596694143795">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.31899173535949" BaseTileLevel="0" BottomsUp="False" CenterX="161.016897074" CenterY="-59.6123251898" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Carina Nebula" Projection="Tan" QuadTreeMap="" Rotation="-90.76" Sparse="True" StockSet="False" TileLevels="3" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0707gL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0707g" Xcorepipe_ids="hst|heic0707g" Xcxstatus="queue:hubble">
+        <Credits>N. Smith and NOAO/AURA/NSF; This image shows a ground-based view of the giant star-forming region in the southern sky known as the Carina Nebula, combining ...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0707g/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0707g.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="AND" DataSetType="Sky" Dec="41.38581914951469" Magnitude="0" Name="M31 PHAST" Opacity="100" RA="0.7288272228944803" Rotation="0" Thumbnail="http://data1.wwtassets.org/packages/2025/03_hubble/phast/thumb.jpg" ZoomLevel="5.588990230812746">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="3.6384629589331374" BaseTileLevel="0" BottomsUp="False" CenterX="10.9324088386" CenterY="41.3858104149" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="M31 PHAST" OffsetX="1.3879634700519268e-05" OffsetY="-5.316997095003017e-06" Projection="Tan" QuadTreeMap="" Rotation="125.02223862026231" Sparse="True" StockSet="False" TileLevels="10" Url="http://data1.wwtassets.org/packages/2025/03_hubble/phast/{1}/{3}/{3}_{2}.png" WidthFactor="2" Xcxstatus="in:67c7fbbc1751427718c4ef33">
+        <Credits>NASA, ESA, B. Williams (University of Washington)</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic2501a/</CreditsUrl>
+        <Description>This the largest photomosaic ever assembled from NASA/ESA Hubble Space Telescope observations. It is a panoramic view of the neighboring Andromeda galaxy, located 2.5 million light-years away. It took over 10 years to make this vast and colorful portrait of the galaxy, requiring over 600 Hubble snapshots. The galaxy is so close to us, that in angular size it is six times the apparent diameter of the full Moon, and can be seen with the unaided eye. For Hubble’s pinpoint view, that’s a lot of celestial real estate to cover. This stunning, colorful mosaic captures the glow of 200 million stars. That’s still a fraction of Andromeda’s population. And the stars are spread across about 2.5 billion pixels. The detailed look at the resolved stars will help astronomers piece together the galaxy’s past history that includes mergers with smaller satellite galaxies. [Image description: The Andromeda galaxy, a spiral galaxy, spreads across the image. It is tilted nearly edge-on to our line of sight so that it appears very oval. The borders of the galaxy are jagged because the image is a mosaic of smaller, square images against a black background. The outer edges of the galaxy are blue, while the inner two-thirds is yellowish with a bright, central core. Dark, dusty filamentary clouds wrap around the outer half of the galaxy’s disk. At 10 o’clock, a smaller dwarf elliptical galaxy forms a fuzzy, yellow blob. Hubble’s sharp vision distinguishes about 200 million stars within the image.]</Description>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2025/03_hubble/phast/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="SEX" DataSetType="Sky" Dec="2.2306464581" Magnitude="0" Name="COSMOS" Opacity="100" RA="10.0076172702667" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0701k.jpg" ZoomLevel="5.69858828612403">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.42464707153101" BaseTileLevel="0" BottomsUp="False" CenterX="150.114259054" CenterY="2.2306464581" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="COSMOS" Projection="Tan" QuadTreeMap="" Rotation="0" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0701kL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0701k" Xcorepipe_ids="hst|heic0701k" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA and R. Massey (Califor; This composite shows three different components of the COSMOS survey: The normal matter (in red) determined mainly by the Europe...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0701k/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0701k.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="0" Constellation="UMA" DataSetType="Sky" Dec="69.319507349" Magnitude="0" Name="Holmberg IX" Opacity="100" RA="9.93979605613333" Rotation="0" Thumbnail="http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0801b.jpg" ZoomLevel="6.83303334867763">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.70825833716941" BaseTileLevel="0" BottomsUp="False" CenterX="149.096940842" CenterY="69.319507349" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Holmberg IX" Projection="Tan" QuadTreeMap="" Rotation="11.66" Sparse="True" StockSet="False" TileLevels="4" Url="http://wwtfiles.blob.core.windows.net/vamp/Hubble-heic0801bL{1}X{2}Y{3}.png" WidthFactor="1" Xastropix_ids="esahubble|heic0801b" Xcorepipe_ids="hst|heic0801b" Xcxstatus="queue:hubble">
+        <Credits>NASA, ESA, and D. de Mello (Cath; A GALEX ultraviolet image of the interacting galaxies M81 and M82, which lie 12 million light-years away in the constellation Ur...</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic0801b/</CreditsUrl>
+        <ThumbnailUrl>http://wwtfiles.blob.core.windows.net/vamp/thumb-Hubble-heic0801b.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+  <Place Angle="0" AngularSize="7" Classification="Galaxy" Constellation="AND" DataSetType="Sky" Dec="41.5927244444445" Magnitude="0" Name="PHAT M31" Opacity="100" RA="0.7436091666666655" Rotation="0" Thumbnail="http://data1.wwtassets.org/packages/2020/07_phat_m31/thumb.jpg" ZoomLevel="7">
+    <ForegroundImageSet>
+      <ImageSet BandPass="Visible" BaseDegreesPerTile="1.8197882908523313" BaseTileLevel="0" BottomsUp="False" CenterX="11.686498572218326" CenterY="41.90823522094287" DataSetType="Sky" ElevationModel="False" FileType=".png" Generic="False" Name="Sharpest ever view of the Andromeda Galaxy;Andromeda Galaxy;M 31;Messier 31" OffsetX="-0.483202756087923" OffsetY="-0.154475340368076" Projection="Tan" QuadTreeMap="" Rotation="-236.10668016489333" Sparse="True" StockSet="False" TileLevels="9" Url="http://data1.wwtassets.org/packages/2020/07_phat_m31/{1}/{3}/{3}_{2}.png" WidthFactor="2" Xcxstatus="in:649ba2b61e6961df10c19447">
+        <Credits>NASA, ESA, J. Dalcanton (University of Washington, USA), B.
+        F. Williams (University of Washington, USA), L. C. Johnson (University
+        of Washington, USA), the PHAT team, and R. Gendler. Astrometric
+        alignment by A. David Weigel (US Space &amp; Rocket Center).</Credits>
+        <CreditsUrl>https://esahubble.org/images/heic1502a/</CreditsUrl>
+        <Description>This image, captured with the NASA/ESA Hubble Space
+        Telescope, is the largest and sharpest image ever taken of the
+        Andromeda galaxy — otherwise known as M31. The full image has 1.5
+        billion pixels. You would need more than 600 HD television screens to
+        display the whole image at once. It is the biggest Hubble image ever
+        released and shows over 100 million stars and thousands of star
+        clusters embedded in a section of the galaxy’s pancake-shaped disc
+        stretching across over 40,000 light-years.</Description>
+        <ThumbnailUrl>http://data1.wwtassets.org/packages/2020/07_phat_m31/thumb.jpg</ThumbnailUrl>
+      </ImageSet>
+    </ForegroundImageSet>
+  </Place>
+</Folder>
