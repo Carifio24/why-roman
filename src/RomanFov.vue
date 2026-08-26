@@ -490,12 +490,12 @@
           <div class="tour-controls-column">
             <h3>FOV</h3>
             <MiniFootprintSettings
-              v-for="fov in fovControls"
-              :key="fov.label"
-              v-model:opacity="fov.footprint.opacity"
-              v-model:fill="fov.footprint.fill"
-              :label="fov.label"
-              :color="fov.footprint.color"
+              v-for="footprint in visibleFootprints"
+              :key="footprint.id"
+              v-model:opacity="footprint.opacity"
+              v-model:fill="footprint.fill"
+              :label="footprint.label"
+              :color="footprint.color"
               :show-opacity="false"
             />
           </div>
@@ -1201,14 +1201,6 @@ function toggleControls() {
   showOptions.value = open;
 }
 
-// the footprints the controls panel offers, and what to call them there
-const fovControls = [
-  { footprint: hubble, label: "Hubble" },
-  { footprint: roman, label: "Roman" },
-  { footprint: phast, label: "PHAT outline" },
-  { footprint: phastI, label: "PHAT fields" },
-];
-
 const endTourOverlay = ref(false);
 function showEndTourOverlay() {
   endTourOverlay.value = true;
@@ -1680,6 +1672,7 @@ function selectPlace(id: string, step = 0) {
     leaveTour();
   }
   showExploreUi.value = false;
+  showOptions.value = false;
   lastTourId.value = id;
   selectedPlaceId.value = id;
   goToStep(step);
