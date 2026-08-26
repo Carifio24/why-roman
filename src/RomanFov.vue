@@ -329,23 +329,53 @@
               <div
                 v-for="slider in opacitySliders"
                 :key="slider.index"
+                class="opacity-slider-row"
               >
-                <label :for="`layer-opacity-${slider.index}`">{{
-                  slider.name
-                }}</label>
-                <v-slider
-                  :id="`layer-opacity-${slider.index}`"
-                  :model-value="opacityOf(slider.index)"
-                  :min="0"
-                  :max="1"
-                  :step="0.01"
-                  :color="roman.color"
-                  density="compact"
-                  hide-details
-                  @update:model-value="
-                    (value: number) => setOpacity(slider.index, value)
-                  "
-                />
+                <template v-if="slider.minLabel || slider.maxLabel">
+                  <span
+                    class="opacity-slider-label"
+                    tabindex="0"
+                    @click="setOpacity(slider.index, 0)"
+                    @keyup.enter="setOpacity(slider.index, 0)"
+                  >{{ slider.minLabel ?? slider.name }}</span>
+                  <v-slider
+                    :id="`layer-opacity-${slider.index}`"
+                    :model-value="opacityOf(slider.index)"
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    color="grey"
+                    density="compact"
+                    hide-details
+                    @update:model-value="
+                      (value: number) => setOpacity(slider.index, value)
+                    "
+                  />
+                  <span
+                    class="opacity-slider-label"
+                    tabindex="0"
+                    @click="setOpacity(slider.index, 1)"
+                    @keyup.enter="setOpacity(slider.index, 1)"
+                  >{{ slider.maxLabel ?? slider.name }}</span>
+                </template>
+                <template v-else>
+                  <label :for="`layer-opacity-${slider.index}`">{{
+                    slider.name
+                  }}</label>
+                  <v-slider
+                    :id="`layer-opacity-${slider.index}`"
+                    :model-value="opacityOf(slider.index)"
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    color="grey"
+                    density="compact"
+                    hide-details
+                    @update:model-value="
+                      (value: number) => setOpacity(slider.index, value)
+                    "
+                  />
+                </template>
               </div>
             </div>
           </v-row>
@@ -1124,14 +1154,24 @@ function showImagesets(wtml: WtmlLoaderReturn, ...indices: number[]) {
   }
 }
 
-function showOpacitySliders(...indices: number[]) {
+// a plain number shows the layer's own name; pass an object instead to
+// label the slider's 0%/100% ends (e.g. the background/foreground images
+// being cross-faded) rather than falling back to the layer's own name
+type OpacitySliderSpec =
+  | number
+  | { index: number; minLabel?: string; maxLabel?: string };
+
+function showOpacitySliders(...specs: OpacitySliderSpec[]) {
   layerOpacities.value = {};
   const wtml = shownWtml.value;
   if (!wtml) {
     opacitySliders.value = [];
     return;
   }
-  // make sure layers are enabled and have opacity. 
+  const indices = specs.map((spec) =>
+    typeof spec === "number" ? spec : spec.index,
+  );
+  // make sure layers are enabled and have opacity.
   indices.forEach((index) => {
     const layer = wtml.imagesetLayers.value[index];
     if (layer) {
@@ -1140,10 +1180,15 @@ function showOpacitySliders(...indices: number[]) {
     }
   });
   // set the list of sliders to show
-  opacitySliders.value = indices.map((index) => ({
-    index,
-    name: wtml.imagesetNames.value[index] ?? "",
-  }));
+  opacitySliders.value = specs.map((spec) => {
+    const index = typeof spec === "number" ? spec : spec.index;
+    return {
+      index,
+      name: wtml.imagesetNames.value[index] ?? "",
+      minLabel: typeof spec === "number" ? undefined : spec.minLabel,
+      maxLabel: typeof spec === "number" ? undefined : spec.maxLabel,
+    };
+  });
 }
 
 interface ImagesetView {
@@ -1668,7 +1713,7 @@ const tourEndOptions = computed<{id: string, label: string, action: () => void}[
  * others fade against, so it doesn't get one.
  */
 // set by showOpacitySliders, not worked out from what is showing
-const opacitySliders = ref<{ index: number; name: string }[]>([]);
+const opacitySliders = ref<{ index: number; name: string; minLabel?: string; maxLabel?: string }[]>([]);
 const layerSliders = opacitySliders;
 
 function opacityOf(index: number): number {
@@ -2647,5 +2692,28 @@ h1.startup-screen-title {
 
 #step-control {
   flex: 1 0 auto;
+  border: none;
+  background: none;
+}
+
+.opacity-slider-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.opacity-slider-label {
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background: var(--background-color-darkest);
+  border: 1px solid var(--accent-color);
+  border-radius: 10px;
+  padding: 0.25rem 0.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>
