@@ -25,13 +25,13 @@
     <slot name="controls">
       <div class="tour-text-controls">
         <v-btn
-          :class="{ 'tour-back-button-hidden': step === 0 }"
+          :class="{ 'tour-back-button-hidden': step === 0 && !showBackOnFirstStep }"
           variant="flat"
           color="#502752"
           rounded="lg"
           @click="emit('previous')"
         >
-          Back
+          {{ backText }}
         </v-btn>
 
         <!-- <v-btn
@@ -52,6 +52,7 @@
           <template #item="{index}">
             <!-- get rid of {{  index +1 }} for production -->
             <button
+              class="tour-dot"
               :class="{ 'tour-dot-active': index === step }"
               @click="() => emit('step', index)"
             >
@@ -59,14 +60,15 @@
             </button>
           </template>
         </v-breadcrumbs>
+        <v-spacer v-else />
         <v-btn
-          v-if="step < totalSteps - 1"
+          v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
           variant="flat"
           color="#502752"
           rounded="lg"
           @click="emit('next')"
         >
-          Next
+          {{ nextText }}
         </v-btn>
       </div>
     </slot>
@@ -82,10 +84,18 @@ interface Props {
   step: number,
   /** the step dots. off once the tour is done stepping */
   showBreadcrumbs?: boolean,
+  showNextOnLastStep?: boolean,
+  showBackOnFirstStep?: boolean,
+  nextText?: string,  
+  backText?: string,
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showBreadcrumbs: true,
+  showNextOnLastStep: false,
+  showBackOnFirstStep: false,
+  nextText: 'Next',
+  backText: 'Back',
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
@@ -169,9 +179,10 @@ p {
       padding: 0 2px;
     }
 
-    button {
+    button.tour-dot {
       padding: 0;
-      font-size: 0.5rem;
+      --tour-dot-size: 0.5rem;
+      font-size: var(--tour-dot-size);
       line-height: 1;
       color: white;
       background: none;
@@ -182,7 +193,7 @@ p {
     button.tour-dot-active {
       color: var(--accent-color);
       --font-delta: 0.25em;
-      font-size: calc(0.5rem + var(--font-delta));
+      font-size: calc(var(--tour-dot-size) + var(--font-delta));
       margin: calc(-1*var(--font-delta));
       z-index: 10;
     }

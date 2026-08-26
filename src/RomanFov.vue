@@ -454,15 +454,16 @@
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
-        :show-breadcrumbs="!showExploreUi"
-        @next="goToStep(tourStep + 1)"
+        show-next-on-last-step
+        :next-text="showExploreUi ? 'Explore' : 'Next'"
+        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
         @step="(index) => goToStep(index)"
       >
         <!-- the close-out step keeps the text but trades the stepper for the
          way out -->
-        <template
+        <!-- <template
           v-if="showExploreUi"
           #controls
         >
@@ -478,7 +479,7 @@
               Explore
             </v-btn>
           </div>
-        </template>
+        </template> -->
       </TourSheet>
 
       <TourSheet
@@ -1667,6 +1668,12 @@ const tourStepTitle = computed(
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
 
 function goToStep(n: number) {
+  // if going backwards, we need undo the tour close out steps
+  if (n < tourStep.value && n < (tourTotalSteps.value - 1)) {
+    if (showExploreUi.value) {
+      showExploreUi.value = false;
+    }
+  }
   tourStep.value = n;
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
