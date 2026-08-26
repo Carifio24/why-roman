@@ -43,12 +43,13 @@
             class="startup-button"
             variant="elevated"
             rounded="lg"
+            size="large"
             block
             :color="backgroundColorDarkest"
             :disabled="isLoading"
             @click="handleSplashClose"
           >
-            Get Started
+            GET STARTED
           </v-btn>
         </div>
       </component>
@@ -2727,10 +2728,10 @@ video {
 // SplashScreen on large screens, where that ancestor doesn't exist.
 h1.startup-screen-title {
   color: white;
-  font-size: 1.25em;
+  font-size: calc(4 * var(--default-font-size));
   text-align: center;
   line-height: 1.1;
-  margin-bottom: 2rem;
+  margin-block: 0.5rem;
   text-shadow: 0 2px 8px black; //var(--background-color);
 }
 
@@ -2743,10 +2744,10 @@ h1.startup-screen-title {
 }
 
 #startup-screen-content > span {
+  font-size: calc(3 * var(--default-font-size));
   text-shadow: 0 2px 8px black; //var(--background-color);
   filter: drop-shadow(0px 2px 6px black);
   font-weight: 600;
-  
 }
 
 // Fill and contrast text come from the `color` prop, shape from `rounded`.
@@ -2755,6 +2756,10 @@ h1.startup-screen-title {
   text-transform: none;
   letter-spacing: normal;
   border: 3px solid var(--accent-color);
+  min-width: 0;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 0.5em;
 }
 
 .v-btn {
