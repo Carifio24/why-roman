@@ -2227,8 +2227,16 @@ body {
 
 // small devices in landscape get a wider share of the row, since there's
 // less absolute width to work with than on a large screen
-#app.app-is-small-landscape #side-drawer.side-drawer-open {
-  width: 40%;
+#app.app-is-small-landscape {
+  #side-drawer.side-drawer-open {
+    width: 40%;
+  }
+
+  // matches the width override above, so anything sizing itself off the
+  // drawer's actual width (e.g. TourSheet.vue's font-size) stays accurate.
+  // Height is still the full-column default (100vh, from #app below) --
+  // this layout doesn't override it.
+  --container-width: 40vw;
 }
 
 // large screens in landscape: give #main-content (and so WWT) the full
@@ -2236,17 +2244,24 @@ body {
 // corner instead of a full-height column full of deadspace. #app fills the
 // viewport 1:1, so position: fixed here lands in the same place as
 // anchoring to #app would.
-#app.app-is-large-landscape #side-drawer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
+#app.app-is-large-landscape {
+  #side-drawer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
 
-  &.side-drawer-open {
-    width: 34%;
-    height: 34%;
+    &.side-drawer-open {
+      width: 34%;
+      height: 34%;
+    }
   }
+
+  // matches side-drawer-open's height: 34% above, unlike the other
+  // width-constrained layouts (default/small-landscape), which stay
+  // full-height and so keep the 100vh default from #app below
+  --container-height: 34vh;
 }
 
 // small devices in portrait: side panel becomes a bottom panel instead of a
@@ -2272,6 +2287,12 @@ body {
   #tour-controls {
     flex-direction: row;
   }
+
+  // matches side-drawer-open's width: 100% / height: 34% above -- the
+  // bottom panel, the mirror image of app-is-large-landscape's box (full
+  // width, short height, instead of full height, narrow width)
+  --container-width: 100vw;
+  --container-height: 34vh;
 }
 
 #app {
@@ -2280,6 +2301,13 @@ body {
   margin: 0;
   overflow: hidden;
   font-size: var(--default-font-size);
+  // Default (large-portrait, and the base large-landscape/small-landscape
+  // both build on before their own overrides above): matches #side-drawer's
+  // base width: 34%, full height. TourSheet.vue derives its font-size from
+  // these instead of raw viewport units, so text scales with the box it's
+  // actually in, not the whole screen.
+  --container-width: 34vw;
+  --container-height: 100vh;
 
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {

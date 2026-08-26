@@ -143,15 +143,27 @@ p {
   margin-top: 0.5rem;
 }
 
-// large-landscape's box is a fixed ~34% of the screen height (see
-// RomanFov.vue's #app.app-is-large-landscape #side-drawer), so a step with a
-// full paragraph of text needs a smaller size to fit without scrolling
-#app.app-is-large-landscape #tour-text {
-  font-size: calc(1.3 * var(--default-font-size));
+// Sizes text off the box's own dimensions (--container-width/-height, set
+// per layout mode on #app in RomanFov.vue) instead of the raw viewport, so
+// it scales with how much room TourSheet actually has rather than the whole
+// screen. Averages width and height rather than picking either extreme: a
+// box that's narrow but full-height (small-landscape's side column) or wide
+// but short (the portrait bottom panel) both have one generous dimension
+// and one tight one -- sizing off only the generous one overflows the tight
+// one, and off only the tight one looks needlessly small.
+#tour-text {
+  font-size: clamp(
+    1rem,
+    calc(0.025 * (var(--container-width) + var(--container-height))),
+    2rem
+  );
+}
 
-  p {
-    margin-top: 0.25rem;
-  }
+// large-landscape's box is also a fixed ~34% of the screen height, unlike
+// the other width-constrained cases above (which are full height), so a
+// step with a full paragraph still needs tighter paragraph spacing to fit
+#app.app-is-large-landscape #tour-text p {
+  margin-top: 0.25rem;
 }
 
 .info-box {
@@ -166,10 +178,6 @@ p {
   border-color: var(--border-color);
   // width: 100%;
   height: calc(100% - 0.5rem);
-}
-
-.selected-info-tall.info-box {
-  font-size: calc(1.3 * var(--default-font-size));
 }
 
 // Copied from rubin-first-look. Positions the floating tour text against
