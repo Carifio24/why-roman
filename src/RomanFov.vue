@@ -986,8 +986,8 @@ function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
   footprints.forEach(
     (footprint, index) => {
       footprint.show = visible.includes(footprint);
-      if (show && show[index] === false) {
-        footprint.opacity = 0;
+      if (show) {
+        footprint.opacity = show[visible.indexOf(footprint)] === true ? 1 : 0;
       }
     },
   );
@@ -1231,7 +1231,8 @@ function andromedaTour(n: number, tour = true) {
   if (n === -1) {
     onlyFootprints(
       [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
-      Array(8).fill(false) // hide them all
+      // eslint-disable-next-line no-sparse-arrays
+      [,,true,,,,,]
     );
     // handle undefined warning buy using the setter
     textVisibilitySetters["roman"]?.(true);
