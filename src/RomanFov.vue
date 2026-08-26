@@ -1248,6 +1248,7 @@ function andromedaTour(n: number, tour = true) {
    - visible imagesets
    - camera position
    */
+  ats.setMaxStep(n);
   if (n === 0 || n === 1) { // Andromeda & View from the ground
     ats.setMaxStep(0);
     onlyFootprints([]); // no footprints
@@ -1290,7 +1291,7 @@ function andromedaTour(n: number, tour = true) {
       });
       showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
     });
-    ats.setMaxStep(1);
+    
     return;
   }
 
@@ -1307,7 +1308,7 @@ function andromedaTour(n: number, tour = true) {
     }).then(async () => {
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
-    ats.setMaxStep(2);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 4) { // JWST can only see this
@@ -1321,7 +1322,7 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     });
-    ats.setMaxStep(3);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 5) { // Compare Roman, JWST, and Hubble
@@ -1335,7 +1336,7 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
     });
-    ats.setMaxStep(4);
+    ats.setMaxStep(n);
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
@@ -1344,7 +1345,7 @@ function andromedaTour(n: number, tour = true) {
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
     if (tour) showEndTourOverlay();
-    ats.setMaxStep(5);
+    ats.setMaxStep(n);
     return;
   }
   
@@ -1372,7 +1373,7 @@ function andromedaTour(n: number, tour = true) {
         duration: 3,
       });
     });
-    ats.setMaxStep(6);
+    ats.setMaxStep(n);
     return;
   }
   
@@ -1388,7 +1389,7 @@ function andromedaTour(n: number, tour = true) {
   //     rollRad: store.rollRad, // keep the roll we are at
   //     instant: false,
   //   });
-  //   ats.setMaxStep(7);
+  //   ats.setMaxStep(n);
   //   return;
   // }
   
@@ -1405,7 +1406,7 @@ function andromedaTour(n: number, tour = true) {
   //     rollRad: store.rollRad, // keep the roll we are at
   //     instant: false,
   //   });
-  //   ats.setMaxStep(8);
+  //   ats.setMaxStep(n);
   //   return;
   // }
   
@@ -1414,7 +1415,7 @@ function andromedaTour(n: number, tour = true) {
     tourCloseOut();
     showOpacitySliders();
     onlyFootprints([]);
-    ats.setMaxStep(7);
+    ats.setMaxStep(n);
     return;
   }
   
