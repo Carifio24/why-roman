@@ -11,8 +11,9 @@
       <wwt-loader v-model="isLoading" />
 
       <SplashGesture
-        v-if="!isLoading && !showInfoDialog && !showStartup && !showIntroSlides"
+        v-if="!isLoading && !showInfoDialog && !showStartup && !showIntroSlides && tourStep >= 1 && opacitySliders.length === 0"
         v-model="showSplashGesture"
+        :close-on-click="false"
         @close="handleSplashGestureClose"
       />
 
@@ -1340,12 +1341,12 @@ function andromedaTour(n: number, tour = true) {
         instant: false,
         duration: 4,
       });
-      showOpacitySliders(0);
+      showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
     });
     ats.setMaxStep(1);
     return;
   }
-  
+
   if (n === 3) {  // "Hubble Took this many images"
     onlyFootprints(phast); // just show PHAST outlines
     showOpacitySliders();  // no slides

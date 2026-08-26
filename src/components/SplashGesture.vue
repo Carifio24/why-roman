@@ -58,15 +58,13 @@
     <template
       #actions
     >
-      <v-btn
+      <v-icon
         class="mx-2"
-        density="comfortable"
-        rounded="lg"
-        text="Close"
-        variant="tonal"
+        icon="mdi-close"
+        tabindex="0"
         @click.stop="handleClose"
         @keyup.enter.stop="handleClose"
-      ></v-btn>
+      ></v-icon>
     </template>
   </v-snackbar>
 </template>
