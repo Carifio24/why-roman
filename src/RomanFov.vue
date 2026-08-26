@@ -1226,6 +1226,7 @@ const ats = {
 };
 
 function andromedaTour(n: number, tour = true) {
+  setAllTextOverlaysVisibility(n === 5);
   if (n === -1) {
     onlyFootprints(
       [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
@@ -1784,6 +1785,10 @@ function showTextOverlay(id: string, show: boolean) {
   }
 }
 
+function setAllTextOverlaysVisibility(visible: boolean) {
+  Object.values(textVisibilitySetters).forEach(setter => setter(visible));
+}
+
 const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 // onBeforeMount(() => {
 //   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
@@ -1827,6 +1832,7 @@ onMounted(() => {
       text: "Roman",
       center: Coordinates.raDecTo3d(-0.001, 0.4),
       color: "#ff1900",
+      scale: 0.0005,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
       store,
