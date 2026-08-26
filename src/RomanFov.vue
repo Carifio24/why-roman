@@ -2,7 +2,7 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize && isPortrait ? 'app-is-small' : '']"
+    :class="[smallSize && isPortrait ? 'app-is-small' : '', smallSize && !isPortrait ? 'app-is-small-landscape' : '']"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -2210,15 +2210,6 @@ body {
   max-height: 100svh;
 }
 
-#app.app-is-small > .v-application__wrap {
-  flex-direction: column; // side panel becomes a bottom panel
-  max-height: 100svh;
-
-  #side-drawer {
-    order: 1;
-  }
-}
-
 #main-content {
   // containing block for the absolutely positioned WWT host and overlay
   position: relative;
@@ -2232,7 +2223,11 @@ body {
   transition: height 0.1s ease-in-out;
 }
 
-// a flex sibling of #main-content, so opening it shrinks the WWT view
+// a flex sibling of #main-content, so opening it shrinks the WWT view.
+// This is the landscape arrangement (side column, drawer to the left via
+// order: -1) -- it's what both small and large devices use in landscape
+// (app-is-small-landscape only widens it below); app-is-small (portrait)
+// switches to a bottom panel instead.
 #side-drawer {
   flex: 0 0 auto;
   overflow: hidden;
@@ -2244,14 +2239,27 @@ body {
   }
 }
 
+// small devices in landscape get a wider share of the row, since there's
+// less absolute width to work with than on a large screen
+#app.app-is-small-landscape #side-drawer.side-drawer-open {
+  width: 40%;
+}
+
+// small devices in portrait: side panel becomes a bottom panel instead of a
+// side column
 #app.app-is-small {
+  > .v-application__wrap {
+    flex-direction: column;
+    max-height: 100svh;
+  }
+
   #side-drawer {
-    flex: 0 0 auto;
-    overflow: hidden;
     width: 100%;
     height: 0;
+    order: 1;
 
     &.side-drawer-open {
+      width: 100%;
       height: 34%;
     }
   }
