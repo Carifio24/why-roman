@@ -570,8 +570,8 @@
         :accent-color="roman.color"
         tab-title="WWT Why Roman"
       >
-        <InfoPage title="View Finder Info">
-          <ViewFinderHelp />
+        <InfoPage title="About Roman">
+          <ScienceInfo />
         </InfoPage>
         <InfoPage
           title="User Guide"
@@ -628,7 +628,7 @@ import ImagesetCredits from "./components/ImagesetCredits.vue";
 import InformationSheet from "./components/InformationSheet.vue";
 import InfoPage from "./components/InfoPage.vue";
 import UserGuide from "./components/UserGuide.vue";
-import ViewFinderHelp from "./components/ViewFinderHelp.vue";
+import ScienceInfo from "./components/ScienceInfo.vue";
 import InfoDialog from "./components/InfoDialog.vue";
 import SplashGesture from "./components/SplashGesture.vue";
 import SplashScreen from "./components/SplashScreen.vue";

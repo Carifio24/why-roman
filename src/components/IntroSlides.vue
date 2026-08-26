@@ -18,18 +18,17 @@
           :value="0"
         >
           <p>
-            On August 30, 2026, NASA and SpaceX will launch the Nancy Grace Roman Space Telescope into orbit.
+            On August 30, 2026, NASA and SpaceX will launch the <strong>Nancy Grace Roman Space Telescope</strong> into orbit.
           </p>
           <p>
             <!-- It will travel to “L2” X miles from Earth, near the James Webb Space Telescope.  -->
             Using the Andromeda Galaxy, let's learn about Roman's capabilities and how they are different from the Hubble and Webb Space Telescopes.
           </p>
-          <!-- <v-img
-            src="/Trailer_still_1-1.jpg"
-            aspect-ratio="1"
-            height="150px"
-            cover
-          /> -->
+          <v-img
+            class="mx-auto"
+            src="/nancy_grace_roman.jpeg"
+            width="90%"
+          />
           <!-- <video loop src="/JWST_L2_Orbit_Animation_HD.webm" /> -->
         </v-window-item>
         <v-window-item

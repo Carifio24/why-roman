@@ -10,7 +10,7 @@ export const andromedaExperience: TourExperience = [
       "It spans 3 degrees (or 6 full Moons!) across the sky.",
       "By studying Andromeda, astronomers can better understand our own Milky Way galaxy.",
     ],
-    instaText: "Andromeda covers a huge amount of sky",
+    instaText: "The Andromeda Galaxy is REALLY BIG on the sky",
 
   },
   {
@@ -19,7 +19,7 @@ export const andromedaExperience: TourExperience = [
       "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
       "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
     ],
-    instaText: "A telescope on the ground sees this...",
+    instaText: "From the ground, you (with a telescope!) can see THIS...",
   },
   {
     title: "Hubble's view from space",  // step 3, n=2
@@ -28,7 +28,7 @@ export const andromedaExperience: TourExperience = [
       "Zoom in to see how much more detail you can notice with Hubble.",
       "Use the slider to cross-fade between the 2 images.",
     ],
-    instaText: "Hubble sees this...",
+    instaText: "If you use the Hubble Space Telescope, you can see this!",
   },
   {
     title: "Over 1,000 Hubble images",  // step 4, n=3
@@ -46,7 +46,7 @@ export const andromedaExperience: TourExperience = [
       "To obtain this view with Hubble, astronomers stitched together 1,400 images taken over 500 hours.",
       "The overlaid grid shows where each individual image was taken across Andromeda to make this beautiful mosaic.",
     ],
-    instaText: "Hubble captured 1,400 images for Andromeda",
+    instaText: "Hubble captured 1,400 images for Andromeda! Taking 500 hours!",
   },
   {
     title: "JWST only sees this",  // step 5, n=4
@@ -83,8 +83,8 @@ export const andromedaExperience: TourExperience = [
     //          2.4 m; Webb 6.5 m
     tourSheetText: [
       "Like Webb, Roman will capture infrared images.",
-      'The **color** boomerang shape shows the footprint or "field of view" of one Roman image.',
-      "The **color** and **color** squares show the Webb and Hubble footprints."
+      'The **red** boomerang shape shows the footprint or "field of view" of one Roman image.',
+      "The **blue** and **magenta** squares show the Webb and Hubble footprints."
     ],
     instaText: "Roman covers way more sky per infrared image.",
   },
