@@ -483,7 +483,7 @@
       </TourSheet>
 
       <TourSheet
-        v-if="showOptions"
+        v-if="showOptions && !showTextSheet"
         :tour-id="lastTourId"
         :step="tourStep"
         :small-size="smallSize"
@@ -574,111 +574,10 @@
         :accent-color="roman.color"
         tab-title="WWT Why Roman"
       >
-        <InfoPage title="Tour">
-          <template v-if="selectedPlaceId === 'eagle'">
-            <h4 class="user-guide-header">The Eagle Nebula (M16)</h4>
-            <p>
-              Hubble's <em>Pillars of Creation</em> captures a few light-years
-              of towering gas and dust where new stars are forming. It's one of
-              the most recognizable images in astronomy, and it covers a tiny
-              patch of sky.
-            </p>
-            <p class="mt-3">
-              Step the slider to <strong>Roman</strong> to bring in the wider
-              view. Roman sees the whole star-forming region at once, at
-              Hubble-like sharpness.
-            </p>
-          </template>
-
-          <template v-else-if="selectedPlaceId">
-            <h4 class="user-guide-header">
-              {{ activeTour?.label }}
-            </h4>
-            <p>
-              Step through with the slider to bring in the wider, Roman-scale
-              view behind the current image.
-            </p>
-          </template>
-
-          <template v-else>
-            <h4 class="user-guide-header">Why Roman</h4>
-            <p>
-              This
-              <a
-                href="https://www.worldwidetelescope.org/home"
-                target="_blank"
-                rel="noopener noreferrer"
-              >WorldWide Telescope</a>
-              (WWT) interactive provides a view of the Roman Space Telescope
-              footprint on the sky.
-            </p>
-            <p class="mt-3">
-              Pick a target from the cards on the right to compare what today's
-              telescopes see with what Roman would.
-            </p>
-          </template>
+        <InfoPage title="View Finder Info">
+          <ViewFinderHelp />
         </InfoPage>
         <InfoPage
-          v-if="showExploreUi"
-          title="Controls"
-        >
-          <div class="d-flex flex-column ga-2">
-            <v-btn
-              v-for="tour in tours"
-              :key="tour.id"
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToPlace(tour.id)"
-            >
-              {{ tour.label }}
-            </v-btn>
-          </div>
-
-          <h3
-            v-if="visibleFootprints.length > 0"
-            class="mt-4"
-          >
-            Satellite fields of view
-          </h3>
-          <MiniFootprintSettings
-            v-for="footprint in visibleFootprints"
-            :key="footprint.id"
-            v-model:opacity="footprint.opacity"
-            v-model:fill="footprint.fill"
-            v-model:color="footprint.color"
-            :label="footprint.label"
-            :show-fill="footprint.id === 'roman-footprint' || true"
-          />
-
-          <div
-            v-for="slider in layerSliders"
-            :key="slider.index"
-          >
-            <label :for="`explore-opacity-${slider.index}`">{{
-              slider.name
-            }}</label>
-            <v-slider
-              :id="`explore-opacity-${slider.index}`"
-              :model-value="opacityOf(slider.index)"
-              :min="0"
-              :max="1"
-              :step="0.01"
-              :color="roman.color"
-              density="compact"
-              hide-details
-              @update:model-value="
-                (value: number) => setOpacity(slider.index, value)
-              "
-            />
-          </div>
-        </InfoPage>
-        <!-- <InfoPage title="View Finder Info">
-                    <ViewFinderHelp />
-                  </InfoPage> -->
-        <InfoPage
-          v-if="selectedPlaceId"
           title="User Guide"
         >
           <UserGuide />
