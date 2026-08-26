@@ -2,7 +2,11 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize && isPortrait ? 'app-is-small' : '', !isPortrait ? 'app-is-landscape' : '']"
+    :class="{
+      'app-is-small': smallSize,
+      'app-is-portrait': isPortrait,
+      'app-is-landscape': !isPortrait,
+    }"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -2204,7 +2208,7 @@ body {
 
 // small devices in landscape get a wider share of the row, since there's
 // less absolute width to work with than on a large screen
-#app.app-is-small.app-is-landscape #side-drawer.side-drawer-open {
+#app.app-is-small.app-is-portrait.app-is-landscape #side-drawer.side-drawer-open {
   width: 40%;
 }
 
@@ -2212,7 +2216,7 @@ body {
 
 // small devices in portrait: side panel becomes a bottom panel instead of a
 // side column
-#app.app-is-small {
+#app.app-is-small.app-is-portrait {
   > .v-application__wrap {
     flex-direction: column;
     max-height: 100svh;
@@ -2614,7 +2618,7 @@ video {
 // short drawers: columns side by side, so the height goes to the content
 // rather than to stacking, and the close button stays in the corner instead of
 // dropping below both columns
-#app.app-is-small #tour-controls,
+#app.app-is-small.app-is-portrait #tour-controls,
 #app.app-is-landscape #tour-controls {
   flex-direction: row;
 }
@@ -2749,7 +2753,7 @@ h1.startup-screen-title {
   }
 }
 
-#app.app-is-small {
+#app.app-is-small.app-is-portrait {
 
   #side-drawer-tour-sheet {
     order: 1;
