@@ -19,7 +19,7 @@ export const andromedaExperience: TourExperience = [
       "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
       "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
     ],
-    instaText: "From the ground, you (with a telescope!) can see THIS...",
+    instaText: "From the ground, a telescope can see THIS...",
   },
   {
     title: "Hubble's view from space",  // step 3, n=2
@@ -31,7 +31,7 @@ export const andromedaExperience: TourExperience = [
     instaText: "If you use the Hubble Space Telescope, you can see this!",
   },
   {
-    title: "Over 1,000 Hubble images",  // step 4, n=3
+    title: "600 Hubble images",  // step 4, n=3
     // Hubble built this picture out of 600 separate pointings, over 13 years, from 2010 to 2024.
     // About 1,000 trips around the Earth. Roughly 3,700 individual exposures. Add all the
     // shutter-open time together and it comes to about 500 hours -- three solid weeks of staring.
@@ -43,10 +43,10 @@ export const andromedaExperience: TourExperience = [
     // Precise: 606 pointings | 1,023 orbits | 503 h exposure |
     //          0.888 deg^2 | 2010-07-12 to 2024-01-13 | ~3,700 ACS exposures
     tourSheetText: [
-      "To obtain this view with Hubble, astronomers stitched together 1,400 images taken over 500 hours.",
+      "To obtain this view with Hubble, astronomers stitched together 600 images taken over 500 hours.",
       "The overlaid grid shows where each individual image was taken across Andromeda to make this beautiful mosaic.",
     ],
-    instaText: "Hubble captured 1,400 images for Andromeda! Taking 500 hours!",
+    instaText: "Hubble captured 600 images for Andromeda, taking 500 hours!",
   },
   {
     title: "JWST only sees this",  // step 5, n=4
@@ -65,7 +65,7 @@ export const andromedaExperience: TourExperience = [
       "The James Webb Space Telescope takes images in infrared light",
       "The side-by-side squares show how much (or little) of the sky Webb can photograph at once."
     ],
-    instaText: "Webb can see only tiny pieces at a time",
+    instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time",
   },
   {
     title: "Compare Roman, JWST, and Hubble",  // step 6, n=5
@@ -107,7 +107,7 @@ export const andromedaExperience: TourExperience = [
     tourSheetText: [
       "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 1,400 images (taken over 500 hrs) with Hubble!",
     ],
-    instaText: "Roman is over 100x faster than Hubble.",
+    instaText: "Roman is 100x faster than Hubble.",
   },
   {
     title: "Roman's incredible detail",  // step 8, n=7 -- with the pixel grid
