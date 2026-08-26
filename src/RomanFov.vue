@@ -1346,6 +1346,7 @@ function andromedaTour(n: number, tour = true) {
 
   if (n === 2) {  // Hubbles view from space
     onlyFootprints(phast);
+    showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
       raRad: 10.6847 * D2R,
@@ -1356,14 +1357,16 @@ function andromedaTour(n: number, tour = true) {
     }).then(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1500)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      await store.gotoRADecZoom({
-        raRad: 11.0743 * D2R,
-        decRad: 41.6521 * D2R,
-        zoomDeg: 0.04 * 6,
-        instant: false,
-        duration: 4,
-      });
-      showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+      if (tourStep.value === 2) {
+        await store.gotoRADecZoom({
+          raRad: 11.0743 * D2R,
+          decRad: 41.6521 * D2R,
+          zoomDeg: 0.04 * 6,
+          instant: false,
+          duration: 4,
+        });
+        showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+      }
     });
     ats.setMaxStep(1);
     return;
@@ -1439,13 +1442,15 @@ function andromedaTour(n: number, tour = true) {
       onlyFootprints(romanPixel, roman);
       await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      await store.gotoRADecZoom({
-        raRad: 10.13 * D2R,
-        decRad: 40.71 * D2R,
-        zoomDeg: 2 * 6,
-        instant: false,
-        duration: 3,
-      });
+      if (tourStep.value === 7) {
+        await store.gotoRADecZoom({
+          raRad: 10.13 * D2R,
+          decRad: 40.71 * D2R,
+          zoomDeg: 2 * 6,
+          instant: false,
+          duration: 3,
+        });
+      }
     });
     ats.setMaxStep(6);
     return;
