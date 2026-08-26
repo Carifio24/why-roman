@@ -1226,6 +1226,7 @@ const ats = {
 };
 
 function andromedaTour(n: number, tour = true) {
+  setAllTextOverlaysVisibility(n === 5);
   if (n === -1) {
     onlyFootprints(
       [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
@@ -1782,6 +1783,10 @@ function showTextOverlay(id: string, show: boolean) {
   if (setter) {
     setter(show);
   }
+}
+
+function setAllTextOverlaysVisibility(visible: boolean) {
+  Object.values(textVisibilitySetters).forEach(setter => setter(visible));
 }
 
 const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
