@@ -35,6 +35,14 @@ declare module "@wwtelescope/engine" {
     get_view(): Matrix3d;
     get_world(): Matrix3d;
     get_worldBase(): Matrix3d;
+    executeWithTransforms(
+      transforms: {
+        world?: Matrix3d,
+        view?: Matrix3d,
+        projection?: Matrix3d,
+      },
+      callable: CallableFunction, 
+    );
   }
 
   class SimpleLineList {
@@ -57,6 +65,17 @@ declare module "@wwtelescope/engine" {
     addSubdividedTriangles(v1: Vector3d, v2: Vector3d, v3: Vector3d, color: Color, date: Dates, subdivisions: number): void;
     draw(renderContext: RenderContext, opacity: number, cull: boolean): void;
     clear(): void;
+  }
+
+  class Text3d {
+    constructor(center: Vector3d, up: Vector3d, text: string, fontsize: number, scale: number);
+  }
+
+  class Text3dBatch {
+    constructor(height: number);
+    add(text: Text3d): void;
+    draw(renderContext: RenderContext, opacity: number, color: Color): void;
+    prepareBatch(): void;
   }
 
 }

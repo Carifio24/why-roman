@@ -233,6 +233,7 @@
                     v-model:fill-opacity="footprint.fillOpacity"
                     v-model:show="footprint.show"
                     :label="footprint.label"
+                    @show="(show: boolean) => showTextOverlay(footprint.id, show)"
                   />
                   <!--                   
                   <div
@@ -834,6 +835,7 @@ const textColor = ref("#F5F0FF");
  */
 import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
 import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
+import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
 import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
 import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint";
@@ -861,10 +863,16 @@ const roman = useFootprint({
   label: "Roman",
   footprint: romanFootprint,
   color: "#ff1900",
-  // center WFI01
-  offsetXDeg: 4.08 / 60, // half a tile to the right
-  offsetYDeg: -2.16 / 60, // half a tile up
   // linewidth: 2, // faking the linewidth can leave artifacts
+  offsetXDeg: 0.05,
+  offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
+});
+
+const romanPixel = useFootprint({
+  id: "roman-pixel-grid",
+  label: "Roman Pixel Grid",
+  footprint: romanPixelFootprint,
+  color: "#108de0",
   show: true,
 });
 const testFootprint = useFootprint({
@@ -978,14 +986,7 @@ const m31HiDisk = useFootprint({
   show: false,
 });
 */
-const m31SfDiskOutline = useFootprint({
-  id: "m31-sf-disk-footprint-outline",
-  label: "M31 SF disk (2002)",
-  footprint: m31SfDiskFootprintOutline,
-  color: "#c8b3e6",
-  fixed: true,
-  show: false,
-});
+
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
   label: "M31 SF disk (2002)",
@@ -994,42 +995,12 @@ const m31SfDisk = useFootprint({
   fixed: true,
   show: false,
 });
-
-// fake roman 0.11 x 0.11 arcmin pixel grid (10x10)
-function makeNxNGrid(n: number, pxScale: number) {
-  // need to make a grid of n x n scale,
-  // each cell is pxScale x pxScale arcsec
-  
-  // it will be list of n * n cells, each with four corner
-  const grid: [number, number][][] = Array.from({ length: n * n});
-  const cellCorner = (centerX: number, centerY: number): [number, number][] => {
-    const halfScale = pxScale / 2;
-    return [
-      [centerX - halfScale, centerY - halfScale],
-      [centerX - halfScale, centerY + halfScale],
-      [centerX + halfScale, centerY + halfScale],
-      [centerX + halfScale, centerY - halfScale],
-    ];
-  };
-  // centers ar 0, pxScale, 2*pxScale, ..., (n-1)*pxScale
-  const cellXCenters = Array.from({ length: n }, (_, i) => (i - n/2) * pxScale);
-  const cellYCenters = Array.from({ length: n }, (_, i) => (i - n/2) * pxScale);
-  let index = 0;
-  for (const y of cellYCenters) {
-    for (const x of cellXCenters) {
-      grid[index] = cellCorner(x, y);
-      index++;
-    }
-  }
-  return grid;
-}
-
-const psuedoPixelFootprint = useFootprint({
-  id: "pseudo-pixel-footprint",
-  label: "Pseudo Pixel Grid",
-  footprint: makeNxNGrid(10, 0.11 / 3600), // 10x10 grid of 0.11 arcsec pixels
-  color: "#00ff00",
-  fixed: false,
+const m31SfDiskOutline = useFootprint({
+  id: "m31-sf-disk-footprint-outline",
+  label: "M31 SF disk (2002)",
+  footprint: m31SfDiskFootprintOutline,
+  color: "#f58d42",  // TODO: Feel free to change this
+  fixed: true,
   show: false,
 });
 
@@ -1044,7 +1015,7 @@ const footprints = [
   // m31HiDisk,
   m31SfDisk,
   m31SfDiskOutline,
-  psuedoPixelFootprint,
+  romanPixel,
   roman,
   jwst,
   hubble,
@@ -1056,6 +1027,7 @@ const visibleFootprints = computed(() =>
 );
 
 import { useLocalStorage } from "@vueuse/core";
+import { createTextOverlay } from "./text";
 
 const hasSeenIntroSlides = useLocalStorage("why-roman:hasSeenIntroSlides", false);
 const hasSeenFullTour = useLocalStorage("why-roman:hasSeenFullTour", false);
@@ -1108,7 +1080,6 @@ function onlyFootprints(...visible: Footprint[]) {
 }
 
 const { setOrderForLayers } = useLayerOrdering();
-
 
 const shownImagesets = ref<number[]>([]);
 const layerOpacities = ref<Record<number, number>>({});
@@ -1334,7 +1305,11 @@ const ats = {
 
 function andromedaTour(n: number, tour = true) {
   if (n === -1) {
-    onlyFootprints(phast, phastI, roman, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    onlyFootprints(phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline);
+    // handle undefined warning buy using the setter
+    textVisibilitySetters["roman"]?.(true);
+    textVisibilitySetters["hubble"]?.(false);
+    textVisibilitySetters["jwst"]?.(false);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3.4, instant: false });
@@ -1448,7 +1423,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 7) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints(psuedoPixelFootprint /* show pixel grid when ready */);
+    onlyFootprints(romanPixel /* show pixel grid when ready */);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1459,7 +1434,7 @@ function andromedaTour(n: number, tour = true) {
       instant: false,
       duration: 3,
     }).then(async () => {
-      onlyFootprints(psuedoPixelFootprint, roman);
+      onlyFootprints(romanPixel, roman);
       await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
       await store.gotoRADecZoom({
@@ -1476,7 +1451,7 @@ function andromedaTour(n: number, tour = true) {
   
   // // step 9
   // if (n === 8) { // So many pixels
-  //   onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready, */ roman);
+  //   onlyFootprints(phast,romanPixel, /* show pixel grid when ready, */ roman);
   //   showOpacitySliders();
   //   showImagesets(andromedaWtml, 0);
   //   store.gotoRADecZoom({
@@ -1492,7 +1467,7 @@ function andromedaTour(n: number, tour = true) {
   
   // // step 10
   // if (n === 9) {  // Zoomed all the way out 
-  //   onlyFootprints(phast, m31SfDiskOutline,psuedoPixelFootprint,/* show pixel grid when ready, */ roman);
+  //   onlyFootprints(phast, m31SfDiskOutline,romanPixel,/* show pixel grid when ready, */ roman);
   //   showOpacitySliders();
   //   showImagesets(andromedaWtml, 0);
   //   // goToImageset(andromedaWtml, 0, { zoom: 2.5, instant: false });
@@ -1812,6 +1787,15 @@ const settings = Settings.get_active();
 
 const webglDisabled = ref(false);
 
+const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
+
+function showTextOverlay(id: string, show: boolean) {
+  const setter = textVisibilitySetters[id];
+  if (setter) {
+    setter(show);
+  }
+}
+
 const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 // onBeforeMount(() => {
 //   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
@@ -1822,7 +1806,7 @@ onMounted(() => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
       positionSet.value = true;
-      // eslint-disable-next-lint @typescript-eslint/ban-ts-comment
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error `canvas` is defined
       WWTControl.singleton.canvas.setAttribute("hidden", "true");
       WWTControl.singleton.renderOneFrame = function () {
@@ -1834,6 +1818,10 @@ onMounted(() => {
     // allow zoom out to 90deg
     WWTControl.singleton.set_zoomMax(6 * 90);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error Modifying window object
+    window.Matrix3d = wwtlib.Matrix3d; window.wwt = WWTControl.singleton;
+
     settings.set_galacticMode(galactic.value);
     settings.set_showCrosshairs(crosshairs.value);
     settings.set_crosshairsColor(crosshairsColor.value);
@@ -1841,8 +1829,37 @@ onMounted(() => {
     settings.set_showEquatorialGridText(true);
 
     const control = WWTControl.singleton;
+    const renderContext = control.renderContext;
     control.renderOneFrame();
     control.renderOneFrame = renderOneFrame.bind(control);
+
+    const { setVisible: setRomanTextVisible } = createTextOverlay({
+      store,
+      renderContext,
+      text: "Roman",
+      center: Coordinates.raDecTo3d(-0.001, 0.4),
+      color: "#ff1900",
+    });
+    const { setVisible: setHubbleTextVisible } = createTextOverlay({
+      store,
+      renderContext,
+      text: "Hubble",
+      center: Coordinates.raDecTo3d(-0.01, -0.3),
+      color: "#e100ff",
+      scale: 0.0005,
+    });
+    const { setVisible: setJWSTTextVisible } = createTextOverlay({
+      store,
+      renderContext,
+      text: "JWST",
+      center: Coordinates.raDecTo3d(0.01, -0.3),
+      color: "#002aff",
+      scale: 0.0005,
+    });
+
+    textVisibilitySetters[roman.id] = setRomanTextVisible;
+    textVisibilitySetters[hubble.id] = setHubbleTextVisible;
+    textVisibilitySetters[jwst.id] = setJWSTTextVisible;
 
     const cameraParams = { ...props.initialCameraParams };
     const query = new URLSearchParams(window.location.search);
