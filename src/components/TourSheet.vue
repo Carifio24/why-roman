@@ -28,7 +28,6 @@
           :class="{ 'tour-back-button-hidden': step === 0 }"
           variant="flat"
           color="#502752"
-          size="small"
           rounded="lg"
           @click="emit('previous')"
         >
@@ -56,7 +55,7 @@
               :class="{ 'tour-dot-active': index === step }"
               @click="() => emit('step', index)"
             >
-              ⬤ {{  index + 1 }}
+              ⬤
             </button>
           </template>
         </v-breadcrumbs>
@@ -64,7 +63,6 @@
           v-if="step < totalSteps - 1"
           variant="flat"
           color="#502752"
-          size="small"
           rounded="lg"
           @click="emit('next')"
         >
@@ -111,11 +109,11 @@ const items = computed(() => {
 <style lang="less">
 
 p {
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .info-box {
-  font-size: 0.9rem;
+  font-size: calc(1.5 * var(--default-font-size));
   color: white;
   background: rgba(10, 5, 21, 0.7);
   border: 2px solid;
@@ -140,10 +138,6 @@ p {
   height: calc(100% - 0.5rem);
   overflow-y: auto;
 }
-.selected-info.selected-info-tall {
-  // max-width: 60%;
-  // top: 20px;
-}
 
 .tour-text-controls {
   display: flex;
@@ -158,10 +152,11 @@ p {
   }
 
   .tour-dots {
-    // min-width: 0 is what lets it shrink to the space the buttons leave
     flex: 1 1 0;
     min-width: 0;
-    justify-content: center;
+    max-width: 14rem;
+    margin: 0 auto;
+    justify-content: space-evenly;
     padding: 0;
 
     .v-breadcrumbs-item {
@@ -186,7 +181,7 @@ p {
     
     button.tour-dot-active {
       color: var(--accent-color);
-      --font-delta: 0.5em;
+      --font-delta: 0.25em;
       font-size: calc(0.5rem + var(--font-delta));
       margin: calc(-1*var(--font-delta));
       z-index: 10;
