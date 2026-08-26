@@ -7,7 +7,7 @@
       v-if="currentStep?.instaText"
       class="insta-selected-info-tour"
     >
-      {{ currentStep.instaText }}
+      <span v-html="currentStep.instaText" />
     </div>
   </div>
 </template>
@@ -31,8 +31,8 @@ const currentStep = computed(() => tourExperiences[props.tourId]?.[props.step]);
 
 #insta-tour-text {
   position: absolute;
-  width: 35%;
-  top: 1rem;
+  width: 90%;
+  top: 0.5rem;
   right: 1rem;
   height: auto;
   max-height: 40vh;
@@ -40,10 +40,14 @@ const currentStep = computed(() => tourExperiences[props.tourId]?.[props.step]);
 }
 
 .insta-info-box {
-  font-size: calc(2 * var(--default-font-size));
+  font-size: calc(2.5 * var(--default-font-size));
   font-weight: bold;
+  // use Impact font
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  line-height: 1.2;
   color: white;
-  background: rgba(10, 5, 21, 0.7);
+  background: rgba(10, 5, 21, 0);
+  text-shadow: 0px 0px 10px black, 0px 0px 10px black, 0px 0px 10px black;
   padding: 0.5rem;
   pointer-events: none;
   text-align: right;
