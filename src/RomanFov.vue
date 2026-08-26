@@ -2211,6 +2211,10 @@ body {
 #app.app-is-small > .v-application__wrap {
   flex-direction: column; // side panel becomes a bottom panel
   max-height: 100svh;
+
+  #side-drawer {
+    order: 1;
+  }
 }
 
 #main-content {
@@ -2231,6 +2235,7 @@ body {
   flex: 0 0 auto;
   overflow: hidden;
   width: 0;
+  order: -1;
 
   &.side-drawer-open {
     width: 34%;
