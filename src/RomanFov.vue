@@ -450,7 +450,7 @@
       :class="[(showTextSheet || inTour || showOptions) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
       <TourSheet
-        v-if="activeTour && !showOptions"
+        v-if="activeTour && !showOptions && !showTextSheet"
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
