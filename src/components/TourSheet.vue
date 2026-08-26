@@ -3,34 +3,39 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
-    <div
-      v-if="currentStep"
-      class="selected-info-tour"
-    >
-      <h3 v-if="currentStep.title">
-        {{ currentStep.title }}
-      </h3>
-      <p
-        v-for="(paragraph, i) in currentStep.tourSheetText"
-        :key="i"
+    <!-- fill either slot to replace the step's own content, so callers can put
+     something else in this box without passing it all in as props -->
+    <slot>
+      <div
+        v-if="currentStep"
+        class="selected-info-tour"
       >
-        {{ paragraph }}
-      </p>
-    </div>
+        <h3 v-if="currentStep.title">
+          {{ currentStep.title }}
+        </h3>
+        <p
+          v-for="(paragraph, i) in currentStep.tourSheetText"
+          :key="i"
+        >
+          {{ paragraph }}
+        </p>
+      </div>
+    </slot>
     <v-spacer />
-    <div class="tour-text-controls">
-      <v-btn
-        :class="{ 'tour-back-button-hidden': step === 0 }"
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('previous')"
-      >
-        Back
-      </v-btn>
+    <slot name="controls">
+      <div class="tour-text-controls">
+        <v-btn
+          :class="{ 'tour-back-button-hidden': step === 0 }"
+          variant="flat"
+          color="#502752"
+          size="small"
+          rounded="lg"
+          @click="emit('previous')"
+        >
+          Back
+        </v-btn>
 
-      <!-- <v-btn
+        <!-- <v-btn
         variant="flat"
         color="#502752"
         size="small"
@@ -39,31 +44,34 @@
       >
         Leave Tour
       </v-btn> -->
-      <v-breadcrumbs
-        class="tour-dots"
-        :items="items"
-        divider=""
-      >
-        <template #item="{index}">
-          <button
-            :class="{ 'tour-dot-active': index === step }"
-            @click="() => emit('step', index)"
-          >
-            ⬤
-          </button>
-        </template>
-      </v-breadcrumbs>
-      <v-btn
-        v-if="step < totalSteps - 1"
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('next')"
-      >
-        Next
-      </v-btn>
-    </div>
+        <v-breadcrumbs
+          v-if="showBreadcrumbs"
+          class="tour-dots"
+          :items="items"
+          divider=""
+        >
+          <template #item="{index}">
+            <!-- get rid of {{  index +1 }} for production -->
+            <button
+              :class="{ 'tour-dot-active': index === step }"
+              @click="() => emit('step', index)"
+            >
+              ⬤ {{  index + 1 }}
+            </button>
+          </template>
+        </v-breadcrumbs>
+        <v-btn
+          v-if="step < totalSteps - 1"
+          variant="flat"
+          color="#502752"
+          size="small"
+          rounded="lg"
+          @click="emit('next')"
+        >
+          Next
+        </v-btn>
+      </div>
+    </slot>
   </div>
 </template>
 
@@ -74,9 +82,13 @@ interface Props {
   tourId: string,
   smallSize: boolean,
   step: number,
+  /** the step dots. off once the tour is done stepping */
+  showBreadcrumbs?: boolean,
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  showBreadcrumbs: true,
+});
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
 const emit = defineEmits<{
@@ -126,6 +138,7 @@ p {
   flex-direction: column;
   align-items: flex-start;
   height: calc(100% - 0.5rem);
+  overflow-y: auto;
 }
 .selected-info.selected-info-tall {
   // max-width: 60%;
@@ -145,11 +158,19 @@ p {
   }
 
   .tour-dots {
-    flex: 1 1 auto;
+    // min-width: 0 is what lets it shrink to the space the buttons leave
+    flex: 1 1 0;
+    min-width: 0;
     justify-content: center;
     padding: 0;
 
     .v-breadcrumbs-item {
+      padding: 0 1px;
+    }
+
+    // divider="" still renders the divider items, and their padding is what
+    // made the row too wide to fit
+    .v-breadcrumbs-divider {
       padding: 0 2px;
     }
 
@@ -168,6 +189,7 @@ p {
       --font-delta: 0.5em;
       font-size: calc(0.5rem + var(--font-delta));
       margin: calc(-1*var(--font-delta));
+      z-index: 10;
     }
   }
 }

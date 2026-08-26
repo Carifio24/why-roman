@@ -56,7 +56,6 @@
       </div>
     </template>
     <template
-      v-if="!smallScreen"
       #actions
     >
       <v-btn
@@ -65,8 +64,8 @@
         rounded="lg"
         text="Close"
         variant="tonal"
-        @click.stop="show = false"
-        @keyup.enter.stop="show = false"
+        @click.stop="handleClose"
+        @keyup.enter.stop="handleClose"
       ></v-btn>
     </template>
   </v-snackbar>
@@ -79,17 +78,32 @@ import { supportsTouchscreen } from '@cosmicds/vue-toolkit';
 const touchscreen = supportsTouchscreen();
 // const iconSize = ref('large');
 import { useDisplay } from 'vuetify';
-const show = ref(true);
+const show = defineModel<boolean>({default: true});
 const smallScreen = useDisplay().smAndDown;
 const iconSize = ref(smallScreen.value ? 'small' : 'large');
+
+const props = defineProps({
+  closeOnClick: {
+    type: Boolean,
+    default: true,
+  }, 
+});
 const hide = () => show.value = false;
 
 onMounted(() => {
   console.log('showing gesture preview');
-  setTimeout(() => {
-    window.addEventListener('pointerdown', hide, { once: true });
-  }, 0);
+  if (props.closeOnClick) {
+    setTimeout(() => {
+      window.addEventListener('pointerdown', hide, { once: true });
+    }, 0);
+  }
 });
+
+const emit = defineEmits(['close']);
+const handleClose = () => {
+  show.value = false;
+  emit('close');
+};
 
 onUnmounted(() => {
   window.removeEventListener('pointerdown', hide);
