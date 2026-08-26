@@ -128,7 +128,7 @@
                 tooltip-location="start"
                 tabindex="0"
                 background-color="transparent"
-                @activate="toggleControls"
+                @activate="handleShowOptions"
               ></icon-button>
 
               <icon-button
@@ -139,6 +139,7 @@
                 :color="borderColor"
                 tooltip-text="Show User Guide"
                 tooltip-location="start"
+                @activate="handleShowInfo"
               >
               </icon-button>
 
@@ -318,7 +319,7 @@
             justify="center"
             class="pt-4"
             :style="{
-              'margin-left': !isPortrait && (inTour || showOptions) ? '34%' : '0',
+              'margin-left': !isPortrait && !showTextSheet && (inTour || showOptions) ? '34%' : '0',
             }"
           >
             <div
@@ -463,7 +464,7 @@
       
     
       <TourSheet
-        v-if="showOptions && !showTextSheet"
+        v-if="showOptions"
         tour-id="there-is-no-tour-just-showing-options"
         :step="tourStep"
         :small-size="smallSize"
@@ -1096,11 +1097,23 @@ function enterExplore() {
   showOptions.value = true; // show the options box by default
 }
 
+function handleShowInfo() {
+  // in portraid we should close show options
+  if (isPortrait.value) {
+    showOptions.value = false;
+  }
+}
+
 // opening the controls at the close-out step ends the tour
-function toggleControls() {
+function handleShowOptions() {
   const open = !showOptions.value;
-  if (open && inTour.value) {
-    enterExplore();
+  if (open) {
+    if (inTour.value) {
+      enterExplore();
+    }
+    if (isPortrait.value) {
+      showTextSheet.value = false;
+    }
   }
   showOptions.value = open;
 }
