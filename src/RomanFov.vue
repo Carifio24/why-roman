@@ -487,7 +487,7 @@
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
-            <h3>Scale</h3>
+            <h3>Zoom level</h3>
             <v-btn
               variant="flat"
               color="#502752"
@@ -517,7 +517,7 @@
             </v-btn>
           </div>
           <div class="tour-controls-column">
-            <h3>FOV</h3>
+            <h3>Field of View</h3>
             <MiniFootprintSettings
               v-for="footprint in visibleFootprints"
               :key="footprint.id"
@@ -793,7 +793,7 @@ const testFootprint = useFootprint({
 });
 const jwst = useFootprint({
   id: "jwst-footprint",
-  label: "JWST",
+  label: "Webb",
   footprint: jwstFootprint,
   color: "#002aff",
   offsetXDeg: -0.075, // left
@@ -803,7 +803,7 @@ const jwst = useFootprint({
 });
 const hubble = useFootprint({
   id: "hubble-footprint",
-  label: "WFC3",
+  label: "Hubble",
   footprint: hubbleFootprint,
   color: "#e100ff",
   offsetXDeg: 0.1,
@@ -823,7 +823,7 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "PHAST",
+  label: "M31 Hubble Outline",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
@@ -832,7 +832,7 @@ const phast = useFootprint({
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "PHAST (individual)",
+  label: "M31 Hubble Grid",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
@@ -887,7 +887,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Grid",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -895,7 +895,7 @@ const m31SfDisk = useFootprint({
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
-  label: "M31 SF disk (2002)",
+  label: "M31 Roman Outlines",
   footprint: m31SfDiskFootprintOutline,
   color: "#f58d42",  // TODO: Feel free to change this
   fixed: true,
@@ -904,6 +904,8 @@ const m31SfDiskOutline = useFootprint({
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [  
+  m31SfDisk,
+  m31SfDiskOutline,
   phast,
   phastI,
   // gbtds,
@@ -911,12 +913,10 @@ const footprints = [
   // hltds,
   // gps,
   // m31HiDisk,
-  m31SfDisk,
-  m31SfDiskOutline,
   romanPixel,
   roman,
-  jwst,
   hubble,
+  jwst,
 ];
 
 // the currently visible footprints. 
@@ -1270,7 +1270,8 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints([phast]);
+    onlyFootprints(phast);
+    showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
       raRad: 10.6847 * D2R,
@@ -1281,14 +1282,16 @@ function andromedaTour(n: number, tour = true) {
     }).then(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1500)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      await store.gotoRADecZoom({
-        raRad: 11.0743 * D2R,
-        decRad: 41.6521 * D2R,
-        zoomDeg: 0.04 * 6,
-        instant: false,
-        duration: 4,
-      });
-      showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+      if (tourStep.value === 2) {
+        await store.gotoRADecZoom({
+          raRad: 11.0743 * D2R,
+          decRad: 41.6521 * D2R,
+          zoomDeg: 0.04 * 6,
+          instant: false,
+          duration: 4,
+        });
+        showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+      }
     });
     
     return;
@@ -1364,13 +1367,15 @@ function andromedaTour(n: number, tour = true) {
       onlyFootprints([romanPixel, roman]);
       await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      await store.gotoRADecZoom({
-        raRad: 10.13 * D2R,
-        decRad: 40.71 * D2R,
-        zoomDeg: 2 * 6,
-        instant: false,
-        duration: 3,
-      });
+      if (tourStep.value === 7) {
+        await store.gotoRADecZoom({
+          raRad: 10.13 * D2R,
+          decRad: 40.71 * D2R,
+          zoomDeg: 2 * 6,
+          instant: false,
+          duration: 3,
+        });
+      }
     });
     ats.setMaxStep(n);
     return;
