@@ -11,8 +11,9 @@
       <wwt-loader v-model="isLoading" />
 
       <SplashGesture
-        v-if="!isLoading && !showInfoDialog && !showStartup && !showIntroSlides"
+        v-if="!isLoading && !showInfoDialog && !showStartup && !showIntroSlides && tourStep >= 1 && opacitySliders.length === 0"
         v-model="showSplashGesture"
+        :close-on-click="false"
         @close="handleSplashGestureClose"
       />
 
@@ -23,8 +24,8 @@
         @close="handleSplashClose"
       >
         <div id="startup-screen-content">
-          <h1 class="startup-screen-title">Why Roman</h1>
-          <span>Learn why NASA is launching the  Nancy Grace Roman Space Telescope</span>
+          <h1 class="startup-screen-title">Why Roman?</h1>
+          <span>Learn why NASA is launching a new space telescope</span>
           <!-- <v-btn
             v-for="tour in tours"
             :key="tour.id"
@@ -328,23 +329,53 @@
               <div
                 v-for="slider in opacitySliders"
                 :key="slider.index"
+                class="opacity-slider-row"
               >
-                <label :for="`layer-opacity-${slider.index}`">{{
-                  slider.name
-                }}</label>
-                <v-slider
-                  :id="`layer-opacity-${slider.index}`"
-                  :model-value="opacityOf(slider.index)"
-                  :min="0"
-                  :max="1"
-                  :step="0.01"
-                  :color="roman.color"
-                  density="compact"
-                  hide-details
-                  @update:model-value="
-                    (value: number) => setOpacity(slider.index, value)
-                  "
-                />
+                <template v-if="slider.minLabel || slider.maxLabel">
+                  <span
+                    class="opacity-slider-label"
+                    tabindex="0"
+                    @click="setOpacity(slider.index, 0)"
+                    @keyup.enter="setOpacity(slider.index, 0)"
+                  >{{ slider.minLabel ?? slider.name }}</span>
+                  <v-slider
+                    :id="`layer-opacity-${slider.index}`"
+                    :model-value="opacityOf(slider.index)"
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    color="grey"
+                    density="compact"
+                    hide-details
+                    @update:model-value="
+                      (value: number) => setOpacity(slider.index, value)
+                    "
+                  />
+                  <span
+                    class="opacity-slider-label"
+                    tabindex="0"
+                    @click="setOpacity(slider.index, 1)"
+                    @keyup.enter="setOpacity(slider.index, 1)"
+                  >{{ slider.maxLabel ?? slider.name }}</span>
+                </template>
+                <template v-else>
+                  <label :for="`layer-opacity-${slider.index}`">{{
+                    slider.name
+                  }}</label>
+                  <v-slider
+                    :id="`layer-opacity-${slider.index}`"
+                    :model-value="opacityOf(slider.index)"
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    color="grey"
+                    density="compact"
+                    hide-details
+                    @update:model-value="
+                      (value: number) => setOpacity(slider.index, value)
+                    "
+                  />
+                </template>
               </div>
             </div>
           </v-row>
@@ -366,7 +397,7 @@
                 />
               </template>
             </div>
-            <template v-if="true">
+            <template v-if="false">
               <div>zoom deg: {{ (store.zoomDeg / 6).toFixed(2) }}</div>
               <div>ra deg: {{ (store.raRad * R2D).toFixed(4) }}</div>
               <div>dec deg: {{ (store.decRad * R2D).toFixed(4) }}</div>
@@ -1044,6 +1075,7 @@ const tourParam = searchParams.get("tour");
 const tourStepParam = tourParam === null ? 0 : +(searchParams.get("tourStep") ?? 1) - 1;
 
 const showStartup = ref(!returning && tourParam === null);
+// const showStartup = ref(false);
 const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
@@ -1122,14 +1154,24 @@ function showImagesets(wtml: WtmlLoaderReturn, ...indices: number[]) {
   }
 }
 
-function showOpacitySliders(...indices: number[]) {
+// a plain number shows the layer's own name; pass an object instead to
+// label the slider's 0%/100% ends (e.g. the background/foreground images
+// being cross-faded) rather than falling back to the layer's own name
+type OpacitySliderSpec =
+  | number
+  | { index: number; minLabel?: string; maxLabel?: string };
+
+function showOpacitySliders(...specs: OpacitySliderSpec[]) {
   layerOpacities.value = {};
   const wtml = shownWtml.value;
   if (!wtml) {
     opacitySliders.value = [];
     return;
   }
-  // make sure layers are enabled and have opacity. 
+  const indices = specs.map((spec) =>
+    typeof spec === "number" ? spec : spec.index,
+  );
+  // make sure layers are enabled and have opacity.
   indices.forEach((index) => {
     const layer = wtml.imagesetLayers.value[index];
     if (layer) {
@@ -1138,10 +1180,15 @@ function showOpacitySliders(...indices: number[]) {
     }
   });
   // set the list of sliders to show
-  opacitySliders.value = indices.map((index) => ({
-    index,
-    name: wtml.imagesetNames.value[index] ?? "",
-  }));
+  opacitySliders.value = specs.map((spec) => {
+    const index = typeof spec === "number" ? spec : spec.index;
+    return {
+      index,
+      name: wtml.imagesetNames.value[index] ?? "",
+      minLabel: typeof spec === "number" ? undefined : spec.minLabel,
+      maxLabel: typeof spec === "number" ? undefined : spec.maxLabel,
+    };
+  });
 }
 
 interface ImagesetView {
@@ -1321,42 +1368,57 @@ function andromedaTour(n: number, tour = true) {
   
 
   if (n === 2) {  // Hubbles view from space
-    onlyFootprints(hubble, phast);
+    onlyFootprints(phast);
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
       raRad: 10.6847 * D2R,
       decRad: 41.269 * D2R,
-      zoomDeg: 3.5 * 6,
+      zoomDeg: 2.9 * 6,
       rollRad: 0,
       instant: ats.maxStep < 1, // if we have been here before, don't animate
-    }).then(() => {
-      showOpacitySliders(0);
+    }).then(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // brief pause before the next zoom
       // zoom into some point where the user can change opacity
-      store.gotoRADecZoom({
+      await store.gotoRADecZoom({
         raRad: 11.0743 * D2R,
         decRad: 41.6521 * D2R,
         zoomDeg: 0.04 * 6,
-        instant: ats.maxStep < 1,
-        duration: 2.5,
+        instant: false,
+        duration: 4,
       });
+      showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
     });
     ats.setMaxStep(1);
     return;
   }
-  
+
   if (n === 3) {  // "Hubble Took this many images"
-    onlyFootprints(hubble, phast, phastI); // just show PHAST outlines
+    onlyFootprints(phast); // just show PHAST outlines
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 2, instant: false }); // zoom back out
+    store.gotoRADecZoom({
+      raRad: 10.6847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 2 * 6, 
+      rollRad: 0,
+      instant: false,
+    }).then(async () => {
+      onlyFootprints(phast, phastI); 
+    }); // zoom back out
     ats.setMaxStep(2);
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints(jwst, phast);
+    onlyFootprints(jwst);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 1, instant: false }); // make sure we are zoomed where we want to be
+    store.gotoRADecZoom({ // center M31, zoomed to 
+      raRad: 10.6847 * D2R,
+      decRad: 41.469 * D2R,
+      zoomDeg: 2 * 6,
+      rollRad: 0,
+      instant: false,
+    });
     ats.setMaxStep(3);
     return;
   }
@@ -1364,14 +1426,21 @@ function andromedaTour(n: number, tour = true) {
     onlyFootprints(roman, jwst, hubble);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
+    store.gotoRADecZoom({ // center M31, zoomed to 
+      raRad: 10.5847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 2 * 6, 
+      rollRad: 0,
+      instant: false,
+    });
     ats.setMaxStep(4);
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline, roman);
+    onlyFootprints(phast, phastI, m31SfDisk, m31SfDiskOutline);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
-    goToImageset(andromedaWtml, 0, { zoom: 2, instant: false });
+    goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
     if (tour) showEndTourOverlay();
     ats.setMaxStep(5);
     return;
@@ -1379,7 +1448,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 7) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready */);
+    onlyFootprints(psuedoPixelFootprint /* show pixel grid when ready */);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1389,50 +1458,61 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
       duration: 3,
+    }).then(async () => {
+      onlyFootprints(psuedoPixelFootprint, roman);
+      await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
+      // zoom into some point where the user can change opacity
+      await store.gotoRADecZoom({
+        raRad: 10.13 * D2R,
+        decRad: 40.71 * D2R,
+        zoomDeg: 2 * 6,
+        instant: false,
+        duration: 3,
+      });
     });
     ats.setMaxStep(6);
     return;
   }
   
+  // // step 9
+  // if (n === 8) { // So many pixels
+  //   onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready, */ roman);
+  //   showOpacitySliders();
+  //   showImagesets(andromedaWtml, 0);
+  //   store.gotoRADecZoom({
+  //     raRad: 10.13 * D2R,
+  //     decRad: 40.71 * D2R,
+  //     zoomDeg: (10/60) * 6, // keep the zoom we are at
+  //     rollRad: store.rollRad, // keep the roll we are at
+  //     instant: false,
+  //   });
+  //   ats.setMaxStep(7);
+  //   return;
+  // }
+  
+  // // step 10
+  // if (n === 9) {  // Zoomed all the way out 
+  //   onlyFootprints(phast, m31SfDiskOutline,psuedoPixelFootprint,/* show pixel grid when ready, */ roman);
+  //   showOpacitySliders();
+  //   showImagesets(andromedaWtml, 0);
+  //   // goToImageset(andromedaWtml, 0, { zoom: 2.5, instant: false });
+  //   store.gotoRADecZoom({
+  //     raRad: 10.13 * D2R,
+  //     decRad: 40.71 * D2R,
+  //     zoomDeg: 2 * 6, // keep the zoom we are at
+  //     rollRad: store.rollRad, // keep the roll we are at
+  //     instant: false,
+  //   });
+  //   ats.setMaxStep(8);
+  //   return;
+  // }
+  
   // step 9
-  if (n === 8) { // So many pixels
-    onlyFootprints(phast,psuedoPixelFootprint, /* show pixel grid when ready, */ roman);
-    showOpacitySliders();
-    showImagesets(andromedaWtml, 0);
-    store.gotoRADecZoom({
-      raRad: 10.13 * D2R,
-      decRad: 40.71 * D2R,
-      zoomDeg: (10/60) * 6, // keep the zoom we are at
-      rollRad: store.rollRad, // keep the roll we are at
-      instant: false,
-    });
-    ats.setMaxStep(7);
-    return;
-  }
-  
-  // step 10
-  if (n === 9) {  // Zoomed all the way out 
-    onlyFootprints(phast, m31SfDiskOutline,psuedoPixelFootprint,/* show pixel grid when ready, */ roman);
-    showOpacitySliders();
-    showImagesets(andromedaWtml, 0);
-    // goToImageset(andromedaWtml, 0, { zoom: 2.5, instant: false });
-    store.gotoRADecZoom({
-      raRad: 10.13 * D2R,
-      decRad: 40.71 * D2R,
-      zoomDeg: 2 * 6, // keep the zoom we are at
-      rollRad: store.rollRad, // keep the roll we are at
-      instant: false,
-    });
-    ats.setMaxStep(8);
-    return;
-  }
-  
-  // step 11
-  if (n === 10) {// close out
+  if (n === 8) {// close out
     tourCloseOut();
     showOpacitySliders();
     onlyFootprints();
-    ats.setMaxStep(9);
+    ats.setMaxStep(7);
     return;
   }
   
@@ -1633,7 +1713,7 @@ const tourEndOptions = computed<{id: string, label: string, action: () => void}[
  * others fade against, so it doesn't get one.
  */
 // set by showOpacitySliders, not worked out from what is showing
-const opacitySliders = ref<{ index: number; name: string }[]>([]);
+const opacitySliders = ref<{ index: number; name: string; minLabel?: string; maxLabel?: string }[]>([]);
 const layerSliders = opacitySliders;
 
 function opacityOf(index: number): number {
@@ -2612,5 +2692,28 @@ h1.startup-screen-title {
 
 #step-control {
   flex: 1 0 auto;
+  border: none;
+  background: none;
+}
+
+.opacity-slider-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.opacity-slider-label {
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background: var(--background-color-darkest);
+  border: 1px solid var(--accent-color);
+  border-radius: 10px;
+  padding: 0.25rem 0.5rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>
