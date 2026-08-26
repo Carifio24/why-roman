@@ -59,7 +59,7 @@
       #actions
     >
       <v-icon
-        class="mx-2"
+        class="ms-2"
         icon="mdi-close"
         tabindex="0"
         @click.stop="handleClose"
@@ -115,10 +115,17 @@ onUnmounted(() => {
   padding: 0 0 1rem 1rem;
 }
 
+/* large-landscape floats TourSheet's box over the same lower-left corner of
+   #main-content (RomanFov.vue's #app.app-is-large-landscape #side-drawer,
+   width: 34%) that this would otherwise sit in -- push right to clear it. */
+#app.app-is-large-landscape .v-overlay.gesture-preview-overlay {
+  padding-left: calc(34% + 1rem);
+}
+
 .v-overlay__content.v-snackbar__wrapper.v-snackbar--variant-elevated.gesture-preview {
   border: 1px solid var(--accent-color);
   padding-inline: 0.75em;
-  background-color: #502752ee;
+  background-color: #502752a3;
   color: white;
 }
 .gesture-preview.small {
