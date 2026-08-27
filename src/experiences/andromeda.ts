@@ -62,7 +62,7 @@ export const andromedaExperience: TourExperience = [
     // better. Webb's mirror is nearly three times the size of Roman's -- it is built to look
     // deep and sharp at one spot, not to map a whole galaxy.
     tourSheetText: [
-      "The James Webb Space Telescope takes images using infrared light, revealing secrets invisible to our eyes.",
+      "The James Webb Space Telescope takes images using infrared light (which has less energy than what our eyes can see).",
       "Webb's biggest camera has two chips that are side-by-side. The orange squares show how much (or little) of the sky Webb can photograph at once.",
     ],
     instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time",
@@ -70,9 +70,8 @@ export const andromedaExperience: TourExperience = [
   {
     title: "Roman's View",  // step 6, n=5
     tourSheetText: [
-      "Like Webb, Roman will capture images in infrared light.",
-      "Roman's camera has 18 large chips arranged in a boomerang shape.",
-      `The camera's footprint or "field of view" is shown here.`,
+      "Like Webb, Roman will capture images in infrared light, revealing secrets invisible to our eyes.",
+      `Roman's camera has 18 large chips arranged in a boomerang shape. The camera's footprint or "field of view" is shown here.`,
     ],
     instaText: "Why Roman?!",
   },
