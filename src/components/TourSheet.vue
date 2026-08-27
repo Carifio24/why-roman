@@ -214,7 +214,7 @@ p {
 
 // anchors to .selected-info above; sits over the step title's right end,
 // which is short enough that they don't collide
-.tour-sheet-close {
+.v-icon.tour-sheet-close {
   position: absolute;
   top: 10px;
   right: 10px;

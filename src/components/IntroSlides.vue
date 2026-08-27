@@ -131,7 +131,7 @@ const NUM_SLIDES = 1;
 }
 
 // inside the 4px border and 1.7rem padding, so it sits in the visible corner
-.intro-slides-close {
+.v-icon.intro-slides-close {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
