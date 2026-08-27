@@ -133,7 +133,6 @@
                 tooltip-text="Open controls"
                 tooltip-location="start"
                 tabindex="0"
-                background-color="transparent"
                 @activate="handleShowOptions"
               ></icon-button>
 
@@ -156,7 +155,6 @@
                 :color="borderColor"
                 tooltip-text="Play the tour again"
                 tooltip-location="start"
-                background-color="transparent"
                 @activate="replayTour"
               ></icon-button>
 
@@ -2455,11 +2453,11 @@ body {
   align-self: stretch;
   min-height: 0;
 
-  // just keep the icons as cicles
-  // it is usually sized by the icon, but for some reason the (i)
-  // one was starting skinny then becoming a circle
   .icon-wrapper {
-    aspect-ratio: 1 / 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-width: 2px;
   }
 }
 
