@@ -51,7 +51,7 @@ export function useDataTracking(options: DataTrackingOptions) {
       headers,
     });
     const content = await existsResponse.json();
-    const exists = existsResponse.status === 200 && content.response.user_uuid !== undefined;
+    const exists = existsResponse.status === 200 && content.user_uuid !== undefined;
     if (exists) {
       return;
     }
