@@ -176,14 +176,16 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
       const vectors = box.map(pt => Vector3d.create(...pt, 0));
       const screenBox = screenPoints[index];
       for (let i = 0; i < box.length - 1; i++) {
-        footprint.addLine(vectors[i], vectors[i+1]);
         if (thick) {
           addThickSegment(screenBox[i], screenBox[i+1]);
+        } else {
+          footprint.addLine(vectors[i], vectors[i+1]);
         }
       }
-      footprint.addLine(vectors[box.length - 1], vectors[0]);
       if (thick) {
         addThickSegment(screenBox[box.length - 1], screenBox[0]);
+      } else {
+        footprint.addLine(vectors[box.length - 1], vectors[0]);
       }
 
 
@@ -213,7 +215,9 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
     });
 
     const opacity = options.opacity ?? 1;
-    footprint.drawLines(wwt.renderContext, opacity, options.color);
+    if (!thick) {
+      footprint.drawLines(wwt.renderContext, opacity, options.color);
+    }
 
     // the outline quads live in the same list as the fill, so it has to be
     // drawn for a thick outline even with fill off
