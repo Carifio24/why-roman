@@ -30,7 +30,7 @@
           <div id="splash-screen-logos">
             <credit-logos
               id="splash-screen-credit-logos"
-              logo-size="clamp(36px, 5vmin, 65px)"
+              logo-size="clamp(24px, 5vmin, 65px)"
               :default-logos="['cosmicds', 'wwt', 'nasa']"
               :extra-logos="cfaExtraLogo"
             />
@@ -164,7 +164,7 @@ function closeSplashScreen() {
   flex-direction: column;
   justify-content: space-around;
   align-content: center;
-  padding-top: 2rem;
+  padding-top: 1rem;
   padding-bottom: 1rem;
   padding-inline: 2rem;
 

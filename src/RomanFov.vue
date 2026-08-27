@@ -2728,7 +2728,7 @@ video {
 // SplashScreen on large screens, where that ancestor doesn't exist.
 h1.startup-screen-title {
   color: white;
-  font-size: calc(4 * var(--default-font-size));
+  font-size: 1.25em;
   text-align: center;
   line-height: 1.1;
   margin-block: 0.5rem;
@@ -2744,7 +2744,6 @@ h1.startup-screen-title {
 }
 
 #startup-screen-content > span {
-  font-size: calc(3 * var(--default-font-size));
   text-shadow: 0 2px 8px black; //var(--background-color);
   filter: drop-shadow(0px 2px 6px black);
   font-weight: 600;
