@@ -481,6 +481,7 @@
         :step="tourStep"
         :small-size="smallSize"
         :show-breadcrumbs="false"
+        show-close-button
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
@@ -525,10 +526,6 @@
               :show-opacity="false"
             />
           </div>
-          <v-icon
-            icon="mdi-close"
-            @click="showOptions = false"
-          />
         </div>
       </TourSheet>
     </div>
@@ -2832,5 +2829,10 @@ h1.startup-screen-title {
 
 #side-drawer-controls {
   display: flex;
+  
+  h3 {
+    font-size: 1.17em;
+  }
+  
 }
 </style>

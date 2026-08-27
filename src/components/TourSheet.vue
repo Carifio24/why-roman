@@ -3,6 +3,13 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
+    <v-btn
+      v-if="showCloseButton"
+      class="side-drawer-controls-close-icon"
+      variant="text"
+      density="compact"
+      icon="mdi-close"
+    />
     <!-- fill either slot to replace the step's own content, so callers can put
      something else in this box without passing it all in as props -->
     <div class="selected-info-scroll">
@@ -97,6 +104,7 @@ interface Props {
   showBackOnFirstStep?: boolean,
   nextText?: string,  
   backText?: string,
+  showCloseButton?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -105,6 +113,7 @@ const props = withDefaults(defineProps<Props>(), {
   showBackOnFirstStep: false,
   nextText: 'Next',
   backText: 'Back',
+  showCloseButton: false,
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
@@ -272,6 +281,16 @@ p {
   min-width: 50px;
   padding: 0 12px;
 }
+
+.side-drawer-controls-close-icon {
+    // position: absolute;
+    float: right;
+    z-index: 15;
+    align-self: flex-end;
+    margin-bottom: -1.5em;
+    margin-right: 0.75em;
+    cursor: pointer;
+  }
 
 
 </style>
