@@ -764,7 +764,7 @@ const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
   footprint: romanFootprint,
-  color: "#ff1900",
+  color: "#e100ff",
   // linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
   offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
@@ -799,7 +799,11 @@ const jwst = useFootprint({
   id: "jwst-footprint",
   label: "Webb",
   footprint: jwstFootprint,
-  color: "#002aff",
+  // Was the Carina Spark JWST accent (#f0ab52), but that is the same hue and
+  // nearly the same lightness as the PHAST core it sits on, so it disappeared
+  // there (WCAG 1.06). This deeper orange keeps the warm/infrared association
+  // and stays clear of Hubble's blue for red-green colour blindness.
+  color: "#ff6d00",
   offsetXDeg: -0.075, // left
   offsetYDeg: 0.2, // down
   // linewidth: 2,
@@ -809,7 +813,7 @@ const hubble = useFootprint({
   id: "hubble-footprint",
   label: "Hubble",
   footprint: hubbleFootprint,
-  color: "#e100ff",
+  color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
   // linewidth: 2, 
@@ -901,15 +905,19 @@ const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
   label: "M31 Roman Outlines",
   footprint: m31SfDiskFootprintOutline,
-  color: "#f58d42",  // TODO: Feel free to change this
+  color: "#C77FB3",  // TODO: Feel free to change this
   fixed: true,
   show: false,
 });
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
 const footprints = [  
-  m31SfDisk,
+  roman,
+  hubble,
+  jwst,
+  romanPixel,
   m31SfDiskOutline,
+  m31SfDisk,
   phast,
   phastI,
   // gbtds,
@@ -917,10 +925,6 @@ const footprints = [
   // hltds,
   // gps,
   // m31HiDisk,
-  romanPixel,
-  roman,
-  hubble,
-  jwst,
 ];
 
 // the currently visible footprints. 

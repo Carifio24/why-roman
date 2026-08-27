@@ -83,8 +83,8 @@ export const andromedaExperience: TourExperience = [
     //          2.4 m; Webb 6.5 m
     tourSheetText: [
       "Like Webb, Roman will capture infrared images.",
-      'The **red** boomerang shape shows the footprint or "field of view" of one Roman image.',
-      "The **blue** and **magenta** squares show the Webb and Hubble footprints."
+      'The magenta boomerang shape shows the footprint or "field of view" of one Roman image.',
+      "The orange and blue squares show the Webb and Hubble footprints."
     ],
     instaText: "Roman covers way more sky per infrared image.",
   },
