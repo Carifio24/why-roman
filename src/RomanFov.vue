@@ -1308,7 +1308,7 @@ function andromedaTour(n: number, tour = true) {
     textVisibilitySetters["jwst"]?.(false);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3.4, instant: false });
-    showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+    showOpacitySliders({ index: 0, minLabel: "Ground", maxLabel: "Hubble" });
     return;
   }
   /* each step should explicitly set

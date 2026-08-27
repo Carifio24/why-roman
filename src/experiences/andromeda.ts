@@ -46,7 +46,7 @@ export const andromedaExperience: TourExperience = [
       "To obtain this view with Hubble, astronomers stitched together 600 images taken over 500 hours.",
       "The overlaid grid shows where each individual image was taken across Andromeda to make this beautiful mosaic.",
     ],
-    instaText: "Hubble captured 600 images for Andromeda, taking 500 hours!",
+    instaText: "Hubble captured 600 images for Andromeda. It took 500 hours!",
   },
   {
     title: "JWST only sees this",  // step 5, n=4
