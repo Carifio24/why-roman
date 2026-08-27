@@ -908,7 +908,7 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "M31 Hubble Outline",
+  label: "Hubble Outline",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
@@ -919,7 +919,7 @@ const phast = useFootprint({
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "M31 Hubble Grid",
+  label: "Hubble Pointings",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
@@ -976,7 +976,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "M31 Roman Grid",
+  label: "Roman Pointings (Chips)",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -986,7 +986,7 @@ const m31SfDisk = useFootprint({
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
-  label: "M31 Roman Outlines",
+  label: "Roman Pointings (Outlines)",
   footprint: m31SfDiskFootprintOutline,
   color: "#C77FB3",  // TODO: Feel free to change this
   fixed: true,
