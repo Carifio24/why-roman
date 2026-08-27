@@ -2,7 +2,12 @@
   <v-app
     id="app"
     :style="cssVars"
-    :class="[smallSize && isPortrait ? 'app-is-small' : '', smallSize && !isPortrait ? 'app-is-small-landscape' : '', !smallSize && !isPortrait ? 'app-is-large-landscape' : '']"
+    :class="{
+      'app-is-small': smallSize,
+      'app-is-portrait': isPortrait,
+      'app-is-landscape': !isPortrait,
+      'app-tour-sheet-overlay': tourSheetOverlays,
+    }"
   >
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
@@ -129,7 +134,7 @@
                 tooltip-location="start"
                 tabindex="0"
                 background-color="transparent"
-                @activate="toggleControls"
+                @activate="handleShowOptions"
               ></icon-button>
 
               <icon-button
@@ -140,6 +145,7 @@
                 :color="borderColor"
                 tooltip-text="Show User Guide"
                 tooltip-location="start"
+                @activate="handleShowInfo"
               >
               </icon-button>
 
@@ -313,6 +319,8 @@
           :class="[smallSize ? 'no-footer' : '']"
         >
           <!-- padding on top is needed because -->
+          <!-- clearing the floating tour sheet is handled in CSS, keyed on
+               #app.app-tour-sheet-overlay -->
           <v-row
             id="position-layout"
             align="start"
@@ -447,11 +455,12 @@
     </div>
 
     <div
-      id="side-drawer"
-      :class="[(showTextSheet || inTour || showOptions) ? 'side-drawer-open' : 'side-drawer-closed']"
+      id="side-drawer-tour-sheet"
+      class="layout-drawer"
+      :class="[tourSheetOpen ? 'side-drawer-open' : 'side-drawer-closed']"
     >
       <TourSheet
-        v-if="activeTour && !showOptions && !showTextSheet"
+        v-if="tourSheetOpen && activeTour"
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
@@ -461,31 +470,19 @@
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
         @step="(index) => goToStep(index)"
-      >
-        <!-- the close-out step keeps the text but trades the stepper for the
-         way out -->
-        <!-- <template
-          v-if="showExploreUi"
-          #controls
-        >
-          <div class="tour-text-controls">
-            <v-spacer />
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="enterExplore"
-            >
-              Explore
-            </v-btn>
-          </div>
-        </template> -->
-      </TourSheet>
+      />
+    </div>
 
+    <!-- the controls are their own drawer, not part of the tour sheet: in a
+         roomy landscape the tour sheet floats while these still push WWT over -->
+    <div
+      id="side-drawer-controls"
+      class="layout-drawer"
+      :class="[showOptions ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
       <TourSheet
-        v-if="showOptions && !showTextSheet"
-        :tour-id="lastTourId"
+        v-if="showOptions"
+        tour-id="there-is-no-tour-just-showing-options"
         :step="tourStep"
         :small-size="smallSize"
         :show-breadcrumbs="false"
@@ -538,33 +535,14 @@
             @click="showOptions = false"
           />
         </div>
-        <template #controls>
-          <!-- an empty slot falls back to the stepper, so this div always renders -->
-          <div>
-            <div
-              v-for="slider in layerSliders"
-              :key="slider.index"
-            >
-              <label :for="`controls-opacity-${slider.index}`">{{
-                slider.name
-              }}</label>
-              <v-slider
-                :id="`controls-opacity-${slider.index}`"
-                :model-value="opacityOf(slider.index)"
-                :min="0"
-                :max="1"
-                :step="0.01"
-                :color="roman.color"
-                density="compact"
-                hide-details
-                @update:model-value="
-                  (value: number) => setOpacity(slider.index, value)
-                "
-              />
-            </div>
-          </div>
-        </template>
       </TourSheet>
+    </div>
+    
+    <div
+      id="side-drawer"
+      class="layout-drawer"
+      :class="[(showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
       <InformationSheet
         v-if="showTextSheet"
         v-model="showTextSheet"
@@ -678,6 +656,19 @@ useWWTKeyboardControls(store);
 const { height, width, smAndDown } = useDisplay();
 
 const isPortrait = computed(() => height.value >= width.value);
+
+// Where the tour sheet stops being a side column and starts floating over WWT:
+// a full-height column only wastes space once the screen is big enough for it
+// to look conspicuously empty. Width reuses the existing small/large boundary
+// (smAndDown, 960px); the height floor excludes short landscape windows, where
+// a column wastes little and the floating box would be cramped.
+const ROOMY_LANDSCAPE_MIN_HEIGHT = 600;
+const isRoomyLandscape = computed(
+  () =>
+    !isPortrait.value &&
+    !smAndDown.value &&
+    height.value >= ROOMY_LANDSCAPE_MIN_HEIGHT,
+);
 
 const props = withDefaults(defineProps<RomanFovProps>(), {
   wwtNamespace: "roman-fov",
@@ -821,7 +812,7 @@ const hubble = useFootprint({
   color: "#e100ff",
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
-  // linewidth: 2,
+  // linewidth: 2, 
   show: false,
 });
 // const wfpc2 = useFootprint({
@@ -1145,11 +1136,21 @@ function enterExplore() {
   showOptions.value = true; // show the options box by default
 }
 
+// the controls and the info sheet are the same shape of drawer, so only one
+// of them is ever open -- in landscape as well as portrait, where two open
+// drawers would take 68% of the width between them
+function handleShowInfo() {
+  showOptions.value = false;
+}
+
 // opening the controls at the close-out step ends the tour
-function toggleControls() {
+function handleShowOptions() {
   const open = !showOptions.value;
-  if (open && inTour.value) {
-    enterExplore();
+  if (open) {
+    if (inTour.value) {
+      enterExplore();
+    }
+    showTextSheet.value = false;
   }
   showOptions.value = open;
 }
@@ -1261,9 +1262,9 @@ function andromedaTour(n: number, tour = true) {
    - visible imagesets
    - camera position
    */
-  ats.setMaxStep(n);
+
   if (n === 0 || n === 1) { // Andromeda & View from the ground
-    ats.setMaxStep(0);
+    
     onlyFootprints([]); // no footprints
     showOpacitySliders();
     showImagesets(andromedaWtml); // load wtml, but don't show anything yet
@@ -1275,10 +1276,13 @@ function andromedaTour(n: number, tour = true) {
       instant: false,
     });
     
-    if (n===1) {
-      ats.setMaxStep(1);
-    }
-    
+    // if (n == 0) {
+    //   ats.setMaxStep(0);
+    // }
+    // if (n===1) {
+    //   ats.setMaxStep(1);
+    // }
+    ats.setMaxStep(n);
     return;
   }
   
@@ -1307,7 +1311,7 @@ function andromedaTour(n: number, tour = true) {
         showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
       }
     });
-    
+    ats.setMaxStep(n);
     return;
   }
 
@@ -1673,6 +1677,7 @@ function goToStep(n: number) {
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
   if (activeTour.value) {
+    console.log("goToStep", n, "for tour", activeTour.value.id);
     activeTour.value.step(n);
   }
 }
@@ -1998,6 +2003,19 @@ const cssVars = computed(() => {
 });
 
 const showOptions = ref(false);
+
+// The single source of truth for the tour sheet's layout. Matching the
+// TourSheet's own v-if keeps the drawer from opening empty behind the other
+// two sheets, and `tourSheetOverlays` is what every consumer of the floating
+// layout keys off -- the sheet itself, the gesture hint and the slider row --
+// so the condition can't drift between them again.
+const tourSheetOpen = computed(
+  () => inTour.value && !showOptions.value && !showTextSheet.value,
+);
+const tourSheetOverlays = computed(
+  () => tourSheetOpen.value && isRoomyLandscape.value,
+);
+
 /**
   Computed flags that control whether the relevant dialogs display.
   The `sheet` data member stores which sheet is open, so these are just
@@ -2228,68 +2246,39 @@ body {
   transition: height 0.1s ease-in-out;
 }
 
-// a flex sibling of #main-content, so opening it shrinks the WWT view.
-// This is the small-device landscape arrangement (side column, drawer to
-// the left via order: -1); app-is-large-landscape overrides it below to an
-// overlay instead (a full-height column is mostly deadspace on a big
-// screen), and app-is-small (portrait) switches to a bottom panel.
-#side-drawer {
+/* All three panels -- tour sheet, controls, info sheet -- are the same kind of
+   drawer and share these rules. Only the tour sheet deviates, and only in a
+   roomy landscape, where it floats instead (see .app-tour-sheet-overlay
+   below). Each is a flex sibling of #main-content, so opening one shrinks the
+   WWT view; `order: -1` puts it before #main-content, i.e. on the left. */
+.layout-drawer {
   flex: 0 0 auto;
   overflow: hidden;
   width: 0;
   order: -1;
 
   &.side-drawer-open {
-    width: 34%;
+    width: var(--drawer-width);
   }
 }
 
-// small devices in landscape get a wider share of the row, since there's
-// less absolute width to work with than on a large screen
-#app.app-is-small-landscape #side-drawer.side-drawer-open {
-  width: 40%;
-}
-
-// large screens in landscape: give #main-content (and so WWT) the full
-// canvas, and float the drawer as a fixed-size box over its lower-left
-// corner instead of a full-height column full of deadspace. #app fills the
-// viewport 1:1, so position: fixed here lands in the same place as
-// anchoring to #app would.
-#app.app-is-large-landscape #side-drawer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
-
-  &.side-drawer-open {
-    width: 34%;
-    height: 34%;
-  }
-}
-
-// small devices in portrait: side panel becomes a bottom panel instead of a
-// side column
-#app.app-is-small {
+// portrait, any size: the side column becomes a bottom panel, because height
+// is the abundant axis there and width is the scarce one
+#app.app-is-portrait {
   > .v-application__wrap {
     flex-direction: column;
     max-height: 100svh;
   }
 
-  #side-drawer {
+  .layout-drawer {
     width: 100%;
     height: 0;
     order: 1;
 
     &.side-drawer-open {
       width: 100%;
-      height: 34%;
+      height: var(--drawer-height);
     }
-  }
-
-  // the drawer is wide and short here, so the columns fit side by side
-  #tour-controls {
-    flex-direction: row;
   }
 }
 
@@ -2299,6 +2288,18 @@ body {
   margin: 0;
   overflow: hidden;
   font-size: var(--default-font-size);
+
+  // the share of the screen a drawer takes, in whichever axis it occupies.
+  // Every drawer rule and every "clear the floating sheet" offset reads these,
+  // so the proportion is defined once.
+  --drawer-width: 34%;
+  --drawer-height: 34%;
+
+  // a phone in landscape has little absolute width to spare, so the column
+  // takes a bigger share than it would on a large screen
+  &.app-is-small.app-is-landscape {
+    --drawer-width: 40%;
+  }
 
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
@@ -2683,6 +2684,14 @@ video {
   }
 }
 
+// the portrait bottom drawer is wide and short, so its columns sit side by
+// side: the height goes to the content rather than to stacking, and the close
+// button stays in the corner instead of dropping below both columns. In
+// landscape the drawer is a tall narrow column, where stacking is right.
+#app.app-is-portrait #tour-controls {
+  flex-direction: row;
+}
+
 #tour-controls {
   display: flex;
   flex-direction: column;
@@ -2798,5 +2807,66 @@ h1.startup-screen-title {
   &:hover {
     cursor: pointer;
   }
+}
+
+
+/* The tour sheet is a .layout-drawer like the other two; it only needs the
+   inner flex column so the sheet can do its own scrolling, plus the
+   --container-* vars TourSheet.vue sizes its text against (set per layout,
+   since the box's proportions differ a lot between them). */
+#side-drawer-tour-sheet {
+  --container-width: 34vw;
+  --container-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#app.app-is-portrait #side-drawer-tour-sheet {
+  --container-width: 100vw;
+  --container-height: 34vh;
+}
+
+/* Roomy landscape: give #main-content (and so WWT) the full canvas and float
+   the tour sheet over its lower-left corner, instead of a full-height column
+   that would be mostly deadspace at this size. Taking it out of flow is what
+   makes #main-content stay full width -- which is also why the gesture hint
+   and the slider row need the offsets below to clear it. */
+#app.app-tour-sheet-overlay #side-drawer-tour-sheet {
+  --container-width: 34vw;
+  --container-height: 50vh; // matches max-height below
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  z-index: 1000;
+
+  &.side-drawer-open {
+    width: var(--drawer-width);
+    height: min-content;
+    max-height: 50vh;
+    bottom: 1rem;
+  }
+}
+
+/* Clear the floating sheet. #main-content is full width whenever the sheet is
+   floating (the other two drawers are mutually exclusive with it), so the
+   sheet's right edge is at --drawer-width of it. This percentage resolves
+   against #wwt-overlay's *padded* content box instead, which lands ~11px
+   short, and the v-row inside adds its own negative margin -- the extra 1rem
+   absorbs both, and matches the offset SplashGesture.vue uses. */
+#app.app-tour-sheet-overlay #bottom-content {
+  padding-left: calc(var(--drawer-width) + 1rem);
+}
+
+#side-drawer-controls {
+  display: flex;
+  
+  h3 {
+    font-size: 1.17em;
+  }
+  
 }
 </style>
