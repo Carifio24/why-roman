@@ -1429,7 +1429,7 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints([phast, phastI, m31SfDisk, m31SfDiskOutline]);
+    onlyFootprints([phast, phastI, m31SfDiskOutline]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
