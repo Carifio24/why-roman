@@ -159,9 +159,10 @@ p {
   );
 }
 
-// the landscape box is the short floating one (~50vh), so a step with a full
-// paragraph needs tighter spacing to fit
-#app.app-is-landscape #tour-text p {
+// the floating box is capped at ~50vh, so a step with a full paragraph needs
+// tighter spacing to fit. A landscape phone gets a full-height drawer instead
+// and has no such pressure, hence keying on the overlay rather than landscape.
+#app.app-tour-sheet-overlay #tour-text p {
   margin-top: 0.25rem;
 }
 
@@ -201,17 +202,13 @@ p {
 
 // the scrollable region: grows to fill whatever space tour-text-controls
 // doesn't need, and scrolls on its own so the controls stay visible even
-// when a step's text doesn't fit (notably in the large-landscape overlay,
-// where the box is a fixed ~34% of the screen height, not full height)
+// when a step's text doesn't fit (notably in the floating overlay, where the
+// box is capped at ~50vh rather than being full height)
 .selected-info-scroll {
   width: 100%;
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-}
-
-.selected-info-scroll {
-  flex: 0 1 auto;
 }
 
 .tour-text-controls {
@@ -265,9 +262,10 @@ p {
   }
 }
 
-// landscape is the short floating box in every size now, so the buttons shrink
-// to leave the step's text as much of it as possible
-#app.app-is-landscape .tour-text-controls .v-btn {
+// the floating box is the short one, so its buttons shrink to leave the step's
+// text as much of it as possible. The drawer layouts are roomier and keep the
+// default button size.
+#app.app-tour-sheet-overlay .tour-text-controls .v-btn {
   --v-btn-size: 0.75rem;
   --v-btn-height: 28px;
   font-size: var(--v-btn-size);

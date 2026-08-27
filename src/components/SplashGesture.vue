@@ -115,11 +115,12 @@ onUnmounted(() => {
   padding: 0 0 1rem 1rem;
 }
 
-/* large-landscape floats TourSheet's box over the same lower-left corner of
-   #main-content (RomanFov.vue's #app.app-is-large-landscape #side-drawer,
-   width: 34%) that this would otherwise sit in -- push right to clear it. */
-#app.app-is-large-landscape .v-overlay.gesture-preview-overlay {
-  padding-left: calc(34% + 1rem);
+/* When the tour sheet floats (RomanFov.vue's #app.app-tour-sheet-overlay) it
+   occupies the same lower-left corner of #main-content this would sit in, so
+   push right to clear it. --drawer-width is defined on #app there, so the two
+   can't drift apart. */
+#app.app-tour-sheet-overlay .v-overlay.gesture-preview-overlay {
+  padding-left: calc(var(--drawer-width) + 1rem);
 }
 
 .v-overlay__content.v-snackbar__wrapper.v-snackbar--variant-elevated.gesture-preview {
