@@ -55,4 +55,3 @@ jobs:
           branch: gh-pages
           folder: dist
           clean: true
-          target-folder: ${{ github.head_ref || github.ref_name }}
