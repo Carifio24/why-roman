@@ -76,29 +76,46 @@ export function getDelaunay(vertices: Point[], id: string): number[] {
 }
 
 
-function perpendicularOffsetVector(v1: Vector3d, v2: Vector3d, delta: number, lengthen: number = 0): [Vector3d, Vector3d] {
-  const f = Vector3d.create(v2.x - v1.x, v2.y - v1.y, 0);
-  const norm = Math.sqrt(f.x * f.x + f.y * f.y);
-  const fhat = Vector3d.create(f.x / norm, f.y / norm, 0);
-  const perp = Vector3d.create(-fhat.y, fhat.x, 0);
-  const offset = Vector3d.create(perp.x * delta, perp.y * delta, 0);
-  if (lengthen !== 0) {
-    const parallelOff = Vector3d.create(fhat.x * lengthen / 2, fhat.y * lengthen / 2, 0);
-    offset.x += parallelOff.x;
-    offset.y += parallelOff.y;
-    return [Vector3d.create(v1.x + offset.x - parallelOff.x, v1.y + offset.y - parallelOff.y, 0), Vector3d.create(v2.x + offset.x + parallelOff.x, v2.y + offset.y + parallelOff.y, 0)];
-  }
-  return [Vector3d.create(v1.x + offset.x, v1.y + offset.y, 0), Vector3d.create(v2.x + offset.x, v2.y + offset.y, 0)];
-}
 
-function addLineWidth(footprint: SimpleLineList, v1: Vector3d, v2: Vector3d, onePix: number, pxWidth: number) {
-  const halfWidth = Math.floor(pxWidth / 2);
-  for (let i = 1; i <= halfWidth; i++) {
-    const perpsPlus = perpendicularOffsetVector(v1, v2, onePix * i, halfWidth * onePix);  // lengthen the vector so corners match. assumes nearly right angle joins -_-
-    const perpsMinus = perpendicularOffsetVector(v1, v2, -onePix * i, halfWidth * onePix); 
-    footprint.addLine(...perpsPlus);
-    footprint.addLine(...perpsMinus);
+/*
+ A thick segment as one solid quad, cornered out in screen space.
+
+ The previous approach stacked extra hairlines a pixel to either side, which
+ only holds together while one canvas pixel is one device pixel. The engine
+ sizes the canvas from `parentNode.clientWidth` -- CSS pixels, with no
+ devicePixelRatio anywhere in it -- so at any browser zoom the whole canvas is
+ resampled, and a stack of 1px lines a pixel apart is exactly the high-frequency
+ pattern that aliases into banding. Hence "looks fine until you hit cmd +/-".
+
+ A filled quad resamples cleanly at any ratio. Screen space rather than clip
+ also fixes an anisotropy in the old version: it offset by the *x* pixel size
+ whatever the segment's direction, so on a non-square canvas horizontal edges
+ came out a different width from vertical ones.
+*/
+function thickSegmentQuad(p1: Point, p2: Point, pxWidth: number): Point[] {
+  const dx = p2[0] - p1[0];
+  const dy = p2[1] - p1[1];
+  const length = Math.sqrt(dx * dx + dy * dy);
+  if (length === 0) {
+    return [];
   }
+  const ux = dx / length;
+  const uy = dy / length;
+  const half = pxWidth / 2;
+  // run each end half a width long so square corners meet without a notch
+  const ax = p1[0] - ux * half;
+  const ay = p1[1] - uy * half;
+  const bx = p2[0] + ux * half;
+  const by = p2[1] + uy * half;
+  // perpendicular
+  const nx = -uy * half;
+  const ny = ux * half;
+  return [
+    [ax + nx, ay + ny],
+    [bx + nx, by + ny],
+    [bx - nx, by - ny],
+    [ax - nx, ay - ny],
+  ];
 }
 
 export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
@@ -122,19 +139,12 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
   }
 
   const renderContext = wwt.renderContext;
-  let onePixSquare = [] as Point[][];
 
   const zeroTransforms = createTransformsForCamera({
     position: { raDeg: 0, decDeg: 0 },
     rotationDeg: 0,
     renderContext,
   });
-
-  const getOnePxSquare = (rc: RenderContext) => {
-    onePixSquare = convertScreenPointsToClip(rc, [[[0, 0], [1, 1]]]);
-  };
-  executeWithTransforms(renderContext, getOnePxSquare, zeroTransforms);
-  const onePix = [Math.abs(onePixSquare[0][0][0] - onePixSquare[0][1][0]), Math.abs(onePixSquare[0][0][1] - onePixSquare[0][1][1])];
 
   const triangles = new TriangleList(); // TriangleList should support pure2D. 
   triangles.pure2D = true;
@@ -147,19 +157,35 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
     const screenPoints = positionedShiftedCorners.map(box => getScreenPoints(wwt, box));
     const clipPoints = convertScreenPointsToClip(renderContext, screenPoints);
 
+    const thick = (options.linewidth ?? 1) > 1;
+    const outlineColor = Color.fromArgb(Math.round((options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
+
+    // one quad per segment, built from the screen points so the width is in
+    // real pixels and the same in every direction
+    const addThickSegment = (p1: Point, p2: Point) => {
+      const quad = thickSegmentQuad(p1, p2, options.linewidth as number);
+      if (quad.length === 0) {
+        return;
+      }
+      const c = convertScreenPointsToClip(renderContext, [quad])[0].map(pt => Vector3d.create(...pt, 0));
+      triangles.addTriangle(c[0], c[1], c[2], outlineColor, date);
+      triangles.addTriangle(c[2], c[3], c[0], outlineColor, date);
+    };
+
     clipPoints.forEach((box, index) => {
       const vectors = box.map(pt => Vector3d.create(...pt, 0));
+      const screenBox = screenPoints[index];
       for (let i = 0; i < box.length - 1; i++) {
         footprint.addLine(vectors[i], vectors[i+1]);
-        if (options.linewidth && options.linewidth > 1) {
-          addLineWidth(footprint, vectors[i], vectors[i+1], onePix[0], options.linewidth);
+        if (thick) {
+          addThickSegment(screenBox[i], screenBox[i+1]);
         }
       }
       footprint.addLine(vectors[box.length - 1], vectors[0]);
-      if (options.linewidth && options.linewidth > 1) {
-        addLineWidth(footprint, vectors[box.length - 1], vectors[0], onePix[0], options.linewidth);
+      if (thick) {
+        addThickSegment(screenBox[box.length - 1], screenBox[0]);
       }
-      
+
 
       if (options.fill) {
         const triangleColor = Color.fromArgb(Math.round(options.fillOpacity * (options.opacity ?? 1) * 255), options.color.r, options.color.g, options.color.b);
@@ -188,8 +214,10 @@ export function drawFootprint(wwt: WWTControl, options: DrawFootprintOptions) {
 
     const opacity = options.opacity ?? 1;
     footprint.drawLines(wwt.renderContext, opacity, options.color);
-  
-    if (options.fill) {
+
+    // the outline quads live in the same list as the fill, so it has to be
+    // drawn for a thick outline even with fill off
+    if (options.fill || thick) {
       triangles.draw(wwt.renderContext, 1, true);
     }
   };

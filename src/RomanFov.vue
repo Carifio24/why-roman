@@ -842,7 +842,7 @@ const roman = useFootprint({
   label: "Roman",
   footprint: romanFootprint,
   color: "#e100ff",
-  // linewidth: 2, // faking the linewidth can leave artifacts
+  linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
   offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
 });
@@ -853,6 +853,7 @@ const romanPixel = useFootprint({
   footprint: romanPixelFootprint,
   color: "#108de0",
   show: true,
+  linewidth: 2,
 });
 const testFootprint = useFootprint({
   id: "roman-fixed-footprint",
@@ -883,7 +884,7 @@ const jwst = useFootprint({
   color: "#ff6d00",
   offsetXDeg: -0.075, // left
   offsetYDeg: 0.2, // down
-  // linewidth: 2,
+  linewidth: 2,
   show: false,
 });
 const hubble = useFootprint({
@@ -893,7 +894,7 @@ const hubble = useFootprint({
   color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
-  // linewidth: 2, 
+  linewidth: 2, 
   show: false,
 });
 // const wfpc2 = useFootprint({
