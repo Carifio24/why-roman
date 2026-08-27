@@ -167,7 +167,7 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.025 * (var(--container-width) + var(--container-height))),
+    calc(0.023 * (var(--container-width) + var(--container-height))),
     2rem
   );
 }
@@ -220,6 +220,13 @@ p {
   right: 10px;
   z-index: 1;
   cursor: pointer;
+}
+
+// the close icon is out of flow, so a long title runs straight under it once the
+// box is narrow -- reserve its 24px plus a gap. Keyed on the icon being present
+// so a caller that supplies its own close control doesn't get the indent.
+.selected-info:has(> .tour-sheet-close) h3 {
+  padding-right: 2rem;
 }
 
 
