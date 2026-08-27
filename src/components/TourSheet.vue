@@ -167,8 +167,8 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.0225 * (var(--container-width) + var(--container-height))),
-    1.8rem
+    calc(0.027 * (var(--container-width) + var(--container-height))),
+    1.5rem
   );
 }
 
@@ -326,7 +326,7 @@ p {
 }
 
 .selected-info-tour {
-  padding-bottom: 0.5em;
+  padding: 0.2em;
 }
 
 </style>
