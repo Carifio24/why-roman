@@ -853,7 +853,7 @@ const romanPixel = useFootprint({
   footprint: romanPixelFootprint,
   color: "#108de0",
   show: true,
-  linewidth: 2,
+  linewidth: 3,
 });
 const testFootprint = useFootprint({
   id: "roman-fixed-footprint",
@@ -1982,26 +1982,26 @@ onMounted(() => {
       store,
       renderContext,
       text: "Roman",
-      center: Coordinates.raDecTo3d(-0.001, 0.4),
+      center: Coordinates.raDecTo3d(-0.004, 0.4),
       // read off the footprint so the label can't drift from the shape it names
       color: roman.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
       store,
       renderContext,
       text: "Hubble",
-      center: Coordinates.raDecTo3d(-0.01, -0.3),
+      center: Coordinates.raDecTo3d(-0.018, -0.3),
       color: hubble.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
     const { setVisible: setJWSTTextVisible } = createTextOverlay({
       store,
       renderContext,
-      text: "JWST",
-      center: Coordinates.raDecTo3d(0.01, -0.3),
+      text: "Webb",
+      center: Coordinates.raDecTo3d(0.012, -0.3),
       color: jwst.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
 
     textVisibilitySetters[roman.id] = setRomanTextVisible;
