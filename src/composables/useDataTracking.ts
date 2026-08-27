@@ -30,6 +30,7 @@ export function useDataTracking(options: DataTrackingOptions) {
   
   const headers = {
     "Content-Type": "application/json",
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     "Authorization": env[`${prefix}CDS_API_KEY`] ?? "",
   };
 
