@@ -211,7 +211,20 @@ const NUM_SLIDES = 1;
   }
 }
 
-.intro-slide-button {
+// Both of these are qualified by the container to outrank a same-specificity
+// rule that lands after this file in the production bundle -- in dev the order
+// is the other way round, so they only misbehave once built.
+
+// the toolkit ships a global `.v-card-actions { display: var(--footer-visible) }`
+// for its rating dialog; that variable is undefined here, so the declaration is
+// invalid and takes Vuetify's `display: flex` down with it, leaving the spacer
+// with nothing to push against
+.intro-slides-container > .v-card-actions {
+  display: flex;
+}
+
+// Vuetify emits `.v-btn { border-width: 0 }` twice, the second copy after this
+.intro-slides-container .intro-slide-button {
   color: var(--text-color);
   font-size: 1.2rem;
   text-transform: uppercase;
