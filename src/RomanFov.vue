@@ -1779,7 +1779,10 @@ function selectPlace(id: string, step = 0) {
     leaveTour();
   }
   showExploreUi.value = false;
+  // starting a tour hands the drawer back to the tour sheet, so both explore
+  // panels close -- every entry point (cards, replay, startup) comes through here
   showOptions.value = false;
+  showTextSheet.value = false;
   lastTourId.value = id;
   selectedPlaceId.value = id;
   goToStep(step);
