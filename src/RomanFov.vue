@@ -996,15 +996,17 @@ const m31SfDiskOutline = useFootprint({
 });
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
+// the draw order is the last item in the list is drawn on top.
+// We want Roman things to be on top
 const footprints = [  
-  roman,
-  hubble,
-  jwst,
-  romanPixel,
-  m31SfDiskOutline,
-  m31SfDisk,
   phast,
   phastI,
+  m31SfDiskOutline,
+  m31SfDisk,
+  jwst,
+  hubble,
+  roman,
+  romanPixel,
   // gbtds,
   // hlwas,
   // hltds,
