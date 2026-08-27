@@ -26,7 +26,7 @@ export const andromedaExperience: TourExperience = [
     tourSheetText: [
       "The Hubble Space Telescope has provided the clearest view to date of Andromeda in visible light (that we can see with our eyes).",
       "Zoom in to see how much more detail you can notice with Hubble.",
-      "Use the slider to cross-fade between the 2 images.",
+      "Use the slider to compare the 2 images.",
     ],
     instaText: "If you use the Hubble Space Telescope, you can see this!",
   },
@@ -49,7 +49,7 @@ export const andromedaExperience: TourExperience = [
     instaText: "Hubble captured 600 images for Andromeda. It took 500 hours!",
   },
   {
-    title: "JWST only sees this",  // step 5, n=4
+    title: "Webb sees this",  // step 5, n=4
     // Webb's camera sees a patch about 100 times smaller than Roman's. It would take Webb more
     // than 300 pointings to cover just the piece of Andromeda that Hubble mapped; Roman needs 3.
     //
@@ -62,13 +62,22 @@ export const andromedaExperience: TourExperience = [
     // better. Webb's mirror is nearly three times the size of Roman's -- it is built to look
     // deep and sharp at one spot, not to map a whole galaxy.
     tourSheetText: [
-      "The James Webb Space Telescope takes images in infrared light",
-      "The side-by-side squares show how much (or little) of the sky Webb can photograph at once."
+      "The James Webb Space Telescope takes images using infrared light (which has less energy than what our eyes can see).",
+      "Webb's biggest camera has two chips that are side-by-side. The orange squares show how much (or little) of the sky Webb can photograph at once.",
     ],
     instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time",
   },
   {
-    title: "Compare Roman, JWST, and Hubble",  // step 6, n=5
+    title: "Roman's View",  // step 6, n=5
+    tourSheetText: [
+      "Like Webb, Roman will capture images in infrared light.",
+      "Roman's camera has 18 large chips arranged in a boomerang shape.",
+      `The camera's footprint or "field of view" is shown here.`,
+    ],
+    instaText: "Enter Roman...!",
+  },
+  {
+    title: "Compare 3 Space Telescopes",  // step 7, n=6
     // Three cameras, same sky, wildly different sizes. Roman's view is about 85 times bigger
     // than Hubble's and 100 times bigger than Webb's.
     //
@@ -82,11 +91,10 @@ export const andromedaExperience: TourExperience = [
     //          (101x) | Hubble infrared (WFC3/IR) 4.68 (207x) | Roman and Hubble mirrors both
     //          2.4 m; Webb 6.5 m
     tourSheetText: [
-      "Like Webb, Roman will capture infrared images.",
-      'The magenta boomerang shape shows the footprint or "field of view" of one Roman image.',
-      "The orange and blue squares show the Webb and Hubble footprints."
+      "The Webb and Hubble camera footprints are added in orange and blue.",
+      "See how much more sky Roman can cover at once?"
     ],
-    instaText: "Roman covers way more sky per infrared image.",
+    instaText: 'Roman covers way more sky with each "snap!"',
   },
   {
     title: "What Hubble did, Roman can do in 3 hours",  // step 7, n=6
@@ -122,7 +130,7 @@ export const andromedaExperience: TourExperience = [
     //          faintest stars mag 27.1 at S/N 4 (27.52 AB) | 200 million stars
     tourSheetText: [
       "Roman's high resolution will allow very detailed images, similar to Hubble.",
-      "This grid shows the size of Roman's pixels, overlaid on the image taken by Hubble.",
+      "The blue grid shows the size of Roman's pixels, overlaid on the image taken by Hubble.",
       "Zoom out from here to see how much area Roman can cover with this level of detail."
     ],
     instaText: "Roman images will have similar detail to Hubble.",
