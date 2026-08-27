@@ -147,9 +147,9 @@
 
           <h5>Archives &amp; software</h5>
           <p class="citation">
-            Hubble data from the Mikulski Archive for Space Telescopes (MAST) at STScI &mdash;
+            The PHAT/PHAST footprints are from the Mikulski Archive for Space Telescopes (MAST) at STScI &mdash;
             <easyLink href="https://archive.stsci.edu/hlsp/phat">PHAT</easyLink> and
-            <easyLink href="https://archive.stsci.edu/hlsp/phast">PHAST</easyLink> archives.
+            <easyLink href="https://archive.stsci.edu/hlsp/phast">PHAST</easyLink> archives. We show the Hubble ACS F814W <code>s_region</code> polygons.
           </p>
           <p class="citation">
             Built with <easyLink href="https://www.astropy.org">Astropy</easyLink>.
