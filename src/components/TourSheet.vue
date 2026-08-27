@@ -3,6 +3,16 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
+    <!-- outside .selected-info-scroll so it stays in the corner rather than
+         scrolling away with the step's text -->
+    <v-icon
+      v-if="showClose"
+      class="tour-sheet-close"
+      icon="mdi-close"
+      tabindex="0"
+      @click="emit('close')"
+      @keyup.enter="emit('close')"
+    />
     <!-- fill either slot to replace the step's own content, so callers can put
      something else in this box without passing it all in as props -->
     <div class="selected-info-scroll">
@@ -95,8 +105,10 @@ interface Props {
   showBreadcrumbs?: boolean,
   showNextOnLastStep?: boolean,
   showBackOnFirstStep?: boolean,
-  nextText?: string,  
+  nextText?: string,
   backText?: string,
+  /** a close icon in the corner. off where the caller supplies its own */
+  showClose?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -105,11 +117,12 @@ const props = withDefaults(defineProps<Props>(), {
   showBackOnFirstStep: false,
   nextText: 'Next',
   backText: 'Back',
+  showClose: false,
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
 const emit = defineEmits<{
-  (e: 'previous' | 'next' | 'leave'): void;
+  (e: 'previous' | 'next' | 'leave' | 'close'): void;
   (e: 'step', index: number): void;
 }>();
 
@@ -154,7 +167,7 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.025 * (var(--container-width) + var(--container-height))),
+    calc(0.023 * (var(--container-width) + var(--container-height))),
     2rem
   );
 }
@@ -199,6 +212,23 @@ p {
   align-items: flex-start;
 }
 
+// anchors to .selected-info above; sits over the step title's right end,
+// which is short enough that they don't collide
+.tour-sheet-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+// the close icon is out of flow, so a long title runs straight under it once the
+// box is narrow -- reserve its 24px plus a gap. Keyed on the icon being present
+// so a caller that supplies its own close control doesn't get the indent.
+.selected-info:has(> .tour-sheet-close) h3 {
+  padding-right: 2rem;
+}
+
 
 // the scrollable region: grows to fill whatever space tour-text-controls
 // doesn't need, and scrolls on its own so the controls stay visible even
@@ -217,6 +247,13 @@ p {
   align-items: center;
   width: 100%;
   margin-top: 0.5rem;
+
+  // Scoped to .tour-text-controls, so it catches Back/Next without 
+  // touching the breadcrumb dots or the buttons a caller puts in 
+  // the controls slot.
+  .v-btn {
+    border: 1px solid var(--accent-color);
+  }
 
   .tour-back-button-hidden {
     visibility: hidden;

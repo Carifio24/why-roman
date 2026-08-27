@@ -1,7 +1,4 @@
 <template>
-  <h3 class="user-guide-header mt-5">
-    About Roman
-  </h3>
   <p>
     On August 30, 2026, NASA and SpaceX will launch the Nancy Grace Roman Space Telescope to L2, a location in space about 4 times farther away than the Moon!
   </p>

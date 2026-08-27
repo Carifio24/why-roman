@@ -46,7 +46,7 @@ export const andromedaExperience: TourExperience = [
       "To obtain this view with Hubble, astronomers stitched together 600 images taken over 500 hours.",
       "The overlaid grid shows where each individual image was taken across Andromeda to make this beautiful mosaic.",
     ],
-    instaText: "Hubble captured 600 images for Andromeda, taking 500 hours!",
+    instaText: "Hubble captured 600 images for Andromeda. It took 500 hours!",
   },
   {
     title: "JWST only sees this",  // step 5, n=4
@@ -83,8 +83,8 @@ export const andromedaExperience: TourExperience = [
     //          2.4 m; Webb 6.5 m
     tourSheetText: [
       "Like Webb, Roman will capture infrared images.",
-      'The **red** boomerang shape shows the footprint or "field of view" of one Roman image.',
-      "The **blue** and **magenta** squares show the Webb and Hubble footprints."
+      'The magenta boomerang shape shows the footprint or "field of view" of one Roman image.',
+      "The orange and blue squares show the Webb and Hubble footprints."
     ],
     instaText: "Roman covers way more sky per infrared image.",
   },
@@ -105,7 +105,7 @@ export const andromedaExperience: TourExperience = [
     //          over the same area (187x) | Roman SF disk as flown: 1.77 deg^2, 20 epochs,
     //          26.9 h, 0.91 mag deeper stacked
     tourSheetText: [
-      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 1,400 images (taken over 500 hrs) with Hubble!",
+      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 600 images (taken over 500 hrs) with Hubble!",
     ],
     instaText: "Roman is 100x faster than Hubble.",
   },

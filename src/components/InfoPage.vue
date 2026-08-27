@@ -39,12 +39,10 @@ if (!tabsProvider?.withinTabs) {
 // Here we push our panels title to the parent so that it can display the tabs properly
 const index = tabsProvider.registerTab(props.title);
 
-// If there is no active tab set, go ahead and set it
-// This will only ever be true for the first panel
-// Meaning, the first panel will always be the default active one
-if (!tabsProvider.activeTab.value) {
-  tabsProvider.activateTab(index);
-}
+// The first panel is the default active one, which is already what the parent's
+// tab model defaults to. A panel must not claim the default itself: the check
+// that used to live here was falsy-based, so activeTab === 0 kept it true past
+// the first panel and the last one registered ended up winning.
 
 // Finally just check to see if this panel should be active
 // based on the active `activeTab` state from the parent

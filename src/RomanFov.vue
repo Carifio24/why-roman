@@ -130,10 +130,9 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Open controls"
+                tooltip-text="Control fields of view"
                 tooltip-location="start"
                 tabindex="0"
-                background-color="transparent"
                 @activate="handleShowOptions"
               ></icon-button>
 
@@ -143,7 +142,7 @@
                 v-model="showTextSheet"
                 icon="info"
                 :color="borderColor"
-                tooltip-text="Show User Guide"
+                tooltip-text="Learn more"
                 tooltip-location="start"
                 @activate="handleShowInfo"
               >
@@ -156,23 +155,9 @@
                 :color="borderColor"
                 tooltip-text="Play the tour again"
                 tooltip-location="start"
-                background-color="transparent"
                 @activate="replayTour"
               ></icon-button>
 
-              <!-- icon-button owns its own tooltip model, so the close-out
-               call-out is a separate tooltip anchored to its generated id -->
-              <v-tooltip
-                id="callout-tooltip"
-                :model-value="showCallout"
-                activator="#options-closed-button"
-                location="bottom start"
-                :open-on-hover="false"
-              >
-                <div><v-icon icon="mdi-tune-variant" /> settings and fields of view</div>
-                <div><v-icon icon="mdi-information-outline" /> more about Roman</div>
-                <div><v-icon icon="mdi-replay" /> play the tour again</div>
-              </v-tooltip>
 
               <!-- <icon-button
                 v-if="showExploreUi"
@@ -191,6 +176,30 @@
                 {{ snackbarMessage }}
               </v-snackbar>
             </div>
+
+            <transition name="callout-fade">
+              <div
+                v-if="showCallout"
+                id="explore-callout"
+              >
+                <div class="explore-callout-rows">
+                  <div class="explore-callout-lead">
+                    Use these buttons to:
+                  </div>
+                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
+                  <div><v-icon icon="mdi-replay" /> play the tour again</div>
+                </div>
+                <v-icon
+                  class="explore-callout-close"
+                  icon="mdi-close"
+                  tabindex="0"
+                  @click="dismissCallout"
+                  @keyup.enter="dismissCallout"
+                />
+              </div>
+            </transition>
+
             <div
               v-if="false"
               id="options"
@@ -459,109 +468,143 @@
       class="layout-drawer"
       :class="[tourSheetOpen ? 'side-drawer-open' : 'side-drawer-closed']"
     >
+      <!-- @close runs enterExplore, not leaveTour, so closing mid-tour lands
+           where finishing the tour would: leaveTour only tears the tour down,
+           enterExplore also sets up the explore layers, camera and controls -->
       <TourSheet
         v-if="tourSheetOpen && activeTour"
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
         show-next-on-last-step
+        show-close
         :next-text="showExploreUi ? 'Explore' : 'Next'"
         @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
+        @close="enterExplore"
         @step="(index) => goToStep(index)"
       />
     </div>
 
-    <!-- the controls are their own drawer, not part of the tour sheet: in a
-         roomy landscape the tour sheet floats while these still push WWT over -->
+    <!-- The controls and the info sheet share one drawer column. On a screen
+         with room for both they stack inside it (the way Zoom stacks
+         participants over chat); everywhere else only one is ever open, so the
+         stack holds a single panel and behaves like a plain drawer. Either
+         way the column is one --drawer-width wide, never two. -->
     <div
-      id="side-drawer-controls"
+      id="side-panel-stack"
       class="layout-drawer"
-      :class="[showOptions ? 'side-drawer-open' : 'side-drawer-closed']"
+      :class="[(showOptions || showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
-      <TourSheet
-        v-if="showOptions"
-        tour-id="there-is-no-tour-just-showing-options"
-        :step="tourStep"
-        :small-size="smallSize"
-        :show-breadcrumbs="false"
+      <!-- the controls are their own panel, not part of the tour sheet: in a
+         roomy landscape the tour sheet floats while these still push WWT over -->
+      <div
+        id="side-drawer-controls"
+        :class="[showOptions ? 'side-panel-open' : 'side-panel-closed']"
       >
-        <div id="tour-controls">
-          <div class="tour-controls-column">
-            <h3>Zoom level</h3>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('galaxy')"
-            >
-              Galaxy
-            </v-btn>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('roman')"
-            >
-              Roman
-            </v-btn>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('pixel')"
-            >
-              Pixel
-            </v-btn>
-          </div>
-          <div class="tour-controls-column">
-            <h3>Field of View</h3>
-            <MiniFootprintSettings
-              v-for="footprint in visibleFootprints"
-              :key="footprint.id"
-              v-model:opacity="footprint.opacity"
-              v-model:fill="footprint.fill"
-              :label="footprint.label"
-              :color="footprint.color"
-              :show-opacity="false"
+        <TourSheet
+          v-if="showOptions"
+          tour-id="there-is-no-tour-just-showing-options"
+          :step="tourStep"
+          :small-size="smallSize"
+          :show-breadcrumbs="false"
+        >
+          <div id="tour-controls">
+            <div class="tour-controls-column">
+              <h3>Compare Fields of View</h3>
+              <MiniFootprintSettings
+                v-for="footprint in compareFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+              />
+
+              <MiniFootprintSettings
+                v-for="footprint in pixelFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+                class="mt-3"
+              >
+                <template #action>
+                  <v-btn
+                    id="zoom-to-pixel-scale"
+                    variant="text"
+                    size="small"
+                    class="px-1"
+                    @click="zoomToPixelScale"
+                  >
+                    zoom to pixel scale
+                  </v-btn>
+                </template>
+              </MiniFootprintSettings>
+            </div>
+
+            <div class="tour-controls-column">
+              <!-- wraps so the button drops below the heading in the narrow
+                 side-by-side columns of the portrait drawer -->
+              <div class="d-flex align-center justify-space-between flex-wrap ga-2">
+                <h3>Andromeda Footprints</h3>
+                <v-btn
+                  id="go-to-andromeda"
+                  variant="text"
+                  size="small"
+                  class="px-2"
+                  @click="goToAndromeda"
+                >
+                  Go to Andromeda
+                </v-btn>
+              </div>
+              <MiniFootprintSettings
+                v-for="footprint in andromedaFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+              />
+            </div>
+
+            <v-icon
+              icon="mdi-close"
+              @click="showOptions = false"
             />
           </div>
-          <v-icon
-            icon="mdi-close"
-            @click="showOptions = false"
-          />
-        </div>
-      </TourSheet>
-    </div>
+        </TourSheet>
+      </div>
     
-    <div
-      id="side-drawer"
-      class="layout-drawer"
-      :class="[(showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
-    >
-      <InformationSheet
-        v-if="showTextSheet"
-        v-model="showTextSheet"
-        v-model:tab="infoSheetTab"
-        :tab-color="borderColor"
-        :text-color="textColor"
-        :heading-color="borderColor"
-        :accent-color="roman.color"
-        tab-title="WWT Why Roman"
+      <div
+        id="side-drawer"
+        :class="[(showTextSheet) ? 'side-panel-open' : 'side-panel-closed']"
       >
-        <InfoPage title="About Roman">
-          <ScienceInfo />
-        </InfoPage>
-        <InfoPage
-          title="User Guide"
+        <InformationSheet
+          v-if="showTextSheet"
+          v-model="showTextSheet"
+          v-model:tab="infoSheetTab"
+          :tab-color="borderColor"
+          :text-color="textColor"
+          :heading-color="borderColor"
+          :accent-color="roman.color"
+          tab-title="WWT Why Roman"
         >
-          <UserGuide />
-        </InfoPage>
-      </InformationSheet>
+          <InfoPage title="About Roman">
+            <ScienceInfo />
+          </InfoPage>
+          <InfoPage
+            title="User Guide"
+          >
+            <UserGuide />
+          </InfoPage>
+        </InformationSheet>
+      </div>
     </div>
   </v-app>
 </template>
@@ -668,6 +711,18 @@ const isRoomyLandscape = computed(
     !isPortrait.value &&
     !smAndDown.value &&
     height.value >= ROOMY_LANDSCAPE_MIN_HEIGHT,
+);
+
+// Whether the drawer column has room to show the controls and the info sheet
+// at once, stacked, instead of one replacing the other. Both need a usable
+// height, so this asks for more room than isRoomyLandscape does.
+const STACK_PANELS_MIN_WIDTH = 1200;
+const STACK_PANELS_MIN_HEIGHT = 900;
+const canStackPanels = computed(
+  () =>
+    !isPortrait.value &&
+    width.value >= STACK_PANELS_MIN_WIDTH &&
+    height.value >= STACK_PANELS_MIN_HEIGHT,
 );
 
 const props = withDefaults(defineProps<RomanFovProps>(), {
@@ -786,7 +841,7 @@ const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
   footprint: romanFootprint,
-  color: "#ff1900",
+  color: "#e100ff",
   // linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
   offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
@@ -821,7 +876,11 @@ const jwst = useFootprint({
   id: "jwst-footprint",
   label: "Webb",
   footprint: jwstFootprint,
-  color: "#002aff",
+  // Was the Carina Spark JWST accent (#f0ab52), but that is the same hue and
+  // nearly the same lightness as the PHAST core it sits on, so it disappeared
+  // there (WCAG 1.06). This deeper orange keeps the warm/infrared association
+  // and stays clear of Hubble's blue for red-green colour blindness.
+  color: "#ff6d00",
   offsetXDeg: -0.075, // left
   offsetYDeg: 0.2, // down
   // linewidth: 2,
@@ -831,7 +890,7 @@ const hubble = useFootprint({
   id: "hubble-footprint",
   label: "Hubble",
   footprint: hubbleFootprint,
-  color: "#e100ff",
+  color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
   // linewidth: 2, 
@@ -929,7 +988,7 @@ const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
   label: "M31 Roman Outlines",
   footprint: m31SfDiskFootprintOutline,
-  color: "#f58d42",  // TODO: Feel free to change this
+  color: "#C77FB3",  // TODO: Feel free to change this
   fixed: true,
   show: false,
   offsetXDeg: DSS_OFFSET_X_DEG,
@@ -937,30 +996,43 @@ const m31SfDiskOutline = useFootprint({
 });
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
+// the draw order is the last item in the list is drawn on top.
+// We want Roman things to be on top
 const footprints = [  
-  m31SfDisk,
-  m31SfDiskOutline,
   phast,
   phastI,
+  m31SfDiskOutline,
+  m31SfDisk,
+  jwst,
+  hubble,
+  roman,
+  romanPixel,
   // gbtds,
   // hlwas,
   // hltds,
   // gps,
   // m31HiDisk,
-  romanPixel,
-  roman,
-  hubble,
-  jwst,
 ];
 
-// the currently visible footprints. 
+// the currently visible footprints.
 const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
 
-const visibleAndShownFootprints = computed(() =>
-  footprints.filter((footprint) => footprint.show && footprint.opacity > 0),
-);
+/* The controls panel is a fixed menu rather than a view of whatever the
+   current step happens to have on, so these groups are listed literally.
+   Their checkboxes work by moving opacity, which only shows up if `show` is
+   also on -- hence showControlFootprints() below. */
+const compareFootprints = [roman, hubble, jwst];
+const pixelFootprints = [romanPixel];
+const andromedaFootprints = [m31SfDiskOutline, m31SfDisk, phast, phastI];
+
+function showControlFootprints() {
+  [...compareFootprints, ...pixelFootprints, ...andromedaFootprints].forEach(
+    (footprint) => (footprint.show = true),
+  );
+}
+
 function hideVisibleFootprints() {
   // set their opacity to 0
   footprints.forEach((footprint) => {
@@ -1016,22 +1088,15 @@ const infoSheetTab = ref(0);
 
 function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
   footprints.forEach(
-    (footprint, index) => {
-      footprint.show = visible.includes(footprint);
-      if (show) {
-        footprint.opacity = show[visible.indexOf(footprint)] === true ? 1 : 0;
-      }
+    (footprint) => {
+      const index = visible.indexOf(footprint);
+      footprint.show = index !== -1;
+      // opacity doubles as the controls' checkbox state, so it has to be reset
+      // on every call, not just when `show` is passed -- otherwise the ones
+      // explore mode leaves unchecked stay at 0 through a replayed tour
+      footprint.opacity = index !== -1 && (show ? show[index] === true : true) ? 1 : 0;
     },
   );
-}
-
-function showOnlyFootprints(...visible: Footprint[]) {
-  // hide all "shown" footprints by opacity, and make only visible opacity 1
-  footprints.forEach((footprint) => {
-    if (footprint.show) {
-      footprint.opacity = visible.includes(footprint) ? 1 : 0;
-    }
-  });
 }
 
 const { setOrderForLayers } = useLayerOrdering();
@@ -1163,14 +1228,18 @@ function replayTour() {
 function enterExplore() {
   leaveTour();
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
+  showControlFootprints(); // the panel lists them all, so they all need to be live
   showOptions.value = true; // show the options box by default
+  showExploreCallout(); // now that the tour text is done competing for attention
 }
 
-// the controls and the info sheet are the same shape of drawer, so only one
-// of them is ever open -- in landscape as well as portrait, where two open
-// drawers would take 68% of the width between them
+// The controls and the info sheet share one drawer column, so only one is
+// open at a time -- unless the screen is big enough to stack them, where they
+// both fit and neither has to close the other.
 function handleShowInfo() {
-  showOptions.value = false;
+  if (!canStackPanels.value) {
+    showOptions.value = false;
+  }
 }
 
 // opening the controls at the close-out step ends the tour
@@ -1180,7 +1249,10 @@ function handleShowOptions() {
     if (inTour.value) {
       enterExplore();
     }
-    showTextSheet.value = false;
+    showControlFootprints();
+    if (!canStackPanels.value) {
+      showTextSheet.value = false;
+    }
   }
   showOptions.value = open;
 }
@@ -1278,12 +1350,13 @@ function andromedaTour(n: number, tour = true) {
       [,,true,,,,,]
     );
     // handle undefined warning buy using the setter
+    // Claude says these next 3 lines seem to not be doing anything by accident. "They're inert only because the keys are wrong ("roman" vs the registered "roman-footprint"), and the ?. hides the miss. So the correct behavior is an accident of a typo. Fixing those keys would have turned the Roman label on in explore mode and broken exactly the behavior you want. Deleting the three lines is the change that matches your intent. I've left them alone since parked code here is usually deliberate "
     textVisibilitySetters["roman"]?.(true);
     textVisibilitySetters["hubble"]?.(false);
     textVisibilitySetters["jwst"]?.(false);
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3.4, instant: false });
-    showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+    showOpacitySliders({ index: 0, minLabel: "Ground", maxLabel: "Hubble" });
     return;
   }
   /* each step should explicitly set
@@ -1390,7 +1463,7 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 6) { // what hubble did, roman can do in 3 hours
-    onlyFootprints([phast, phastI, m31SfDisk, m31SfDiskOutline]);
+    onlyFootprints([phast, phastI, m31SfDiskOutline]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     goToImageset(andromedaWtml, 0, { zoom: 3, instant: false });
@@ -1475,37 +1548,30 @@ function andromedaTour(n: number, tour = true) {
   console.error("andromeda tour does not have step", n);
 }
 
-function goToScale(scale: 'galaxy' | 'roman' | 'pixel') {
-  if (scale === 'galaxy') {
-    // show these 3 and whatever else the user has visible
-    showOnlyFootprints(phast, romanPixel, roman, ...visibleAndShownFootprints.value);
-    store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 3 * 6,
-      instant: false,
-    });
-    return;
-  }  
-  
-  if (scale === 'roman') {
-    // show these 2 and whatever else the user has visible
-    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
-    return store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 2 * 6,
-      instant: false,
-    });
-  } 
-  if (scale === 'pixel') {
-    // show these 3 and whatever else the user has visible
-    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
-    return store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 0.01,
-      instant: false,
-    });
-    
+/* The controls panel's two camera actions. Unlike goToScale, "Go to
+   Andromeda" recenters rather than only changing zoom, so it brings the user
+   back however far they have panned away. */
+function goToAndromeda() {
+  store.gotoRADecZoom({
+    raRad: 10.6847 * D2R,
+    decRad: 41.269 * D2R,
+    zoomDeg: 3 * 6,
+    rollRad: 0,
+    instant: false,
+  });
+}
+
+function zoomToPixelScale() {
+  // zooming to pixel scale with the grid off would look like nothing happened
+  romanPixel.show = true;
+  if (romanPixel.opacity === 0) {
+    romanPixel.opacity = 1;
   }
+  store.gotoRADecZoom({
+    ...currentViewRad.value,
+    zoomDeg: 0.01,
+    instant: false,
+  });
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
@@ -1648,22 +1714,20 @@ const activeTour = computed(
 );
 const inTour = computed(() => activeTour.value != null);
 
-// the close-out points at the two buttons it wants you to notice, briefly
 const showCallout = ref(false);
-watch(() => inTour.value && showExploreUi.value, (closingOut) => {
-  if (!closingOut) {
-    showCallout.value = false;
-    return;
+const calloutAlreadyShown = ref(false);
+
+function showExploreCallout() {
+  if (calloutAlreadyShown.value) {
+    return; // once per session; it orients, it shouldn't nag
   }
-  // the icons render this tick, so let them land or the tooltip has nothing
-  // to anchor itself to
-  setTimeout(() => (showCallout.value = true), 100);
-});
-watch(showCallout, (shown) => {
-  if (shown) {
-    setTimeout(() => (showCallout.value = false), 7000);
-  }
-});
+  calloutAlreadyShown.value = true;
+  showCallout.value = true;
+}
+
+function dismissCallout() {
+  showCallout.value = false;
+}
 
 function leaveTour() {
   if (activeTour.value) {
@@ -1764,7 +1828,11 @@ function selectPlace(id: string, step = 0) {
     leaveTour();
   }
   showExploreUi.value = false;
+  // starting a tour hands the drawer back to the tour sheet, so both explore
+  // panels close -- every entry point (cards, replay, startup) comes through here
   showOptions.value = false;
+  showTextSheet.value = false;
+  showCallout.value = false; // the buttons it points at are gone during a tour
   lastTourId.value = id;
   selectedPlaceId.value = id;
   goToStep(step);
@@ -1847,7 +1915,7 @@ onMounted(() => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
       positionSet.value = true;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+       
       // @ts-expect-error `canvas` is defined
       WWTControl.singleton.canvas.setAttribute("hidden", "true");
       WWTControl.singleton.renderOneFrame = function () {
@@ -1859,7 +1927,7 @@ onMounted(() => {
     // allow zoom out to 90deg
     WWTControl.singleton.set_zoomMax(6 * 90);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     // @ts-expect-error Modifying window object
     window.Matrix3d = wwtlib.Matrix3d; window.wwt = WWTControl.singleton;
 
@@ -1879,7 +1947,8 @@ onMounted(() => {
       renderContext,
       text: "Roman",
       center: Coordinates.raDecTo3d(-0.001, 0.4),
-      color: "#ff1900",
+      // read off the footprint so the label can't drift from the shape it names
+      color: roman.color,
       scale: 0.0005,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
@@ -1887,7 +1956,7 @@ onMounted(() => {
       renderContext,
       text: "Hubble",
       center: Coordinates.raDecTo3d(-0.01, -0.3),
-      color: "#e100ff",
+      color: hubble.color,
       scale: 0.0005,
     });
     const { setVisible: setJWSTTextVisible } = createTextOverlay({
@@ -1895,7 +1964,7 @@ onMounted(() => {
       renderContext,
       text: "JWST",
       center: Coordinates.raDecTo3d(0.01, -0.3),
-      color: "#002aff",
+      color: jwst.color,
       scale: 0.0005,
     });
 
@@ -2045,6 +2114,34 @@ const tourSheetOpen = computed(
 const tourSheetOverlays = computed(
   () => tourSheetOpen.value && isRoomyLandscape.value,
 );
+
+/* Which panel survives when the column stops being able to stack them. The
+   click handlers already work on "the one you just opened wins", so this
+   tracks that and applies the same rule. Declared here rather than beside
+   those handlers because watch() reads its source immediately, and
+   showOptions is defined further down. */
+const lastOpenedPanel = ref<"controls" | "info">("info");
+watch(showOptions, (open) => {
+  if (open) lastOpenedPanel.value = "controls";
+});
+watch(showTextSheet, (open) => {
+  if (open) lastOpenedPanel.value = "info";
+});
+
+/* Stacking can stop being possible without anyone clicking -- rotating a
+   tablet, or dragging a window narrow, moves the column to the bottom, where
+   there is only room for one. Without this the two stay open and get crushed
+   into the bottom drawer together. */
+watch(canStackPanels, (canStack) => {
+  if (canStack || !showOptions.value || !showTextSheet.value) {
+    return;
+  }
+  if (lastOpenedPanel.value === "controls") {
+    showTextSheet.value = false;
+  } else {
+    showOptions.value = false;
+  }
+});
 
 /**
   Computed flags that control whether the relevant dialogs display.
@@ -2310,6 +2407,17 @@ body {
       height: var(--drawer-height);
     }
   }
+
+  /* The controls are a fixed-length menu, so on a tall screen the full
+     --drawer-height is more than they need and the surplus is dead space over
+     WWT. Let the drawer shrink to them, still capped at the usual height so a
+     short screen behaves as before. Only when they are alone: the info sheet's
+     content length varies by tab, so it keeps the fixed height rather than
+     resizing the canvas underneath it. */
+  #side-panel-stack.side-drawer-open:not(:has(> #side-drawer.side-panel-open)) {
+    height: auto;
+    max-height: var(--drawer-height);
+  }
 }
 
 #app {
@@ -2398,12 +2506,81 @@ body {
   align-self: stretch;
   min-height: 0;
 
-  // just keep the icons as cicles
-  // it is usually sized by the icon, but for some reason the (i)
-  // one was starting skinny then becoming a circle
   .icon-wrapper {
-    aspect-ratio: 1 / 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-width: 2px;
   }
+
+  #explore-callout {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 24rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--background-color-darkest);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    font-size: calc(1.1 * var(--default-font-size));
+    line-height: 1.5;
+    pointer-events: auto;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 68px;
+      width: 10px;
+      height: 10px;
+      background: var(--background-color-darkest);
+      border-top: 1px solid var(--accent-color);
+      border-left: 1px solid var(--accent-color);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .explore-callout-rows {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .explore-callout-lead {
+        margin-bottom: 0.35rem;
+        font-weight: 600;
+      }
+
+      svg,
+      .v-icon {
+        flex: 0 0 1.25em;
+        width: 1.25em;
+        height: 1.25em;
+        font-size: 1em;
+      }
+    }
+
+    .explore-callout-close {
+      cursor: pointer;
+    }
+  }
+}
+
+.callout-fade-enter-active,
+.callout-fade-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.callout-fade-enter-from,
+.callout-fade-leave-to {
+  opacity: 0;
 }
 
 // #top-content is pointer-events: none so drags fall through to WWT, so the
@@ -2727,6 +2904,8 @@ video {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  // so the close icon can sit in the corner of the panel
+  position: relative;
 
   .tour-controls-column {
     display: flex;
@@ -2736,9 +2915,90 @@ video {
   }
 
   .v-icon {
-    align-self: flex-start;
+    position: absolute;
+    top: 0;
+    right: 0;
     cursor: pointer;
   }
+
+  // both section actions read as a pair, so the pixel one is forced white
+  // rather than inheriting the layer colour from the box it sits inside
+  #go-to-andromeda,
+  #zoom-to-pixel-scale {
+    color: white;
+    flex: 0 0 auto;
+  }
+
+  // outlined so it reads as the section's action rather than part of the heading
+  #go-to-andromeda {
+    border: 1px solid white;
+  }
+}
+
+/* The controls reuse TourSheet's markup but not its look: this is a drawer
+   that swaps places with the info sheet, not a card floating over the sky, so
+   it takes the same plain opaque surface and drops the lavender outline. The
+   surface token is what InformationSheet's v-card already resolves to, so the
+   two match by construction rather than by a copied hex value. */
+#side-drawer-controls #tour-text {
+  background: rgb(var(--v-theme-surface));
+  border: none;
+}
+
+/* The shared drawer column. Its two panels stack; a closed one collapses to
+   nothing, so with only one open this behaves exactly like a single drawer.
+   The controls take their natural height (capped, so a long list can't crowd
+   the info sheet out) and the info sheet takes the rest -- the same division
+   Zoom uses for participants over chat. */
+#side-panel-stack {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  // 0 1 auto, not 0 0 auto: it takes its natural height when the drawer has
+  // room, but stays shrinkable so a short drawer scrolls it instead of the
+  // drawer's overflow: hidden clipping the bottom rows out of reach
+  > #side-drawer-controls {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+
+    &.side-panel-closed {
+      display: none;
+    }
+  }
+
+  // The cap is only there to stop a long layer list crowding the info sheet
+  // out of the column. With the controls alone -- which is always the case in
+  // portrait, where stacking is off -- it would just strand the lower third of
+  // the drawer behind a scrollbar, so it applies only while both are open.
+  &:has(> #side-drawer.side-panel-open) > #side-drawer-controls {
+    max-height: 55%;
+  }
+
+  > #side-drawer {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden; // the sheet inside does its own scrolling
+
+    &.side-panel-closed {
+      display: none;
+    }
+  }
+}
+
+// stacked groups need more separation than the 0.5rem between rows within a
+// group; in portrait the two sit side by side and the row gap already does it
+#app.app-is-landscape #tour-controls {
+  gap: 2rem;
+}
+
+// side by side, the second column's heading runs all the way to the right,
+// where the close icon now sits -- keep it clear. Padding works because an
+// absolutely positioned child anchors to the padding box, so the icon stays
+// put while the content shifts in.
+#app.app-is-portrait #tour-controls {
+  padding-right: 1.75rem;
 }
 
 #middle-content {
