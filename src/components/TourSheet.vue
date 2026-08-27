@@ -167,8 +167,8 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.023 * (var(--container-width) + var(--container-height))),
-    2rem
+    calc(0.0225 * (var(--container-width) + var(--container-height))),
+    1.8rem
   );
 }
 
@@ -214,7 +214,7 @@ p {
 
 // anchors to .selected-info above; sits over the step title's right end,
 // which is short enough that they don't collide
-.tour-sheet-close {
+.v-icon.tour-sheet-close {
   position: absolute;
   top: 10px;
   right: 10px;

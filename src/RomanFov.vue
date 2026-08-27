@@ -126,7 +126,7 @@
 
             <div class="d-flex flex-direction-row ga-2">
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
@@ -137,7 +137,7 @@
               ></icon-button>
 
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="info-icon"
                 v-model="showTextSheet"
                 icon="info"
@@ -149,7 +149,7 @@
               </icon-button>
 
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="replay-icon"
                 icon="mdi-replay"
                 :color="borderColor"
@@ -160,7 +160,7 @@
 
 
               <!-- <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="share-icon"
                 icon="fa-share-nodes"
                 :color="borderColor"
@@ -1213,6 +1213,10 @@ function goToImageset(
 
 // the explore ui: hidden while stepping, on from the close-out step onward
 const showExploreUi = ref(true);
+// the top-left buttons. Kept apart from showExploreUi, which goes true on the
+// close-out slide so the tour sheet can offer "Explore" -- the buttons wait
+// until the user actually takes it
+const inExploreMode = ref(false);
 const lastTourId = ref("andromeda");
 
 function tourCloseOut() {
@@ -1226,6 +1230,7 @@ function replayTour() {
 // leaving the tour for good: step -1 is the state explore mode starts from
 function enterExplore() {
   leaveTour();
+  inExploreMode.value = true;
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
   showControlFootprints(); // the panel lists them all, so they all need to be live
   showOptions.value = true; // show the options box by default
@@ -1341,7 +1346,7 @@ const ats = {
 };
 
 function andromedaTour(n: number, tour = true) {
-  setAllTextOverlaysVisibility(n === 5);
+  setAllTextOverlaysVisibility(n === 6);
   if (n === -1) {
     onlyFootprints(
       [phast, phastI, roman, romanPixel, hubble, jwst, m31SfDisk, m31SfDiskOutline],
@@ -1410,7 +1415,7 @@ function andromedaTour(n: number, tour = true) {
           instant: false,
           duration: 4,
         });
-        showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+        showOpacitySliders({ index: 0, minLabel: "Ground", maxLabel: "Hubble" });
       }
     });
     ats.setMaxStep(n);
@@ -1447,7 +1452,21 @@ function andromedaTour(n: number, tour = true) {
     ats.setMaxStep(n);
     return;
   }
-  if (n === 5) { // Compare Roman, JWST, and Hubble
+  if (n === 5) { // Enter Roman
+    onlyFootprints([roman]);
+    showOpacitySliders();
+    showImagesets(andromedaWtml, 0);
+    store.gotoRADecZoom({ // center M31, zoomed to 
+      raRad: 10.5847 * D2R,
+      decRad: 41.269 * D2R,
+      zoomDeg: 2 * 6, 
+      rollRad: 0,
+      instant: false,
+    });
+    ats.setMaxStep(n);
+    return;
+  }
+  if (n === 6) { // Compare Roman, JWST, and Hubble
     onlyFootprints([roman, jwst, hubble]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
@@ -1461,7 +1480,7 @@ function andromedaTour(n: number, tour = true) {
     ats.setMaxStep(n);
     return;
   }
-  if (n === 6) { // what hubble did, roman can do in 3 hours
+  if (n === 7) { // what hubble did, roman can do in 3 hours
     onlyFootprints([phast, phastI, m31SfDiskOutline]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
@@ -1472,7 +1491,7 @@ function andromedaTour(n: number, tour = true) {
   }
   
   // step 8
-  if (n === 7) { // Zoom in to Hubble with a pixel grid
+  if (n === 8) { // Zoom in to Hubble with a pixel grid
     onlyFootprints([romanPixel]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
@@ -1483,19 +1502,8 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
       duration: 3,
-    }).then(async () => {
+    }).then(() => {
       onlyFootprints([romanPixel, roman]);
-      await new Promise((resolve) => setTimeout(resolve, 4000)); // brief pause before the next zoom
-      // zoom into some point where the user can change opacity
-      if (tourStep.value === 7) {
-        await store.gotoRADecZoom({
-          raRad: 10.13 * D2R,
-          decRad: 40.71 * D2R,
-          zoomDeg: 2 * 6,
-          instant: false,
-          duration: 3,
-        });
-      }
     });
     ats.setMaxStep(n);
     return;
@@ -1535,7 +1543,7 @@ function andromedaTour(n: number, tour = true) {
   // }
   
   // step 9
-  if (n === 8) {// close out
+  if (n === 9) {// close out
     tourCloseOut();
     showOpacitySliders();
     onlyFootprints([]);
@@ -1827,6 +1835,7 @@ function selectPlace(id: string, step = 0) {
     leaveTour();
   }
   showExploreUi.value = false;
+  inExploreMode.value = false;
   // starting a tour hands the drawer back to the tour sheet, so both explore
   // panels close -- every entry point (cards, replay, startup) comes through here
   showOptions.value = false;
