@@ -33,64 +33,66 @@
         </div>
       </slot>
     </div>
-    <slot name="controls">
-      <div class="tour-text-controls">
-        <v-btn
-          :class="{ 
-            'tour-back-button-hidden': step === 0 && !showBackOnFirstStep,
-            'px-2': smallSize,
-            'mr-1': smallSize,
-          }"
-          variant="flat"
-          :density="smallSize ? 'compact' : 'default'"
-          color="#502752"
-          @click="emit('previous')"
-        >
-          {{ backText }}
-        </v-btn>
+    <template v-if="showControls">
+      <slot name="controls">
+        <div class="tour-text-controls">
+          <v-btn
+            :class="{ 
+              'tour-back-button-hidden': step === 0 && !showBackOnFirstStep,
+              'px-2': smallSize,
+              'mr-1': smallSize,
+            }"
+            variant="flat"
+            :density="smallSize ? 'compact' : 'default'"
+            color="#502752"
+            @click="emit('previous')"
+          >
+            {{ backText }}
+          </v-btn>
 
-        <!-- <v-btn
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('leave')"
-      >
-        Leave Tour
-      </v-btn> -->
-        <v-breadcrumbs
-          v-if="showBreadcrumbs"
-          class="tour-dots"
-          :items="items"
-          divider=""
-        >
-          <template #item="{index}">
-            <!-- get rid of {{  index +1 }} for production -->
-            <button
-              class="tour-dot"
-              :class="{ 'tour-dot-active': index === step }"
-              @click="() => emit('step', index)"
-            >
-              ⬤
-            </button>
-          </template>
-        </v-breadcrumbs>
-        <v-spacer v-else />
-        <v-btn
-          v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
-          :class="{ 
-            'px-2': smallSize,
-            'ml-1': smallSize
-          }"
+          <!-- <v-btn
           variant="flat"
           color="#502752"
-          :density="smallSize ? 'compact' : 'default'"
-          @click="emit('next')"
+          size="small"
+          rounded="lg"
+          @click="emit('leave')"
         >
-          {{ nextText }}
-        </v-btn>
-      </div>
-    </slot>
+          Leave Tour
+        </v-btn> -->
+          <v-breadcrumbs
+            v-if="showBreadcrumbs"
+            class="tour-dots"
+            :items="items"
+            divider=""
+          >
+            <template #item="{index}">
+              <!-- get rid of {{  index +1 }} for production -->
+              <button
+                class="tour-dot"
+                :class="{ 'tour-dot-active': index === step }"
+                @click="() => emit('step', index)"
+              >
+                ⬤
+              </button>
+            </template>
+          </v-breadcrumbs>
+          <v-spacer v-else />
+          <v-btn
+            v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
+            :class="{ 
+              'px-2': smallSize,
+              'ml-1': smallSize
+            }"
+            variant="flat"
+            color="#502752"
+            :density="smallSize ? 'compact' : 'default'"
+            @click="emit('next')"
+          >
+            {{ nextText }}
+          </v-btn>
+        </div>
+      </slot>
+    </template>
   </div>
 </template>
 
@@ -109,6 +111,12 @@ interface Props {
   backText?: string,
   /** a close icon in the corner. off where the caller supplies its own */
   showClose?: boolean,
+  /**
+   * the Back/Next row. Off for callers that only want the box -- an empty
+   * `controls` slot won't do it, since a slot rendering nothing falls back to
+   * its default content
+   */
+  showControls?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -118,6 +126,7 @@ const props = withDefaults(defineProps<Props>(), {
   nextText: 'Next',
   backText: 'Back',
   showClose: false,
+  showControls: true,
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
