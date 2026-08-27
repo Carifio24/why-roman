@@ -826,6 +826,7 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
+const OVERALL_DISPLAY_OFFSET = 70*(0.5 * 11 / 3600);
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
@@ -833,7 +834,7 @@ const roman = useFootprint({
   color: "#e100ff",
   linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
-  offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
+  offsetYDeg: (-0.5 * 0.11 / 3600) -  OVERALL_DISPLAY_OFFSET,  // Half the height of one Roman pixel
 });
 
 const romanPixel = useFootprint({
@@ -843,6 +844,7 @@ const romanPixel = useFootprint({
   color: "#108de0",
   show: true,
   linewidth: 3,
+  offsetYDeg: -OVERALL_DISPLAY_OFFSET
 });
 
 const jwst = useFootprint({
@@ -851,7 +853,7 @@ const jwst = useFootprint({
   footprint: jwstFootprint,
   color: "#ff6d00",
   offsetXDeg: -0.075, // left
-  offsetYDeg: 0.2, // down
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET, // down
   linewidth: 2,
   show: false,
 });
@@ -861,7 +863,7 @@ const hubble = useFootprint({
   footprint: hubbleFootprint,
   color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
-  offsetYDeg: 0.2,
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET,
   linewidth: 2, 
   show: false,
 });
@@ -1971,7 +1973,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Roman",
-      center: Coordinates.raDecTo3d(-0.004, 0.4),
+      center: Coordinates.raDecTo3d(-0.004, 0.4 + OVERALL_DISPLAY_OFFSET),
       // read off the footprint so the label can't drift from the shape it names
       color: roman.color,
       scale: 0.0008,
@@ -1980,7 +1982,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Hubble",
-      center: Coordinates.raDecTo3d(-0.018, -0.3),
+      center: Coordinates.raDecTo3d(-0.018, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: hubble.color,
       scale: 0.0008,
     });
@@ -1988,7 +1990,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Webb",
-      center: Coordinates.raDecTo3d(0.012, -0.3),
+      center: Coordinates.raDecTo3d(0.012, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: jwst.color,
       scale: 0.0008,
     });
