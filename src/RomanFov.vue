@@ -962,7 +962,7 @@ const hasSeenSplashGesture = useLocalStorage(
   "why-roman:hasSeenSplashGesture",
   false,
 );
-const showSplashGesture = ref(!hasSeenSplashGesture.value);
+const showSplashGesture = ref(true); //ref(!hasSeenSplashGesture.value);
 function handleSplashGestureClose() {
   hasSeenSplashGesture.value = true;
 }
@@ -2828,5 +2828,9 @@ h1.startup-screen-title {
    absorbs both, and matches the offset SplashGesture.vue uses. */
 #app.app-tour-sheet-overlay #bottom-content {
   padding-left: calc(var(--drawer-width) + 1rem);
+}
+
+#side-drawer-controls {
+  display: flex;
 }
 </style>
