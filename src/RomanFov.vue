@@ -509,6 +509,7 @@
           :step="tourStep"
           :small-size="smallSize"
           :show-breadcrumbs="false"
+          :show-controls="false"
         >
           <div id="tour-controls">
             <div class="tour-controls-column">
@@ -2419,13 +2420,18 @@ body {
 
   /* The controls are a fixed-length menu, so on a tall screen the full
      --drawer-height is more than they need and the surplus is dead space over
-     WWT. Let the drawer shrink to them, still capped at the usual height so a
-     short screen behaves as before. Only when they are alone: the info sheet's
-     content length varies by tab, so it keeps the fixed height rather than
-     resizing the canvas underneath it. */
+     WWT. Let the drawer shrink to them. Only when they are alone: the info
+     sheet's content length varies by tab, so it keeps the fixed height rather
+     than resizing the canvas underneath it.
+
+     The cap is a runaway guard rather than a proportion -- height: auto means
+     the drawer only ever takes what the menu needs, so a roomier one costs
+     nothing on a tall screen. At --drawer-height the menu didn't fit on a
+     short phone (it wants ~40% of an iPhone SE) and the bottom rows were
+     clipped; past this the panel scrolls instead. */
   #side-panel-stack.side-drawer-open:not(:has(> #side-drawer.side-panel-open)) {
     height: auto;
-    max-height: var(--drawer-height);
+    max-height: 50%;
   }
 }
 

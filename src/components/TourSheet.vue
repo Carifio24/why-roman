@@ -33,64 +33,66 @@
         </div>
       </slot>
     </div>
-    <slot name="controls">
-      <div class="tour-text-controls">
-        <v-btn
-          :class="{ 
-            'tour-back-button-hidden': step === 0 && !showBackOnFirstStep,
-            'px-2': smallSize,
-            'mr-1': smallSize,
-          }"
-          variant="flat"
-          :density="smallSize ? 'compact' : 'default'"
-          color="#502752"
-          @click="emit('previous')"
-        >
-          {{ backText }}
-        </v-btn>
+    <template v-if="showControls">
+      <slot name="controls">
+        <div class="tour-text-controls">
+          <v-btn
+            :class="{ 
+              'tour-back-button-hidden': step === 0 && !showBackOnFirstStep,
+              'px-2': smallSize,
+              'mr-1': smallSize,
+            }"
+            variant="flat"
+            :density="smallSize ? 'compact' : 'default'"
+            color="#502752"
+            @click="emit('previous')"
+          >
+            {{ backText }}
+          </v-btn>
 
-        <!-- <v-btn
-        variant="flat"
-        color="#502752"
-        size="small"
-        rounded="lg"
-        @click="emit('leave')"
-      >
-        Leave Tour
-      </v-btn> -->
-        <v-breadcrumbs
-          v-if="showBreadcrumbs"
-          class="tour-dots"
-          :items="items"
-          divider=""
-        >
-          <template #item="{index}">
-            <!-- get rid of {{  index +1 }} for production -->
-            <button
-              class="tour-dot"
-              :class="{ 'tour-dot-active': index === step }"
-              @click="() => emit('step', index)"
-            >
-              ⬤
-            </button>
-          </template>
-        </v-breadcrumbs>
-        <v-spacer v-else />
-        <v-btn
-          v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
-          :class="{ 
-            'px-2': smallSize,
-            'ml-1': smallSize
-          }"
+          <!-- <v-btn
           variant="flat"
           color="#502752"
-          :density="smallSize ? 'compact' : 'default'"
-          @click="emit('next')"
+          size="small"
+          rounded="lg"
+          @click="emit('leave')"
         >
-          {{ nextText }}
-        </v-btn>
-      </div>
-    </slot>
+          Leave Tour
+        </v-btn> -->
+          <v-breadcrumbs
+            v-if="showBreadcrumbs"
+            class="tour-dots"
+            :items="items"
+            divider=""
+          >
+            <template #item="{index}">
+              <!-- get rid of {{  index +1 }} for production -->
+              <button
+                class="tour-dot"
+                :class="{ 'tour-dot-active': index === step }"
+                @click="() => emit('step', index)"
+              >
+                ⬤
+              </button>
+            </template>
+          </v-breadcrumbs>
+          <v-spacer v-else />
+          <v-btn
+            v-if="step < totalSteps - (showNextOnLastStep ? 0 : 1)"
+            :class="{ 
+              'px-2': smallSize,
+              'ml-1': smallSize
+            }"
+            variant="flat"
+            color="#502752"
+            :density="smallSize ? 'compact' : 'default'"
+            @click="emit('next')"
+          >
+            {{ nextText }}
+          </v-btn>
+        </div>
+      </slot>
+    </template>
   </div>
 </template>
 
@@ -109,6 +111,12 @@ interface Props {
   backText?: string,
   /** a close icon in the corner. off where the caller supplies its own */
   showClose?: boolean,
+  /**
+   * the Back/Next row. Off for callers that only want the box -- an empty
+   * `controls` slot won't do it, since a slot rendering nothing falls back to
+   * its default content
+   */
+  showControls?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -118,6 +126,7 @@ const props = withDefaults(defineProps<Props>(), {
   nextText: 'Next',
   backText: 'Back',
   showClose: false,
+  showControls: true,
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
@@ -167,16 +176,25 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.0225 * (var(--container-width) + var(--container-height))),
-    1.8rem
+    calc(0.027 * (var(--container-width) + var(--container-height))),
+    1.5rem
   );
+}
+
+#tour-text p {
+  line-height: 1.3;
+  margin-top: 0.5em;
+}
+
+#tour-text h3 {
+  line-height: 1.3;
 }
 
 // the floating box is capped at ~50vh, so a step with a full paragraph needs
 // tighter spacing to fit. A landscape phone gets a full-height drawer instead
 // and has no such pressure, hence keying on the overlay rather than landscape.
 #app.app-tour-sheet-overlay #tour-text p {
-  margin-top: 0.25rem;
+  margin-top: 0.65em;
 }
 
 #tour-text {
@@ -239,6 +257,12 @@ p {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  // The floating box is sized to its own content, but the responsive font-size
+  // makes that a fractional number and the intrinsic height lands a hair under
+  // what the text needs -- enough to raise a scrollbar on a step that visibly
+  // fits. This absorbs the rounding; text that genuinely overflows still
+  // scrolls, since the box stops growing at its max-height.
+  padding-bottom: 2px;
 }
 
 .tour-text-controls {
@@ -308,6 +332,10 @@ p {
   font-size: var(--v-btn-size);
   min-width: 50px;
   padding: 0 12px;
+}
+
+.selected-info-tour {
+  padding: 0.2em;
 }
 
 </style>
