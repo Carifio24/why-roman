@@ -473,116 +473,124 @@
       />
     </div>
 
-    <!-- the controls are their own drawer, not part of the tour sheet: in a
-         roomy landscape the tour sheet floats while these still push WWT over -->
+    <!-- The controls and the info sheet share one drawer column. On a screen
+         with room for both they stack inside it (the way Zoom stacks
+         participants over chat); everywhere else only one is ever open, so the
+         stack holds a single panel and behaves like a plain drawer. Either
+         way the column is one --drawer-width wide, never two. -->
     <div
-      id="side-drawer-controls"
+      id="side-panel-stack"
       class="layout-drawer"
-      :class="[showOptions ? 'side-drawer-open' : 'side-drawer-closed']"
+      :class="[(showOptions || showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
     >
-      <TourSheet
-        v-if="showOptions"
-        tour-id="there-is-no-tour-just-showing-options"
-        :step="tourStep"
-        :small-size="smallSize"
-        :show-breadcrumbs="false"
+      <!-- the controls are their own panel, not part of the tour sheet: in a
+         roomy landscape the tour sheet floats while these still push WWT over -->
+      <div
+        id="side-drawer-controls"
+        :class="[showOptions ? 'side-panel-open' : 'side-panel-closed']"
       >
-        <div id="tour-controls">
-          <div class="tour-controls-column">
-            <h3>Compare Fields of View</h3>
-            <MiniFootprintSettings
-              v-for="footprint in compareFootprints"
-              :key="footprint.id"
-              v-model:opacity="footprint.opacity"
-              v-model:fill="footprint.fill"
-              :label="footprint.label"
-              :color="footprint.color"
-              :show-opacity="false"
-            />
+        <TourSheet
+          v-if="showOptions"
+          tour-id="there-is-no-tour-just-showing-options"
+          :step="tourStep"
+          :small-size="smallSize"
+          :show-breadcrumbs="false"
+        >
+          <div id="tour-controls">
+            <div class="tour-controls-column">
+              <h3>Compare Fields of View</h3>
+              <MiniFootprintSettings
+                v-for="footprint in compareFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+              />
 
-            <MiniFootprintSettings
-              v-for="footprint in pixelFootprints"
-              :key="footprint.id"
-              v-model:opacity="footprint.opacity"
-              v-model:fill="footprint.fill"
-              :label="footprint.label"
-              :color="footprint.color"
-              :show-opacity="false"
-              class="mt-3"
-            >
-              <template #action>
+              <MiniFootprintSettings
+                v-for="footprint in pixelFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+                class="mt-3"
+              >
+                <template #action>
+                  <v-btn
+                    id="zoom-to-pixel-scale"
+                    variant="text"
+                    size="small"
+                    class="px-1"
+                    @click="zoomToPixelScale"
+                  >
+                    zoom to pixel scale
+                  </v-btn>
+                </template>
+              </MiniFootprintSettings>
+            </div>
+
+            <div class="tour-controls-column">
+              <!-- wraps so the button drops below the heading in the narrow
+                 side-by-side columns of the portrait drawer -->
+              <div class="d-flex align-center justify-space-between flex-wrap ga-2">
+                <h3>Andromeda Footprints</h3>
                 <v-btn
-                  id="zoom-to-pixel-scale"
+                  id="go-to-andromeda"
                   variant="text"
                   size="small"
-                  class="px-1"
-                  @click="zoomToPixelScale"
+                  class="px-2"
+                  @click="goToAndromeda"
                 >
-                  zoom to pixel scale
+                  Go to Andromeda
                 </v-btn>
-              </template>
-            </MiniFootprintSettings>
-          </div>
-
-          <div class="tour-controls-column">
-            <!-- wraps so the button drops below the heading in the narrow
-                 side-by-side columns of the portrait drawer -->
-            <div class="d-flex align-center justify-space-between flex-wrap ga-2">
-              <h3>Andromeda Footprints</h3>
-              <v-btn
-                id="go-to-andromeda"
-                variant="text"
-                size="small"
-                class="px-2"
-                @click="goToAndromeda"
-              >
-                Go to Andromeda
-              </v-btn>
+              </div>
+              <MiniFootprintSettings
+                v-for="footprint in andromedaFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+              />
             </div>
-            <MiniFootprintSettings
-              v-for="footprint in andromedaFootprints"
-              :key="footprint.id"
-              v-model:opacity="footprint.opacity"
-              v-model:fill="footprint.fill"
-              :label="footprint.label"
-              :color="footprint.color"
-              :show-opacity="false"
+
+            <v-icon
+              icon="mdi-close"
+              @click="showOptions = false"
             />
           </div>
-
-          <v-icon
-            icon="mdi-close"
-            @click="showOptions = false"
-          />
-        </div>
-      </TourSheet>
-    </div>
+        </TourSheet>
+      </div>
     
-    <div
-      id="side-drawer"
-      class="layout-drawer"
-      :class="[(showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
-    >
-      <InformationSheet
-        v-if="showTextSheet"
-        v-model="showTextSheet"
-        v-model:tab="infoSheetTab"
-        :tab-color="borderColor"
-        :text-color="textColor"
-        :heading-color="borderColor"
-        :accent-color="roman.color"
-        tab-title="WWT Why Roman"
+      <div
+        id="side-drawer"
+        :class="[(showTextSheet) ? 'side-panel-open' : 'side-panel-closed']"
       >
-        <InfoPage title="About Roman">
-          <ScienceInfo />
-        </InfoPage>
-        <InfoPage
-          title="User Guide"
+        <InformationSheet
+          v-if="showTextSheet"
+          v-model="showTextSheet"
+          v-model:tab="infoSheetTab"
+          :tab-color="borderColor"
+          :text-color="textColor"
+          :heading-color="borderColor"
+          :accent-color="roman.color"
+          tab-title="WWT Why Roman"
         >
-          <UserGuide />
-        </InfoPage>
-      </InformationSheet>
-    </div>
+          <InfoPage title="About Roman">
+            <ScienceInfo />
+          </InfoPage>
+          <InfoPage
+            title="User Guide"
+          >
+            <UserGuide />
+          </InfoPage>
+        </InformationSheet>
+      </div>
     </div>
   </v-app>
 </template>
@@ -689,6 +697,18 @@ const isRoomyLandscape = computed(
     !isPortrait.value &&
     !smAndDown.value &&
     height.value >= ROOMY_LANDSCAPE_MIN_HEIGHT,
+);
+
+// Whether the drawer column has room to show the controls and the info sheet
+// at once, stacked, instead of one replacing the other. Both need a usable
+// height, so this asks for more room than isRoomyLandscape does.
+const STACK_PANELS_MIN_WIDTH = 1200;
+const STACK_PANELS_MIN_HEIGHT = 900;
+const canStackPanels = computed(
+  () =>
+    !isPortrait.value &&
+    width.value >= STACK_PANELS_MIN_WIDTH &&
+    height.value >= STACK_PANELS_MIN_HEIGHT,
 );
 
 const props = withDefaults(defineProps<RomanFovProps>(), {
@@ -1164,11 +1184,13 @@ function enterExplore() {
   showOptions.value = true; // show the options box by default
 }
 
-// the controls and the info sheet are the same shape of drawer, so only one
-// of them is ever open -- in landscape as well as portrait, where two open
-// drawers would take 68% of the width between them
+// The controls and the info sheet share one drawer column, so only one is
+// open at a time -- unless the screen is big enough to stack them, where they
+// both fit and neither has to close the other.
 function handleShowInfo() {
-  showOptions.value = false;
+  if (!canStackPanels.value) {
+    showOptions.value = false;
+  }
 }
 
 // opening the controls at the close-out step ends the tour
@@ -1179,7 +1201,9 @@ function handleShowOptions() {
       enterExplore();
     }
     showControlFootprints();
-    showTextSheet.value = false;
+    if (!canStackPanels.value) {
+      showTextSheet.value = false;
+    }
   }
   showOptions.value = open;
 }
@@ -1834,7 +1858,7 @@ onMounted(() => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
       positionSet.value = true;
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+       
       // @ts-expect-error `canvas` is defined
       WWTControl.singleton.canvas.setAttribute("hidden", "true");
       WWTControl.singleton.renderOneFrame = function () {
@@ -1846,7 +1870,7 @@ onMounted(() => {
     // allow zoom out to 90deg
     WWTControl.singleton.set_zoomMax(6 * 90);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     // @ts-expect-error Modifying window object
     window.Matrix3d = wwtlib.Matrix3d; window.wwt = WWTControl.singleton;
 
@@ -2031,6 +2055,34 @@ const tourSheetOpen = computed(
 const tourSheetOverlays = computed(
   () => tourSheetOpen.value && isRoomyLandscape.value,
 );
+
+/* Which panel survives when the column stops being able to stack them. The
+   click handlers already work on "the one you just opened wins", so this
+   tracks that and applies the same rule. Declared here rather than beside
+   those handlers because watch() reads its source immediately, and
+   showOptions is defined further down. */
+const lastOpenedPanel = ref<"controls" | "info">("info");
+watch(showOptions, (open) => {
+  if (open) lastOpenedPanel.value = "controls";
+});
+watch(showTextSheet, (open) => {
+  if (open) lastOpenedPanel.value = "info";
+});
+
+/* Stacking can stop being possible without anyone clicking -- rotating a
+   tablet, or dragging a window narrow, moves the column to the bottom, where
+   there is only room for one. Without this the two stay open and get crushed
+   into the bottom drawer together. */
+watch(canStackPanels, (canStack) => {
+  if (canStack || !showOptions.value || !showTextSheet.value) {
+    return;
+  }
+  if (lastOpenedPanel.value === "controls") {
+    showTextSheet.value = false;
+  } else {
+    showOptions.value = false;
+  }
+});
 
 /**
   Computed flags that control whether the relevant dialogs display.
@@ -2295,6 +2347,17 @@ body {
       width: 100%;
       height: var(--drawer-height);
     }
+  }
+
+  /* The controls are a fixed-length menu, so on a tall screen the full
+     --drawer-height is more than they need and the surplus is dead space over
+     WWT. Let the drawer shrink to them, still capped at the usual height so a
+     short screen behaves as before. Only when they are alone: the info sheet's
+     content length varies by tab, so it keeps the fixed height rather than
+     resizing the canvas underneath it. */
+  #side-panel-stack.side-drawer-open:not(:has(> #side-drawer.side-panel-open)) {
+    height: auto;
+    max-height: var(--drawer-height);
   }
 }
 
@@ -2752,6 +2815,48 @@ video {
 #side-drawer-controls #tour-text {
   background: rgb(var(--v-theme-surface));
   border: none;
+}
+
+/* The shared drawer column. Its two panels stack; a closed one collapses to
+   nothing, so with only one open this behaves exactly like a single drawer.
+   The controls take their natural height (capped, so a long list can't crowd
+   the info sheet out) and the info sheet takes the rest -- the same division
+   Zoom uses for participants over chat. */
+#side-panel-stack {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  // 0 1 auto, not 0 0 auto: it takes its natural height when the drawer has
+  // room, but stays shrinkable so a short drawer scrolls it instead of the
+  // drawer's overflow: hidden clipping the bottom rows out of reach
+  > #side-drawer-controls {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+
+    &.side-panel-closed {
+      display: none;
+    }
+  }
+
+  // The cap is only there to stop a long layer list crowding the info sheet
+  // out of the column. With the controls alone -- which is always the case in
+  // portrait, where stacking is off -- it would just strand the lower third of
+  // the drawer behind a scrollbar, so it applies only while both are open.
+  &:has(> #side-drawer.side-panel-open) > #side-drawer-controls {
+    max-height: 55%;
+  }
+
+  > #side-drawer {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden; // the sheet inside does its own scrolling
+
+    &.side-panel-closed {
+      display: none;
+    }
+  }
 }
 
 // stacked groups need more separation than the 0.5rem between rows within a
