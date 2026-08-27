@@ -760,6 +760,28 @@ const cfaExtraLogo = [{
   name: "cfa",
 }];
 
+/*
+ * WWT renders the DSS background ~2.8" off, so footprints given in true sky
+ * coordinates miss the imagery a viewer actually sees. This moves them onto it.
+ * Measured in ~/projects/wwt-dss-offset. Negated because shiftCorners() subtracts,
+ * and the east shift is divided by cos(dec) since corners are plain RA degrees.
+ */
+const DSS_DEC_OFFSET_ARCSEC = 2.331;
+const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
+const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
+const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
+
+/*
+ * A different number, for footprints that outline the PHAST mosaic: they have to
+ * follow the PHAST imagery, which public/offset_phast.py moves onto DSS by its own
+ * transform (PHAST carries a rotation error too). Translation part only -- a
+ * footprint cannot be rotated, leaving ~0.3" at the mosaic edges.
+ */
+const PHAST_DEC_OFFSET_ARCSEC = 1.869;
+const PHAST_RA_OFFSET_ARCSEC = -0.867 / Math.cos((41.3858 * Math.PI) / 180);
+const PHAST_OFFSET_X_DEG = -PHAST_RA_OFFSET_ARCSEC / 3600;
+const PHAST_OFFSET_Y_DEG = -PHAST_DEC_OFFSET_ARCSEC / 3600;
+
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
@@ -832,6 +854,8 @@ const phast = useFootprint({
   color: "#00ff95",
   fixed: true,
   show: false,
+  offsetXDeg: PHAST_OFFSET_X_DEG,
+  offsetYDeg: PHAST_OFFSET_Y_DEG,
 });
 
 const phastI = useFootprint({
@@ -842,6 +866,8 @@ const phastI = useFootprint({
   fixed: true,
   show: false,
   opacity: 0.2,
+  offsetXDeg: PHAST_OFFSET_X_DEG,
+  offsetYDeg: PHAST_OFFSET_Y_DEG,
 });
 
 /* The Roman core survey footprints: real sky positions, so all `fixed`. */
@@ -896,6 +922,8 @@ const m31SfDisk = useFootprint({
   color: "#bd93f9",
   fixed: true,
   show: false,
+  offsetXDeg: DSS_OFFSET_X_DEG,
+  offsetYDeg: DSS_OFFSET_Y_DEG,
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
@@ -904,6 +932,8 @@ const m31SfDiskOutline = useFootprint({
   color: "#f58d42",  // TODO: Feel free to change this
   fixed: true,
   show: false,
+  offsetXDeg: DSS_OFFSET_X_DEG,
+  offsetYDeg: DSS_OFFSET_Y_DEG,
 });
 
 // phast, phastI, gbtds, hlwas, hltds, gps, testFootprint
