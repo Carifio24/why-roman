@@ -3,7 +3,9 @@
     class="mini-fp-settings pa-2"
     :style="{ '--fp-color': color }"
   >
-    <div class="d-flex flex-wrap justify-space-between">
+    <!-- align-center so the label and checkbox sit centred against a taller
+         #action button rather than riding along its top edge -->
+    <div class="d-flex flex-wrap justify-space-between align-center">
       <div class="show-option">
         <label>
           <span class="mr-2"> {{ label }} </span>
@@ -46,6 +48,8 @@
           step="0.01"
         />
       </div>
+      <!-- for an action belonging to this layer, e.g. "zoom to pixel scale" -->
+      <slot name="action"></slot>
     </div>
   </div>
 </template>

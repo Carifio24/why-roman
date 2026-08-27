@@ -489,39 +489,58 @@
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
-            <h3>Zoom level</h3>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('galaxy')"
-            >
-              Galaxy
-            </v-btn>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('roman')"
-            >
-              Roman
-            </v-btn>
-            <v-btn
-              variant="flat"
-              color="#502752"
-              size="small"
-              rounded="lg"
-              @click="goToScale('pixel')"
-            >
-              Pixel
-            </v-btn>
-          </div>
-          <div class="tour-controls-column">
-            <h3>Field of View</h3>
+            <h3>Compare Fields of View</h3>
             <MiniFootprintSettings
-              v-for="footprint in visibleFootprints"
+              v-for="footprint in compareFootprints"
+              :key="footprint.id"
+              v-model:opacity="footprint.opacity"
+              v-model:fill="footprint.fill"
+              :label="footprint.label"
+              :color="footprint.color"
+              :show-opacity="false"
+            />
+
+            <MiniFootprintSettings
+              v-for="footprint in pixelFootprints"
+              :key="footprint.id"
+              v-model:opacity="footprint.opacity"
+              v-model:fill="footprint.fill"
+              :label="footprint.label"
+              :color="footprint.color"
+              :show-opacity="false"
+              class="mt-3"
+            >
+              <template #action>
+                <v-btn
+                  id="zoom-to-pixel-scale"
+                  variant="text"
+                  size="small"
+                  class="px-1"
+                  @click="zoomToPixelScale"
+                >
+                  zoom to pixel scale
+                </v-btn>
+              </template>
+            </MiniFootprintSettings>
+          </div>
+
+          <div class="tour-controls-column">
+            <!-- wraps so the button drops below the heading in the narrow
+                 side-by-side columns of the portrait drawer -->
+            <div class="d-flex align-center justify-space-between flex-wrap ga-2">
+              <h3>Andromeda Footprints</h3>
+              <v-btn
+                id="go-to-andromeda"
+                variant="text"
+                size="small"
+                class="px-2"
+                @click="goToAndromeda"
+              >
+                Go to Andromeda
+              </v-btn>
+            </div>
+            <MiniFootprintSettings
+              v-for="footprint in andromedaFootprints"
               :key="footprint.id"
               v-model:opacity="footprint.opacity"
               v-model:fill="footprint.fill"
@@ -530,6 +549,7 @@
               :show-opacity="false"
             />
           </div>
+
           <v-icon
             icon="mdi-close"
             @click="showOptions = false"
@@ -562,6 +582,7 @@
           <UserGuide />
         </InfoPage>
       </InformationSheet>
+    </div>
     </div>
   </v-app>
 </template>
@@ -927,14 +948,25 @@ const footprints = [
   // m31HiDisk,
 ];
 
-// the currently visible footprints. 
+// the currently visible footprints.
 const visibleFootprints = computed(() =>
   footprints.filter((footprint) => footprint.show),
 );
 
-const visibleAndShownFootprints = computed(() =>
-  footprints.filter((footprint) => footprint.show && footprint.opacity > 0),
-);
+/* The controls panel is a fixed menu rather than a view of whatever the
+   current step happens to have on, so these groups are listed literally.
+   Their checkboxes work by moving opacity, which only shows up if `show` is
+   also on -- hence showControlFootprints() below. */
+const compareFootprints = [roman, hubble, jwst];
+const pixelFootprints = [romanPixel];
+const andromedaFootprints = [m31SfDiskOutline, m31SfDisk, phast, phastI];
+
+function showControlFootprints() {
+  [...compareFootprints, ...pixelFootprints, ...andromedaFootprints].forEach(
+    (footprint) => (footprint.show = true),
+  );
+}
+
 function hideVisibleFootprints() {
   // set their opacity to 0
   footprints.forEach((footprint) => {
@@ -997,15 +1029,6 @@ function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
       }
     },
   );
-}
-
-function showOnlyFootprints(...visible: Footprint[]) {
-  // hide all "shown" footprints by opacity, and make only visible opacity 1
-  footprints.forEach((footprint) => {
-    if (footprint.show) {
-      footprint.opacity = visible.includes(footprint) ? 1 : 0;
-    }
-  });
 }
 
 const { setOrderForLayers } = useLayerOrdering();
@@ -1137,6 +1160,7 @@ function replayTour() {
 function enterExplore() {
   leaveTour();
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
+  showControlFootprints(); // the panel lists them all, so they all need to be live
   showOptions.value = true; // show the options box by default
 }
 
@@ -1154,6 +1178,7 @@ function handleShowOptions() {
     if (inTour.value) {
       enterExplore();
     }
+    showControlFootprints();
     showTextSheet.value = false;
   }
   showOptions.value = open;
@@ -1448,37 +1473,30 @@ function andromedaTour(n: number, tour = true) {
   console.error("andromeda tour does not have step", n);
 }
 
-function goToScale(scale: 'galaxy' | 'roman' | 'pixel') {
-  if (scale === 'galaxy') {
-    // show these 3 and whatever else the user has visible
-    showOnlyFootprints(phast, romanPixel, roman, ...visibleAndShownFootprints.value);
-    store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 3 * 6,
-      instant: false,
-    });
-    return;
-  }  
-  
-  if (scale === 'roman') {
-    // show these 2 and whatever else the user has visible
-    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
-    return store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 2 * 6,
-      instant: false,
-    });
-  } 
-  if (scale === 'pixel') {
-    // show these 3 and whatever else the user has visible
-    showOnlyFootprints(romanPixel, roman, ...visibleAndShownFootprints.value);
-    return store.gotoRADecZoom({
-      ...currentViewRad.value,
-      zoomDeg: 0.01,
-      instant: false,
-    });
-    
+/* The controls panel's two camera actions. Unlike goToScale, "Go to
+   Andromeda" recenters rather than only changing zoom, so it brings the user
+   back however far they have panned away. */
+function goToAndromeda() {
+  store.gotoRADecZoom({
+    raRad: 10.6847 * D2R,
+    decRad: 41.269 * D2R,
+    zoomDeg: 3 * 6,
+    rollRad: 0,
+    instant: false,
+  });
+}
+
+function zoomToPixelScale() {
+  // zooming to pixel scale with the grid off would look like nothing happened
+  romanPixel.show = true;
+  if (romanPixel.opacity === 0) {
+    romanPixel.opacity = 1;
   }
+  store.gotoRADecZoom({
+    ...currentViewRad.value,
+    zoomDeg: 0.01,
+    instant: false,
+  });
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
@@ -2695,6 +2713,8 @@ video {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  // so the close icon can sit in the corner of the panel
+  position: relative;
 
   .tour-controls-column {
     display: flex;
@@ -2704,9 +2724,48 @@ video {
   }
 
   .v-icon {
-    align-self: flex-start;
+    position: absolute;
+    top: 0;
+    right: 0;
     cursor: pointer;
   }
+
+  // both section actions read as a pair, so the pixel one is forced white
+  // rather than inheriting the layer colour from the box it sits inside
+  #go-to-andromeda,
+  #zoom-to-pixel-scale {
+    color: white;
+    flex: 0 0 auto;
+  }
+
+  // outlined so it reads as the section's action rather than part of the heading
+  #go-to-andromeda {
+    border: 1px solid white;
+  }
+}
+
+/* The controls reuse TourSheet's markup but not its look: this is a drawer
+   that swaps places with the info sheet, not a card floating over the sky, so
+   it takes the same plain opaque surface and drops the lavender outline. The
+   surface token is what InformationSheet's v-card already resolves to, so the
+   two match by construction rather than by a copied hex value. */
+#side-drawer-controls #tour-text {
+  background: rgb(var(--v-theme-surface));
+  border: none;
+}
+
+// stacked groups need more separation than the 0.5rem between rows within a
+// group; in portrait the two sit side by side and the row gap already does it
+#app.app-is-landscape #tour-controls {
+  gap: 2rem;
+}
+
+// side by side, the second column's heading runs all the way to the right,
+// where the close icon now sits -- keep it clear. Padding works because an
+// absolutely positioned child anchors to the padding box, so the icon stays
+// put while the content shifts in.
+#app.app-is-portrait #tour-controls {
+  padding-right: 1.75rem;
 }
 
 #middle-content {
