@@ -549,20 +549,20 @@
             </div>
 
             <div class="tour-controls-column">
-              <!-- wraps so the button drops below the heading in the narrow
-                 side-by-side columns of the portrait drawer -->
-              <div class="d-flex align-center justify-space-between flex-wrap ga-2">
-                <h3>Mapping Andromeda</h3>
-                <v-btn
-                  id="go-to-andromeda"
-                  variant="text"
-                  size="small"
-                  class="px-2"
-                  @click="goToAndromeda"
-                >
-                  Go to Andromeda
-                </v-btn>
-              </div>
+              <h3>Andromeda</h3>
+              <!-- the column's first item rather than part of the heading: that
+                   keeps the two titles level and puts this button on the same
+                   line as the opposite column's first checkbox, at every width
+                   -->
+              <v-btn
+                id="go-to-andromeda"
+                variant="text"
+                size="small"
+                class="px-2"
+                @click="goToAndromeda"
+              >
+                Go to Andromeda
+              </v-btn>
               <MiniFootprintSettings
                 v-for="footprint in andromedaFootprints"
                 :key="footprint.id"
@@ -2952,6 +2952,10 @@ video {
     flex-direction: column;
     gap: 0.5rem;
     flex: 1 1 0;
+    // flex-basis: 0 only splits evenly with this: min-width defaults to auto,
+    // which held the fields-of-view column at its min-content width and left
+    // the Andromeda one with the remainder
+    min-width: 0;
   }
 
   .v-icon {
@@ -2967,6 +2971,16 @@ video {
   #zoom-to-pixel-scale {
     color: white;
     flex: 0 0 auto;
+
+    // on a 320px phone an even split leaves each column too narrow for these
+    // on one line -- wrap rather than run past the column edge, the same way
+    // #tour-options' .tour-option does
+    height: auto;
+    min-height: 32px;
+
+    .v-btn__content {
+      white-space: normal;
+    }
   }
 
   // outlined so it reads as the section's action rather than part of the heading
@@ -2990,6 +3004,33 @@ video {
    The controls take their natural height (capped, so a long list can't crowd
    the info sheet out) and the info sheet takes the rest -- the same division
    Zoom uses for participants over chat. */
+/* --drawer-width is a share of the screen, which stops making sense once the
+   screen is very wide: at 2560 the column is 870px, and neither panel has
+   anything to do with it -- the control chips just stretch, and the info
+   sheet's prose runs well past a comfortable line length. Caps the pair
+   together, since they share this column when stacked.
+
+   Landscape only: in portrait the stack is the full-width bottom drawer, where
+   a cap would leave it stranded in the corner. It binds above ~1750px wide,
+   so every smaller screen keeps the full 34%.
+
+   420 rather than 500 because the info sheet's side gutters are now a fixed
+   16px instead of 4vw (see InformationSheet.vue) -- that gave back 86px at the
+   width where this cap starts to bite, so the column loses the padding rather
+   than the prose. */
+#app.app-is-landscape #side-panel-stack.side-drawer-open {
+  max-width: 420px;
+}
+
+/* The controls need a fixed ~180px -- a checkbox, its label and the section
+   button -- and no more however wide the phone is, so 40% of a landscape phone
+   is mostly empty chip. The info sheet is prose and still wants its full share,
+   and the two never stack at this size, so only the controls-alone case is
+   narrowed. Same shape of selector as the portrait height cap below. */
+#app.app-is-small.app-is-landscape #side-panel-stack.side-drawer-open:not(:has(> #side-drawer.side-panel-open)) {
+  max-width: 220px;
+}
+
 #side-panel-stack {
   display: flex;
   flex-direction: column;
@@ -3033,12 +3074,13 @@ video {
   gap: 2rem;
 }
 
-// side by side, the second column's heading runs all the way to the right,
-// where the close icon now sits -- keep it clear. Padding works because an
-// absolutely positioned child anchors to the padding box, so the icon stays
-// put while the content shifts in.
-#app.app-is-portrait #tour-controls {
-  padding-right: 1.75rem;
+// Both section titles sit at the top of an equal-height box, so they stay level
+// with each other and the first item under each -- the Go to Andromeda button
+// and the Roman checkbox -- starts on the same line. The height covers the
+// longer title wrapping to two lines in a narrow column.
+#tour-controls .tour-controls-column > h3 {
+  display: flex;
+  align-items: flex-start;
 }
 
 #middle-content {
