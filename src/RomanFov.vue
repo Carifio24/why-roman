@@ -1056,11 +1056,13 @@ const infoSheetTab = ref(0);
 
 function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
   footprints.forEach(
-    (footprint, index) => {
-      footprint.show = visible.includes(footprint);
-      if (show) {
-        footprint.opacity = show[visible.indexOf(footprint)] === true ? 1 : 0;
-      }
+    (footprint) => {
+      const index = visible.indexOf(footprint);
+      footprint.show = index !== -1;
+      // opacity doubles as the controls' checkbox state, so it has to be reset
+      // on every call, not just when `show` is passed -- otherwise the ones
+      // explore mode leaves unchecked stay at 0 through a replayed tour
+      footprint.opacity = index !== -1 && (show ? show[index] === true : true) ? 1 : 0;
     },
   );
 }
