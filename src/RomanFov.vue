@@ -126,7 +126,7 @@
 
             <div class="d-flex flex-direction-row ga-2">
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
@@ -137,7 +137,7 @@
               ></icon-button>
 
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="info-icon"
                 v-model="showTextSheet"
                 icon="info"
@@ -149,7 +149,7 @@
               </icon-button>
 
               <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="replay-icon"
                 icon="mdi-replay"
                 :color="borderColor"
@@ -160,7 +160,7 @@
 
 
               <!-- <icon-button
-                v-if="showExploreUi"
+                v-if="inExploreMode"
                 id="share-icon"
                 icon="fa-share-nodes"
                 :color="borderColor"
@@ -1214,6 +1214,10 @@ function goToImageset(
 
 // the explore ui: hidden while stepping, on from the close-out step onward
 const showExploreUi = ref(true);
+// the top-left buttons. Kept apart from showExploreUi, which goes true on the
+// close-out slide so the tour sheet can offer "Explore" -- the buttons wait
+// until the user actually takes it
+const inExploreMode = ref(false);
 const lastTourId = ref("andromeda");
 
 function tourCloseOut() {
@@ -1227,6 +1231,7 @@ function replayTour() {
 // leaving the tour for good: step -1 is the state explore mode starts from
 function enterExplore() {
   leaveTour();
+  inExploreMode.value = true;
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
   showControlFootprints(); // the panel lists them all, so they all need to be live
   showOptions.value = true; // show the options box by default
@@ -1411,7 +1416,7 @@ function andromedaTour(n: number, tour = true) {
           instant: false,
           duration: 4,
         });
-        showOpacitySliders({ index: 0, minLabel: "ground", maxLabel: "Hubble" });
+        showOpacitySliders({ index: 0, minLabel: "Ground", maxLabel: "Hubble" });
       }
     });
     ats.setMaxStep(n);
@@ -1829,6 +1834,7 @@ function selectPlace(id: string, step = 0) {
     leaveTour();
   }
   showExploreUi.value = false;
+  inExploreMode.value = false;
   // starting a tour hands the drawer back to the tour sheet, so both explore
   // panels close -- every entry point (cards, replay, startup) comes through here
   showOptions.value = false;
