@@ -766,6 +766,7 @@ let sliderMinPressCount = 0;
 let sliderMaxPressCount = 0;
 let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
+let maxAndromedaTourStep = 0;
 
 const showPrivacyDialog = ref(false);
 
@@ -824,7 +825,7 @@ function getTrackingData() {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     controls_open_time_ms: controlsOpenTime, slider_min_press_count: sliderMinPressCount, slider_max_press_count: sliderMaxPressCount,
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount,
+    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount, max_andromeda_tour_step: maxAndromedaTourStep,
   };
 }
 
@@ -834,7 +835,6 @@ const { createUserEntry, responseOptOut } = useDataTracking({
   storyPath: "/why-roman",
   resetData: resetTrackingData,
   getData: getTrackingData,
-  apiUrl: "http://localhost:8080",
 });
 
 useWWTKeyboardControls(store);
@@ -2488,6 +2488,10 @@ watch(galactic, (gal: boolean) => {
 });
 watch(crosshairs, (show: boolean) => settings.set_showCrosshairs(show));
 watch(crosshairsColor, (color: string) => settings.set_crosshairsColor(color));
+
+watch(tourStep, (step: number) => {
+  maxAndromedaTourStep = Math.max(step, maxAndromedaTourStep);
+});
 
 function handleResolved(object: ResolvedObject) {
   const { raDeg, decDeg } = object;
