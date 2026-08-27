@@ -1493,7 +1493,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 8) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints([romanPixel, roman]);
+    onlyFootprints([romanPixel]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
@@ -1503,6 +1503,8 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
       duration: 3,
+    }).then(() => {
+      onlyFootprints([romanPixel, roman]);
     });
     ats.setMaxStep(n);
     return;
