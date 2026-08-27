@@ -130,7 +130,7 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Open controls"
+                tooltip-text="Control fields of view"
                 tooltip-location="start"
                 tabindex="0"
                 @activate="handleShowOptions"
@@ -142,7 +142,7 @@
                 v-model="showTextSheet"
                 icon="info"
                 :color="borderColor"
-                tooltip-text="Show User Guide"
+                tooltip-text="Learn more"
                 tooltip-location="start"
                 @activate="handleShowInfo"
               >
