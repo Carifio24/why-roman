@@ -105,7 +105,7 @@ export const andromedaExperience: TourExperience = [
     //          over the same area (187x) | Roman SF disk as flown: 1.77 deg^2, 20 epochs,
     //          26.9 h, 0.91 mag deeper stacked
     tourSheetText: [
-      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 1,400 images (taken over 500 hrs) with Hubble!",
+      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 600 images (taken over 500 hrs) with Hubble!",
     ],
     instaText: "Roman is 100x faster than Hubble.",
   },
