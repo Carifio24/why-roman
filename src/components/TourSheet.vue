@@ -167,8 +167,8 @@ p {
 #tour-text {
   font-size: clamp(
     1rem,
-    calc(0.023 * (var(--container-width) + var(--container-height))),
-    2rem
+    calc(0.0225 * (var(--container-width) + var(--container-height))),
+    1.8rem
   );
 }
 
