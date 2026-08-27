@@ -158,19 +158,6 @@
                 @activate="replayTour"
               ></icon-button>
 
-              <!-- icon-button owns its own tooltip model, so the close-out
-               call-out is a separate tooltip anchored to its generated id -->
-              <v-tooltip
-                id="callout-tooltip"
-                :model-value="showCallout"
-                activator="#options-closed-button"
-                location="bottom start"
-                :open-on-hover="false"
-              >
-                <div><v-icon icon="mdi-tune-variant" /> settings and fields of view</div>
-                <div><v-icon icon="mdi-information-outline" /> more about Roman</div>
-                <div><v-icon icon="mdi-replay" /> play the tour again</div>
-              </v-tooltip>
 
               <!-- <icon-button
                 v-if="showExploreUi"
@@ -189,6 +176,30 @@
                 {{ snackbarMessage }}
               </v-snackbar>
             </div>
+
+            <transition name="callout-fade">
+              <div
+                v-if="showCallout"
+                id="explore-callout"
+              >
+                <div class="explore-callout-rows">
+                  <div class="explore-callout-lead">
+                    Use these buttons to:
+                  </div>
+                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
+                  <div><v-icon icon="mdi-replay" /> play the tour again</div>
+                </div>
+                <v-icon
+                  class="explore-callout-close"
+                  icon="mdi-close"
+                  tabindex="0"
+                  @click="dismissCallout"
+                  @keyup.enter="dismissCallout"
+                />
+              </div>
+            </transition>
+
             <div
               v-if="false"
               id="options"
@@ -1185,6 +1196,7 @@ function enterExplore() {
   tours.find((t) => t.id === lastTourId.value)?.step(-1, false);
   showControlFootprints(); // the panel lists them all, so they all need to be live
   showOptions.value = true; // show the options box by default
+  showExploreCallout(); // now that the tour text is done competing for attention
 }
 
 // The controls and the info sheet share one drawer column, so only one is
@@ -1666,22 +1678,20 @@ const activeTour = computed(
 );
 const inTour = computed(() => activeTour.value != null);
 
-// the close-out points at the two buttons it wants you to notice, briefly
 const showCallout = ref(false);
-watch(() => inTour.value && showExploreUi.value, (closingOut) => {
-  if (!closingOut) {
-    showCallout.value = false;
-    return;
+const calloutAlreadyShown = ref(false);
+
+function showExploreCallout() {
+  if (calloutAlreadyShown.value) {
+    return; // once per session; it orients, it shouldn't nag
   }
-  // the icons render this tick, so let them land or the tooltip has nothing
-  // to anchor itself to
-  setTimeout(() => (showCallout.value = true), 100);
-});
-watch(showCallout, (shown) => {
-  if (shown) {
-    setTimeout(() => (showCallout.value = false), 7000);
-  }
-});
+  calloutAlreadyShown.value = true;
+  showCallout.value = true;
+}
+
+function dismissCallout() {
+  showCallout.value = false;
+}
 
 function leaveTour() {
   if (activeTour.value) {
@@ -1786,6 +1796,7 @@ function selectPlace(id: string, step = 0) {
   // panels close -- every entry point (cards, replay, startup) comes through here
   showOptions.value = false;
   showTextSheet.value = false;
+  showCallout.value = false; // the buttons it points at are gone during a tour
   lastTourId.value = id;
   selectedPlaceId.value = id;
   goToStep(step);
@@ -2459,6 +2470,75 @@ body {
     border-radius: 50%;
     border-width: 2px;
   }
+
+  #explore-callout {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 24rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--background-color-darkest);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    font-size: calc(1.1 * var(--default-font-size));
+    line-height: 1.5;
+    pointer-events: auto;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 68px;
+      width: 10px;
+      height: 10px;
+      background: var(--background-color-darkest);
+      border-top: 1px solid var(--accent-color);
+      border-left: 1px solid var(--accent-color);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .explore-callout-rows {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .explore-callout-lead {
+        margin-bottom: 0.35rem;
+        font-weight: 600;
+      }
+
+      svg,
+      .v-icon {
+        flex: 0 0 1.25em;
+        width: 1.25em;
+        height: 1.25em;
+        font-size: 1em;
+      }
+    }
+
+    .explore-callout-close {
+      cursor: pointer;
+    }
+  }
+}
+
+.callout-fade-enter-active,
+.callout-fade-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.callout-fade-enter-from,
+.callout-fade-leave-to {
+  opacity: 0;
 }
 
 // #top-content is pointer-events: none so drags fall through to WWT, so the
