@@ -188,8 +188,9 @@ export const andromedaExperience: TourExperience = [
     // Keep it short. This step's job is to hand over and get out of the way.
     tourSheetText: [
       "You can continue exploring different regions of the sky and the fields of view of Hubble, Webb, and Roman.",
+      "We look forward to sharing Roman's beautiful images soon!"
     ],
-    instaText: "",
+    instaText: 'Stay tuned for "First Look" images in early 2027!',
   }
   
   
