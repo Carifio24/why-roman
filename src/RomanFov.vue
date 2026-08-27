@@ -787,9 +787,8 @@ import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
 import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
 import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
 import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
-import { corners as phastFootprint } from "./footprints/m31_footprint";
-import { corners as phastIFootprint } from "./footprints/m31_individual_footprints";
-import { drawFootprint } from "./footprint";
+import { corners as phastFootprint } from "./footprints/m31_footprint_rot_off";
+import { corners as phastIFootprint } from "./footprints/m31_footprint";
 
 /*
  * The Roman core community surveys, as idealized 49.404' x 25.307' tiles, one
@@ -908,18 +907,18 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "M31 Hubble Outline",
+  label: "M31 Hubble Outline (new)",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
   show: false,
-  offsetXDeg: PHAST_OFFSET_X_DEG,
-  offsetYDeg: PHAST_OFFSET_Y_DEG,
+  // offsetXDeg: PHAST_OFFSET_X_DEG,
+  // offsetYDeg: PHAST_OFFSET_Y_DEG,
 });
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "M31 Hubble Grid",
+  label: "M31 Hubble Outline (old)",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
