@@ -71,6 +71,10 @@ withDefaults(defineProps<Props>(), {
   showOpacity: true,
 });
 
+const emit = defineEmits<{
+  show: [show: boolean],
+}>();
+
 const opacity = defineModel<number>("opacity", { required: true });
 const fill = defineModel<boolean>("fill", { required: true });
 const color = defineModel<string>("color", { required: true });
@@ -88,6 +92,7 @@ const shown = computed({
       lastOpacity = opacity.value;
       opacity.value = 0;
     }
+    emit("show", value);
   },
 });
 </script>

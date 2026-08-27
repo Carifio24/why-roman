@@ -521,6 +521,7 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
 
               <MiniFootprintSettings
@@ -531,6 +532,7 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
                 class="mt-3"
               >
                 <template #action>
@@ -668,6 +670,7 @@ import {
   type WtmlLoaderReturn,
 } from "./composables/useWtmlLoader";
 import { useLayerOrdering } from "./composables/useLayerOrdering";
+import { useDataTracking } from "./composables/useDataTracking";
 import { useSpreadsheetLayer } from "./composables/useSpreadsheetLayer";
 import { RAUnits } from "@wwtelescope/engine-types";
 
@@ -692,6 +695,45 @@ const backgroundImagesetName = computed({
   set(name: string) {
     store.setBackgroundImageByName(name);
   },
+});
+
+let appStartTimestamp = Date.now();
+let zoomToPixelScaleCount = 0;
+let footprintToggleCount: Record<string, number> = {};
+let tourRestartedCount = 0;
+
+function updateFootprintToggleCount(id: string) {
+  if (id in footprintToggleCount) {
+    footprintToggleCount[id] += 1;
+  } else {
+    footprintToggleCount[id] = 1;
+  }
+}
+
+function resetTrackingData() {
+  appStartTimestamp = Date.now();
+  zoomToPixelScaleCount = 0;
+  footprintToggleCount = {};
+  tourRestartedCount = 0;
+}
+
+function getTrackingData() {
+  const now = Date.now();
+  return {
+    app_time_ms: now - appStartTimestamp,
+    zoom_to_pixel_scale_count: zoomToPixelScaleCount,
+    footprint_toggle_count: footprintToggleCount,
+    tour_restarted_count: tourRestartedCount,
+  };
+}
+
+const { createUserEntry } = useDataTracking({
+  optOutKey: "why-roman-optout",
+  userIDKey: "why-roman-user-id",
+  storyPath: "/why-roman",
+  resetData: resetTrackingData,
+  getData: getTrackingData,
+  apiUrl: "http://localhost:8080",
 });
 
 useWWTKeyboardControls(store);
@@ -1221,6 +1263,7 @@ function tourCloseOut() {
 }
 
 function replayTour() {
+  tourRestartedCount += 1;
   selectPlace(lastTourId.value);
 }
 
@@ -1572,6 +1615,7 @@ function zoomToPixelScale() {
     zoomDeg: 0.01,
     instant: false,
   });
+  zoomToPixelScaleCount += 1;
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
@@ -2079,6 +2123,8 @@ onMounted(() => {
 
     // showInfoDialog.value = autoOpenInfoDialog.value;
   });
+
+  createUserEntry();
 });
 
 const ready = computed(() => layersLoaded.value && positionSet.value);
