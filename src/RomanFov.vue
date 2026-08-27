@@ -1493,7 +1493,7 @@ function andromedaTour(n: number, tour = true) {
   
   // step 8
   if (n === 8) { // Zoom in to Hubble with a pixel grid
-    onlyFootprints([romanPixel]);
+    onlyFootprints([romanPixel, roman]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
