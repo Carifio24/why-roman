@@ -525,6 +525,7 @@
               />
 
               <MiniFootprintSettings
+                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
@@ -533,7 +534,6 @@
                 :color="footprint.color"
                 :show-opacity="false"
                 @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
-                class="mt-3"
               >
                 <template #action>
                   <v-btn
@@ -720,10 +720,10 @@ function resetTrackingData() {
 function getTrackingData() {
   const now = Date.now();
   return {
-    app_time_ms: now - appStartTimestamp,
-    zoom_to_pixel_scale_count: zoomToPixelScaleCount,
-    footprint_toggle_count: footprintToggleCount,
-    tour_restarted_count: tourRestartedCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    app_time_ms: now - appStartTimestamp, zoom_to_pixel_scale_count: zoomToPixelScaleCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    footprint_toggle_count: footprintToggleCount, tour_restarted_count: tourRestartedCount,
   };
 }
 
