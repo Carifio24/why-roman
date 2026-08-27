@@ -6,7 +6,7 @@ import { corners as romanWFICorners } from "./roman_wfi_footprint";
 let chip = romanWFICorners[0];
 chip = chip.map(pt => [pt[0] - 0.05, pt[1]]);
 const PIXEL_SIZE_ARCSEC = 0.11;
-const PIXEL_SIZE_DEG = 10 * PIXEL_SIZE_ARCSEC / 3600;
+const PIXEL_SIZE_DEG = PIXEL_SIZE_ARCSEC / 3600;
 const GRID_SIZE = 4;  // 4 x 4 grid
 const HALF_GRID_SIZE = 0.5 * GRID_SIZE;
 
