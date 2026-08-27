@@ -93,6 +93,7 @@ export function useDataTracking(options: DataTrackingOptions) {
   window.addEventListener("visibilitychange", visibilityChangeListener);
 
   return {
+    responseOptOut,
     userID,
     createUserEntry,
     updateUserData,
