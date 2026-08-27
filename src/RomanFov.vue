@@ -830,8 +830,8 @@ function getTrackingData() {
 }
 
 const { createUserEntry, responseOptOut } = useDataTracking({
-  optOutKey: "why-roman-optout",
-  userIDKey: "why-roman-user-id",
+  optOutKey: "why-roman:optOut",
+  userIDKey: "why-roman:userID",
   storyPath: "/why-roman",
   resetData: resetTrackingData,
   getData: getTrackingData,
