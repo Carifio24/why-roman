@@ -826,17 +826,6 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
-/*
- * A different number, for footprints that outline the PHAST mosaic: they have to
- * follow the PHAST imagery, which public/offset_phast.py moves onto DSS by its own
- * transform (PHAST carries a rotation error too). Translation part only -- a
- * footprint cannot be rotated, leaving ~0.3" at the mosaic edges.
- */
-const PHAST_DEC_OFFSET_ARCSEC = 1.869;
-const PHAST_RA_OFFSET_ARCSEC = -0.867 / Math.cos((41.3858 * Math.PI) / 180);
-const PHAST_OFFSET_X_DEG = -PHAST_RA_OFFSET_ARCSEC / 3600;
-const PHAST_OFFSET_Y_DEG = -PHAST_DEC_OFFSET_ARCSEC / 3600;
-
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
@@ -855,32 +844,11 @@ const romanPixel = useFootprint({
   show: true,
   linewidth: 3,
 });
-const testFootprint = useFootprint({
-  id: "roman-fixed-footprint",
-  label: "TEST 10 deg",
-  // footprint: [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]],
-  footprint: [
-    [
-      [-0.5, -0.5],
-      [-0.5, 0.5],
-      [0.5, 0.5],
-      [0.5, -0.5],
-    ].map(([x, y]) => [x * 15, y * 10]),
-  ], // 1 hour x 10 deg. the equatorial grid spacing
-  // footprint: romanFootprint,
-  color: "#4afa4a",
-  fixed: false,
-  fill: false,
-  show: false,
-});
+
 const jwst = useFootprint({
   id: "jwst-footprint",
   label: "Webb",
   footprint: jwstFootprint,
-  // Was the Carina Spark JWST accent (#f0ab52), but that is the same hue and
-  // nearly the same lightness as the PHAST core it sits on, so it disappeared
-  // there (WCAG 1.06). This deeper orange keeps the warm/infrared association
-  // and stays clear of Hubble's blue for red-green colour blindness.
   color: "#ff6d00",
   offsetXDeg: -0.075, // left
   offsetYDeg: 0.2, // down
@@ -894,6 +862,25 @@ const hubble = useFootprint({
   color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
   offsetYDeg: 0.2,
+  linewidth: 2, 
+  show: false,
+});
+
+const jwstCentered = useFootprint({
+  id: "jwst-footprint-centered",
+  label: "Webb",
+  footprint: jwstFootprint,
+  color: "#ff6d00",
+  // offsetXDeg: -0.075, // left
+  linewidth: 2,
+  show: false,
+});
+const hubbleCentered = useFootprint({
+  id: "hubble-footprint-centered",
+  label: "Hubble",
+  footprint: hubbleFootprint,
+  color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
+  // offsetXDeg: 0.1,
   linewidth: 2, 
   show: false,
 });
@@ -1005,7 +992,9 @@ const footprints = [
   m31SfDiskOutline,
   m31SfDisk,
   jwst,
+  jwstCentered,
   hubble,
+  hubbleCentered,
   roman,
   romanPixel,
   // gbtds,
@@ -1024,7 +1013,7 @@ const visibleFootprints = computed(() =>
    current step happens to have on, so these groups are listed literally.
    Their checkboxes work by moving opacity, which only shows up if `show` is
    also on -- hence showControlFootprints() below. */
-const compareFootprints = [roman, hubble, jwst];
+const compareFootprints = [roman, hubbleCentered, jwstCentered];
 const pixelFootprints = [romanPixel];
 const andromedaFootprints = [m31SfDiskOutline, m31SfDisk, phast, phastI];
 
