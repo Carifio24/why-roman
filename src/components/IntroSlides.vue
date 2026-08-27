@@ -214,8 +214,8 @@ const NUM_SLIDES = 1;
 .intro-slide-button {
   color: var(--text-color);
   font-size: 1.2rem;
-  text-transform: none;
-  border: 1px solid var(--text-color);
+  text-transform: uppercase;
+  border: 1px solid var(--accent-color);
 }
 
 </style>

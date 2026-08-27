@@ -241,6 +241,13 @@ p {
   width: 100%;
   margin-top: 0.5rem;
 
+  // Scoped to .tour-text-controls, so it catches Back/Next without 
+  // touching the breadcrumb dots or the buttons a caller puts in 
+  // the controls slot.
+  .v-btn {
+    border: 1px solid var(--accent-color);
+  }
+
   .tour-back-button-hidden {
     visibility: hidden;
     pointer-events: none;
