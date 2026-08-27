@@ -172,11 +172,20 @@ p {
   );
 }
 
+#tour-text p {
+  line-height: 1.3;
+  margin-top: 0.5em;
+}
+
+#tour-text h3 {
+  line-height: 1.3;
+}
+
 // the floating box is capped at ~50vh, so a step with a full paragraph needs
 // tighter spacing to fit. A landscape phone gets a full-height drawer instead
 // and has no such pressure, hence keying on the overlay rather than landscape.
 #app.app-tour-sheet-overlay #tour-text p {
-  margin-top: 0.25rem;
+  margin-top: 0.65em;
 }
 
 #tour-text {
@@ -239,6 +248,12 @@ p {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  // The floating box is sized to its own content, but the responsive font-size
+  // makes that a fractional number and the intrinsic height lands a hair under
+  // what the text needs -- enough to raise a scrollbar on a step that visibly
+  // fits. This absorbs the rounding; text that genuinely overflows still
+  // scrolls, since the box stops growing at its max-height.
+  padding-bottom: 2px;
 }
 
 .tour-text-controls {
@@ -308,6 +323,10 @@ p {
   font-size: var(--v-btn-size);
   min-width: 50px;
   padding: 0 12px;
+}
+
+.selected-info-tour {
+  padding-bottom: 0.5em;
 }
 
 </style>
