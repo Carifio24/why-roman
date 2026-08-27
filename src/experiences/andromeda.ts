@@ -19,7 +19,7 @@ export const andromedaExperience: TourExperience = [
       "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
       "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
     ],
-    instaText: "From the ground, a telescope can see THIS...",
+    instaText: "A telescope on the ground can see this...",
   },
   {
     title: "Hubble's view from space",  // step 3, n=2
@@ -28,7 +28,7 @@ export const andromedaExperience: TourExperience = [
       "Zoom in to see how much more detail you can notice with Hubble.",
       "Use the slider to compare the 2 images.",
     ],
-    instaText: "If you use the Hubble Space Telescope, you can see this!",
+    instaText: "From SPACE, the Hubble telescope can see this!",
   },
   {
     title: "600 Hubble images",  // step 4, n=3
@@ -62,7 +62,7 @@ export const andromedaExperience: TourExperience = [
     // better. Webb's mirror is nearly three times the size of Roman's -- it is built to look
     // deep and sharp at one spot, not to map a whole galaxy.
     tourSheetText: [
-      "The James Webb Space Telescope takes images using infrared light (which has less energy than what our eyes can see).",
+      "The James Webb Space Telescope takes images using infrared light, revealing secrets invisible to our eyes.",
       "Webb's biggest camera has two chips that are side-by-side. The orange squares show how much (or little) of the sky Webb can photograph at once.",
     ],
     instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time",
@@ -74,7 +74,7 @@ export const andromedaExperience: TourExperience = [
       "Roman's camera has 18 large chips arranged in a boomerang shape.",
       `The camera's footprint or "field of view" is shown here.`,
     ],
-    instaText: "Enter Roman...!",
+    instaText: "Why Roman?!",
   },
   {
     title: "Compare 3 Space Telescopes",  // step 7, n=6
@@ -97,7 +97,7 @@ export const andromedaExperience: TourExperience = [
     instaText: 'Roman covers way more sky with each "snap!"',
   },
   {
-    title: "What Hubble did, Roman can do in 3 hours",  // step 7, n=6
+    title: "Roman can image the whole Andromeda galaxy in 3 hours",  // step 7, n=6
     // Hubble spent about 500 hours photographing this part of Andromeda, once, in two colours.
     // Roman can match it in about 3 hours -- and its actual survey revisits the star-forming
     // disk 20 times over five years, covering twice the area, in 27 hours total.
