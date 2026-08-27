@@ -481,7 +481,6 @@
         :step="tourStep"
         :small-size="smallSize"
         :show-breadcrumbs="false"
-        show-close-button
       >
         <div id="tour-controls">
           <div class="tour-controls-column">
@@ -526,6 +525,10 @@
               :show-opacity="false"
             />
           </div>
+          <v-icon
+            icon="mdi-close"
+            @click="showOptions = false"
+          />
         </div>
       </TourSheet>
     </div>
@@ -959,7 +962,7 @@ const hasSeenSplashGesture = useLocalStorage(
   "why-roman:hasSeenSplashGesture",
   false,
 );
-const showSplashGesture = ref(true); //ref(!hasSeenSplashGesture.value);
+const showSplashGesture = ref(!hasSeenSplashGesture.value);
 function handleSplashGestureClose() {
   hasSeenSplashGesture.value = true;
 }
