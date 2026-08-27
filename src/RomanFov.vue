@@ -1348,6 +1348,7 @@ function andromedaTour(n: number, tour = true) {
       [,,true,,,,,]
     );
     // handle undefined warning buy using the setter
+    // Claude says these next 3 lines seem to not be doing anything by accident. "They're inert only because the keys are wrong ("roman" vs the registered "roman-footprint"), and the ?. hides the miss. So the correct behavior is an accident of a typo. Fixing those keys would have turned the Roman label on in explore mode and broken exactly the behavior you want. Deleting the three lines is the change that matches your intent. I've left them alone since parked code here is usually deliberate "
     textVisibilitySetters["roman"]?.(true);
     textVisibilitySetters["hubble"]?.(false);
     textVisibilitySetters["jwst"]?.(false);
@@ -1944,7 +1945,8 @@ onMounted(() => {
       renderContext,
       text: "Roman",
       center: Coordinates.raDecTo3d(-0.001, 0.4),
-      color: "#ff1900",
+      // read off the footprint so the label can't drift from the shape it names
+      color: roman.color,
       scale: 0.0005,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
@@ -1952,7 +1954,7 @@ onMounted(() => {
       renderContext,
       text: "Hubble",
       center: Coordinates.raDecTo3d(-0.01, -0.3),
-      color: "#e100ff",
+      color: hubble.color,
       scale: 0.0005,
     });
     const { setVisible: setJWSTTextVisible } = createTextOverlay({
@@ -1960,7 +1962,7 @@ onMounted(() => {
       renderContext,
       text: "JWST",
       center: Coordinates.raDecTo3d(0.01, -0.3),
-      color: "#002aff",
+      color: jwst.color,
       scale: 0.0005,
     });
 
