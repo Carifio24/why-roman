@@ -58,6 +58,49 @@
           </v-btn>
         </div>
       </component>
+
+      <!-- Data collection opt-out dialog -->
+      <v-dialog
+        scrim="false"
+        v-model="showPrivacyDialog"
+        max-width="400px"
+        id="privacy-popup-dialog"
+      >
+        <v-card>
+          <v-card-text>
+            To evaluate usage of this app, <strong>anonymized</strong> data may be collected, including locations viewed and map quiz responses. "My Location" data is NEVER collected.
+          </v-card-text>
+          <v-card-actions class="pt-3">
+            <v-spacer></v-spacer>
+            <v-btn
+              color="#BDBDBD"
+              href="https://www.cfa.harvard.edu/privacy-statement"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+            Privacy Policy
+            </v-btn>
+            <v-btn
+              color="#ff6666"
+              @click="() => {
+                responseOptOut = true;
+                showPrivacyDialog = false;
+              }"
+            >
+            Opt out
+            </v-btn>
+            <v-btn 
+              color="green"
+              @click="() => {
+                responseOptOut = false;
+                showPrivacyDialog = false;
+              }"
+            >
+              Allow
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       
       <IntroSlides 
         v-if="showIntroSlides" 
@@ -156,6 +199,14 @@
                 tooltip-text="Play the tour again"
                 tooltip-location="start"
                 @activate="replayTour"
+              ></icon-button>
+              <icon-button
+                icon="mdi-lock"
+                :color="borderColor"
+                tooltip-text="Change privacy settings"
+                tooltip-location="bottom"
+                tooltip-offset="5px"
+                mdSize="1em"
               ></icon-button>
 
 
@@ -716,6 +767,8 @@ let sliderMaxPressCount = 0;
 let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
 
+const showPrivacyDialog = ref(false);
+
 function updateFootprintToggleCount(id: string) {
   if (id in footprintToggleCount) {
     footprintToggleCount[id] += 1;
@@ -1155,6 +1208,9 @@ const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
   showIntroSlides.value = true;
+  if (responseOptOut.value === null) {
+    showPrivacyDialog.value = true;
+  }
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
@@ -2784,6 +2840,9 @@ body {
 }
 
 #body-logos {
+
+  display: flex;
+
   #logo-credits img {
     height: 32px !important;
   }
@@ -3302,5 +3361,32 @@ h1.startup-screen-title {
     font-size: 1.17em;
   }
   
+}
+
+#privacy-popup-dialog {
+
+  .v-card-text {
+    color: #BDBDBD;
+  }
+
+  .v-overlay__content {
+    font-size: var(--default-font-size);
+    background-color: purple;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .v-btn--size-default {
+      font-size: calc(0.9 * var(--default-font-size));
+    }  
+
+  .v-card-actions .v-btn {
+    padding: 0 4px;
+  }
+}
+
+#change-optout {
+  width: fit-content;
 }
 </style>
