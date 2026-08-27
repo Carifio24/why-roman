@@ -158,11 +158,7 @@
         <v-spacer class="end-spacer"></v-spacer>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col>
-        <p>funding acknowlegement</p>
-      </v-col>
-    </v-row>
+    <funding-acknowledgement />
   </div>
 </template>
 <script setup lang="ts">
