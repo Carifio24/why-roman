@@ -3,6 +3,16 @@
     id="tour-text"
     :class="['selected-info', smallSize ? 'selected-info-tall' : '', 'info-box']"
   >
+    <!-- outside .selected-info-scroll so it stays in the corner rather than
+         scrolling away with the step's text -->
+    <v-icon
+      v-if="showClose"
+      class="tour-sheet-close"
+      icon="mdi-close"
+      tabindex="0"
+      @click="emit('close')"
+      @keyup.enter="emit('close')"
+    />
     <!-- fill either slot to replace the step's own content, so callers can put
      something else in this box without passing it all in as props -->
     <div class="selected-info-scroll">
@@ -95,8 +105,10 @@ interface Props {
   showBreadcrumbs?: boolean,
   showNextOnLastStep?: boolean,
   showBackOnFirstStep?: boolean,
-  nextText?: string,  
+  nextText?: string,
   backText?: string,
+  /** a close icon in the corner. off where the caller supplies its own */
+  showClose?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -105,11 +117,12 @@ const props = withDefaults(defineProps<Props>(), {
   showBackOnFirstStep: false,
   nextText: 'Next',
   backText: 'Back',
+  showClose: false,
 });
 
 // const emit = defineEmits(['previous', 'next', 'leave',]);
 const emit = defineEmits<{
-  (e: 'previous' | 'next' | 'leave'): void;
+  (e: 'previous' | 'next' | 'leave' | 'close'): void;
   (e: 'step', index: number): void;
 }>();
 
@@ -197,6 +210,16 @@ p {
   padding: 10px;
   // max-width: 30%;
   align-items: flex-start;
+}
+
+// anchors to .selected-info above; sits over the step title's right end,
+// which is short enough that they don't collide
+.tour-sheet-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  cursor: pointer;
 }
 
 

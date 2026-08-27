@@ -459,16 +459,21 @@
       class="layout-drawer"
       :class="[tourSheetOpen ? 'side-drawer-open' : 'side-drawer-closed']"
     >
+      <!-- @close runs enterExplore, not leaveTour, so closing mid-tour lands
+           where finishing the tour would: leaveTour only tears the tour down,
+           enterExplore also sets up the explore layers, camera and controls -->
       <TourSheet
         v-if="tourSheetOpen && activeTour"
         :tour-id="activeTour.id"
         :step="tourStep"
         :small-size="smallSize"
         show-next-on-last-step
+        show-close
         :next-text="showExploreUi ? 'Explore' : 'Next'"
         @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
         @previous="goToStep(tourStep - 1)"
         @leave="leaveTour"
+        @close="enterExplore"
         @step="(index) => goToStep(index)"
       />
     </div>

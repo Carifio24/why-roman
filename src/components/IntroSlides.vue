@@ -9,8 +9,17 @@
     :persistent="true"
   >
     <v-card :class="['intro-slides-container', smallSize ? 'intro-slides-small' : '']">
-      <v-window 
-        v-model="window" 
+      <!-- dismissing the intro is the same as finishing it: the dialog is
+           persistent, so this is the only way out besides the buttons -->
+      <v-icon
+        class="intro-slides-close"
+        icon="mdi-close"
+        tabindex="0"
+        @click="handleFinalNext"
+        @keyup.enter="handleFinalNext"
+      />
+      <v-window
+        v-model="window"
         class="intro-slides pa-2"
       >
         <v-window-item
@@ -119,6 +128,16 @@ const NUM_SLIDES = 1;
   background-color: rgba(0, 0, 0, 0.9);
   border: 4px solid var(--background-color);
   padding: 1.7rem;
+}
+
+// inside the 4px border and 1.7rem padding, so it sits in the visible corner
+.intro-slides-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  color: var(--text-color);
+  cursor: pointer;
 }
 
 .intro-slides-container.intro-slides-small {
