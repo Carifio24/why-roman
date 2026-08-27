@@ -539,9 +539,9 @@
                     variant="text"
                     size="small"
                     class="px-1"
-                    @click="zoomToPixelScale"
+                    @click="zoomedToPixelScale ? zoomBackOut() : zoomToPixelScale()"
                   >
-                    zoom to pixel scale
+                    {{ zoomedToPixelScale ? 'zoom back out' : 'zoom to pixel scale' }}
                   </v-btn>
                 </template>
               </MiniFootprintSettings>
@@ -1569,17 +1569,43 @@ function goToAndromeda() {
   });
 }
 
+const PIXEL_SCALE_ZOOM = 0.01;
+// the zoom Go to Andromeda settles at, and the fallback for backing out of a
+// zoom the user pinched into themselves rather than reached with the button
+const ANDROMEDA_ZOOM = 3 * 6;
+
+// Read off the live zoom rather than latched when the button is pressed: the
+// user can pinch back out on their own, and a latched flag would leave the
+// button offering to undo a zoom they had already left.
+const zoomedToPixelScale = computed(() => store.zoomDeg <= PIXEL_SCALE_ZOOM * 10);
+
+// where to return to. Null until the button is used, so a hand-zoomed view
+// backs out to the Andromeda zoom instead of somewhere arbitrary
+const zoomBeforePixelScale = ref<number | null>(null);
+
 function zoomToPixelScale() {
   // zooming to pixel scale with the grid off would look like nothing happened
   romanPixel.show = true;
   if (romanPixel.opacity === 0) {
     romanPixel.opacity = 1;
   }
+  zoomBeforePixelScale.value = store.zoomDeg;
   store.gotoRADecZoom({
     ...currentViewRad.value,
-    zoomDeg: 0.01,
+    zoomDeg: PIXEL_SCALE_ZOOM,
     instant: false,
   });
+}
+
+// the inverse of the above: same patch of sky, the zoom they came from.
+// Recentring is Go to Andromeda's job, right next to this one.
+function zoomBackOut() {
+  store.gotoRADecZoom({
+    ...currentViewRad.value,
+    zoomDeg: zoomBeforePixelScale.value ?? ANDROMEDA_ZOOM,
+    instant: false,
+  });
+  zoomBeforePixelScale.value = null;
 }
 
 const eagleWtml = useWtmlLoader("eagle_nebula.wtml", {
