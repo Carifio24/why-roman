@@ -759,7 +759,7 @@ let aboutRomanTimeMs = 0;
 let userGuideStartTimestamp: number | null = null;
 let userGuideTimeMs = 0;
 let zoomToPixelScaleCount = 0;
-let footprintToggleCount: Record<string, number> = {};
+let footprintsToggleCount: Record<string, number> = {};
 let tourRestartedCount = 0;
 let sideControlsOpenedCount = 0;
 let sliderMinPressCount = 0;
@@ -771,10 +771,10 @@ let maxAndromedaTourStep = 0;
 const showPrivacyDialog = ref(false);
 
 function updateFootprintToggleCount(id: string) {
-  if (id in footprintToggleCount) {
-    footprintToggleCount[id] += 1;
+  if (id in footprintsToggleCount) {
+    footprintsToggleCount[id] += 1;
   } else {
-    footprintToggleCount[id] = 1;
+    footprintsToggleCount[id] = 1;
   }
 }
 
@@ -789,7 +789,7 @@ function resetTrackingData() {
   userGuideTimeMs = 0;
 
   zoomToPixelScaleCount = 0;
-  footprintToggleCount = {};
+  footprintsToggleCount = {};
   tourRestartedCount = 0;
   sideControlsOpenedCount = 0;
   sliderMinPressCount = 0;
@@ -819,13 +819,13 @@ function getTrackingData() {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     app_time_ms: now - appStartTimestamp, zoom_to_pixel_scale_count: zoomToPixelScaleCount,
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    footprint_toggle_count: footprintToggleCount, tour_restarted_count: tourRestartedCount,
+    footprints_toggle_count: footprintsToggleCount, tour_restarted_count: tourRestartedCount,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     side_controls_opened_count: sideControlsOpenedCount, about_roman_time_ms: aboutRomanTime, user_guide_time_ms: userGuideTime,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     controls_open_time_ms: controlsOpenTime, slider_min_press_count: sliderMinPressCount, slider_max_press_count: sliderMaxPressCount,
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount, max_andromeda_tour_step: maxAndromedaTourStep,
+    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount, max_andromeda_tour_step: ats.maxStep,
   };
 }
 
@@ -835,6 +835,7 @@ const { createUserEntry, responseOptOut } = useDataTracking({
   storyPath: "/why-roman",
   resetData: resetTrackingData,
   getData: getTrackingData,
+  apiUrl: "http://localhost:8080",
 });
 
 useWWTKeyboardControls(store);
@@ -2488,10 +2489,6 @@ watch(galactic, (gal: boolean) => {
 });
 watch(crosshairs, (show: boolean) => settings.set_showCrosshairs(show));
 watch(crosshairsColor, (color: string) => settings.set_crosshairsColor(color));
-
-watch(tourStep, (step: number) => {
-  maxAndromedaTourStep = Math.max(step, maxAndromedaTourStep);
-});
 
 function handleResolved(object: ResolvedObject) {
   const { raDeg, decDeg } = object;
