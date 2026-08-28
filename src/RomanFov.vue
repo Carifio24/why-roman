@@ -2159,7 +2159,26 @@ const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 //   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
 // });
 
+// Ported from solar-eclipse-2026. :focus-visible's own heuristic makes an
+// exception for inputs -- unlike buttons, they count as focus-visible even when
+// clicked or dragged with a mouse, on the reasoning that you need to see a text
+// cursor. That gives the oreo ring to sliders and the like on plain mouse use.
+// Tracking Tab against mouse/touch lets the CSS below undo that exception.
+function onKeydownForFocusIndicator(event: KeyboardEvent) {
+  if (event.key === "Tab") {
+    document.body.classList.add("keyboard-focus-only");
+  }
+}
+
+function onPointerForFocusIndicator() {
+  document.body.classList.remove("keyboard-focus-only");
+}
+
 onMounted(() => {
+  document.addEventListener("keydown", onKeydownForFocusIndicator);
+  document.addEventListener("mousedown", onPointerForFocusIndicator);
+  document.addEventListener("touchstart", onPointerForFocusIndicator);
+
   store.waitForReady().then(async () => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
@@ -2987,6 +3006,29 @@ body {
 .v-text-field input:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+}
+
+// The carve-out described above onKeydownForFocusIndicator: inputs -- sliders
+// included -- match :focus-visible on a plain click or drag, so without this the
+// oreo ring appears on mouse use. body.keyboard-focus-only is only set while the
+// last interaction was a Tab.
+body:not(.keyboard-focus-only) input:focus-visible,
+body:not(.keyboard-focus-only) textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+// The toolkit's icon-button carries its own pre-oreo focus styling: plain
+// :focus rules that swap colour and border-colour to --focus-color, and the
+// box-shadow while active. Neutralise both so the oreo ring is the only focus
+// indicator these buttons show.
+.icon-wrapper:focus {
+  color: var(--color) !important;
+  border-color: var(--color) !important;
+}
+
+.icon-wrapper.active:focus {
+  box-shadow: 0 0 10px 3px var(--active-shadow) !important;
 }
 
 .video-wrapper {
