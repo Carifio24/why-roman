@@ -33,7 +33,8 @@ export const telescopeInfo: Record<string, TelescopeInfo> = {
     highlights: [
       "Will survey the sky hundreds of times faster than Hubble at the same sharpness.",
       "Designed to measure dark energy by mapping how galaxies cluster over cosmic time.",
-      "Will hunt for exoplanets by watching for the brief brightening of microlensing events and peer through dust to see stars being born",
+      "Will hunt for exoplanets by catching the brief flicker of a microlensing event.",
+      "Can peer through dust to watch new stars being born.",
     ],
   },
 
@@ -57,13 +58,13 @@ export const telescopeInfo: Record<string, TelescopeInfo> = {
     name: "James Webb Space Telescope",
     launch: "December 25, 2021",
     camera: "Near Infrared Camera (NIRCam)",
-    fieldOfView: "Two 2.2 arcminute squares (44 arcsecond gap), about 9.7 square arcminutes in total",
+    fieldOfView: "Two 2.2 arcminute squares, about 9.7 square arcminutes in total",
     resolution: "0.031 arcseconds per pixel (short wavelengths), 0.063 (long)",
     wavelengths: "Infrared light (0.6–5 microns)",
     highlights: [
       "Sees the most distant galaxies yet found, as they were a few hundred million years after the Big Bang.",
       "Its infrared eyes see through the dust clouds where stars and planets are being born.",
-      "Reads the atmospheres of planets orbiting other stars.",
+      "Decodes the atmospheres of planets orbiting other stars.",
     ],
   },
 };

@@ -86,8 +86,8 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 const rows = computed(() => [
-  { term: "Launched", value: props.info.launch },
-  { term: "Camera", value: props.info.camera },
+  { term: "Launch", value: props.info.launch },
+  { term: "Featured camera", value: props.info.camera },
   { term: "Field of view", value: props.info.fieldOfView },
   { term: "Resolution", value: props.info.resolution },
   { term: "Sees", value: props.info.wavelengths },
