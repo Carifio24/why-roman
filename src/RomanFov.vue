@@ -628,6 +628,7 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
             </div>
 
@@ -766,7 +767,6 @@ let sliderMinPressCount = 0;
 let sliderMaxPressCount = 0;
 let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
-let maxAndromedaTourStep = 0;
 
 const showPrivacyDialog = ref(false);
 
