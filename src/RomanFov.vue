@@ -550,19 +550,6 @@
 
             <div class="tour-controls-column">
               <h3>Andromeda</h3>
-              <!-- the column's first item rather than part of the heading: that
-                   keeps the two titles level and puts this button on the same
-                   line as the opposite column's first checkbox, at every width
-                   -->
-              <v-btn
-                id="go-to-andromeda"
-                variant="text"
-                size="small"
-                class="px-2"
-                @click="goToAndromeda"
-              >
-                Go to Andromeda
-              </v-btn>
               <MiniFootprintSettings
                 v-for="footprint in andromedaFootprints"
                 :key="footprint.id"
@@ -572,6 +559,18 @@
                 :color="footprint.color"
                 :show-opacity="false"
               />
+              <!-- last, so it sits near the other column's zoom-to-pixel-scale
+                   action. Out of the heading either way, which is what keeps the
+                   two titles level and the checkbox rows aligned. -->
+              <v-btn
+                id="go-to-andromeda"
+                variant="text"
+                size="small"
+                class="px-2"
+                @click="goToAndromeda"
+              >
+                Go to Andromeda
+              </v-btn>
             </div>
 
             <v-icon
@@ -2983,9 +2982,37 @@ video {
     }
   }
 
+  // Grows to fill whatever is left of its line. On its own line -- which is
+  // where it lands once the chip is too narrow to hold it beside the label --
+  // that is the full width, so its text centres like Go to Andromeda's rather
+  // than sitting off to the left. Only this one: Go to Andromeda is a child of
+  // the column, where flex-grow would stretch it vertically instead.
+  #zoom-to-pixel-scale {
+    flex: 1 1 auto;
+  }
+
   // outlined so it reads as the section's action rather than part of the heading
   #go-to-andromeda {
     border: 1px solid white;
+
+    // The checkbox rows are 8px of padding either side of a line of the panel's
+    // own text plus a 1px border, so they grow with the responsive font while a
+    // v-btn's height is fixed -- 3px shorter on a phone, 12px on a desktop.
+    // font-size: inherit is here for the em to resolve against the panel font
+    // rather than the button's own; the lettering is put back on the content.
+    font-size: inherit;
+    line-height: inherit;
+    padding-block: 0;
+    // 18px is the row's 8px padding either side plus its 1px border. The em
+    // version is the fallback: the lh unit postdates the :has() baseline by a
+    // version or two, and browsers without it land within a pixel.
+    min-height: calc(1.5em + 18px);
+    min-height: calc(1lh + 18px);
+
+    .v-btn__content {
+      font-size: 0.75rem;
+      letter-spacing: 0.0892857143em;
+    }
   }
 }
 
