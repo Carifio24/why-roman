@@ -1747,7 +1747,7 @@ function goToAndromeda() {
   });
 }
 
-const PIXEL_SCALE_ZOOM = 0.01;
+const PIXEL_SCALE_ZOOM = 0.002;
 // the zoom Go to Andromeda settles at, and the fallback for backing out of a
 // zoom the user pinched into themselves rather than reached with the button
 const ANDROMEDA_ZOOM = 3 * 6;
