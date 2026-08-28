@@ -234,8 +234,12 @@ function handleClose() {
     .v-card-text {
       font-size: ~"max(13px, calc(0.6em + 0.3vw))";
       padding-top: ~"max(2vw, 16px)";
-      padding-left: ~"max(4vw, 16px)";
-      padding-right: ~"max(4vw, 16px)";
+      // Fixed, not 4vw: the sheet's column is capped at a fixed width now, so
+      // viewport-relative gutters grew while the column did not -- on an
+      // ultrawide they took 276px of it and left the prose ~21 characters wide.
+      // 16px is the floor this already resolved to on a phone.
+      padding-left: 16px;
+      padding-right: 16px;
 
 
       .end-spacer {

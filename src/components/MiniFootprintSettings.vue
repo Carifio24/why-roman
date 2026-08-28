@@ -8,11 +8,11 @@
     <div class="d-flex flex-wrap justify-space-between align-center">
       <div class="show-option">
         <label>
-          <span class="mr-2"> {{ label }} </span>
           <input
             v-model="shown"
             type="checkbox"
           />
+          <span class="ml-2"> {{ label }} </span>
         </label>
       </div>
       <div
@@ -108,7 +108,14 @@ const shown = computed({
   flex-basis: 100%;
 }
 
-.show-option {
+.show-option label {
+  display: flex;
+  align-items: center;
+}
+
+/* so a long label wraps beside the box rather than squashing it */
+.show-option input[type="checkbox"] {
+  flex: 0 0 auto;
 }
 
 .fill-option {
