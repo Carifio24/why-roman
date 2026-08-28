@@ -2336,7 +2336,7 @@ const showOptions = ref(false);
 // layout keys off -- the sheet itself, the gesture hint and the slider row --
 // so the condition can't drift between them again.
 const tourSheetOpen = computed(
-  () => inTour.value && !showOptions.value && !showTextSheet.value,
+  () => inTour.value && !showIntroSlides.value && !showOptions.value && !showTextSheet.value,
 );
 const tourSheetOverlays = computed(
   () => tourSheetOpen.value && isRoomyLandscape.value,
