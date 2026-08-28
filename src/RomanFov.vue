@@ -2132,7 +2132,7 @@ const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
 
-const showMoons = computed(() => tourStep.value === 0);
+const showMoons = computed(() => tourStep.value === 0 && inTour.value);
 const moonsOpacity = ref(0);
 const MOON_POSITIONS = [
   [9.6948, 40.2079],
