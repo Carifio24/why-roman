@@ -551,8 +551,8 @@
         show-next-on-last-step
         show-back-on-first-step
         show-close
-        :next-text="showExploreUi ? 'Explore' : 'Next'"
-        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
+        :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
+        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
         @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
         @leave="leaveTour"
         @close="enterExplore"
@@ -1245,7 +1245,7 @@ function handleSplashClose() {
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
-  startTourFromStartup("andromeda");
+  selectPlace(lastTourId.value, 0);
   hasSeenIntroSlides.value = true;
 }
 
@@ -1400,6 +1400,9 @@ function tourCloseOut() {
 
 function replayTour() {
   tourRestartedCount += 1;
+  leaveTour(); // tear down the tour state and layers
+  inExploreMode.value = false;
+  showTextSheet.value = false;
   showIntroSlides.value = true;
 }
 
@@ -1745,6 +1748,7 @@ function andromedaTour(n: number, tour = true) {
       ats.setMaxStep(n);
       return;
     });
+    return;
   }
   
   
@@ -1764,7 +1768,7 @@ function goToAndromeda() {
   });
 }
 
-const PIXEL_SCALE_ZOOM = 0.01;
+const PIXEL_SCALE_ZOOM = 0.002;
 // the zoom Go to Andromeda settles at, and the fallback for backing out of a
 // zoom the user pinched into themselves rather than reached with the button
 const ANDROMEDA_ZOOM = 3 * 6;
@@ -1989,12 +1993,20 @@ const tourStepTitle = computed(
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
 
 function goToStep(n: number) {
+  // out of range: change nothing at all. step(n) would otherwise still run,
+  // and step(-1) is explore mode's setup, not a tour step
+  if (!Number.isInteger(n) || n < 0 || n > tourTotalSteps.value - 1) {
+    console.warn("goToStep called with out-of-range step", n, "for tour", activeTour.value?.id);
+    return;
+  }
+
   // if going backwards, we need undo the tour close out steps
   if (n < tourStep.value && n < (tourTotalSteps.value - 1)) {
     if (showExploreUi.value) {
       showExploreUi.value = false;
     }
   }
+
   tourStep.value = n;
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
@@ -2307,7 +2319,7 @@ onMounted(() => {
     // If there are layers to set up, do that here!
     layersLoaded.value = true;
 
-    if (tourParam === "manual") {
+    if (tourParam === "manual" || tourParam === "explore") {
       const tour = tours.find((t) => t.id === lastTourId.value) ?? tours[0];
       await tour.wtml.ready; // enterExplore runs step -1, which needs layers
       enterExplore();
@@ -2533,14 +2545,15 @@ function tryGoToSearchPosition(
   positionSearchError.value = `Your value${multiple ? "s" : ""} for ${invalid.join(" and ")} ${isAre} invalid`;
 }
 
+// this is not used, but nice to have it filled in :)
 function shareURL(): string {
   const url = new URL(window.location.href);
-  const bgSet = backgroundImagesets.find(
-    (bg) => bg.imagesetName === backgroundImagesetName.value,
-  );
+  // const bgSet = backgroundImagesets.find(
+  //   (bg) => bg.imagesetName === backgroundImagesetName.value,
+  // );
   let search = `raDeg=${store.raRad * R2D}&decDeg=${store.decRad * R2D}&zoomDeg=${store.zoomDeg}&rollDeg=${store.rollRad * R2D}`;
-  if (bgSet) {
-    search = `${search}&bg=${bgSet.displayName}`;
+  if (selectedPlaceId.value) {
+    search += `&tour=${selectedPlaceId.value}&tourStep=${tourStep.value + 1}`;
   }
   url.search = search;
   return url.href;
