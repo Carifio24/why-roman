@@ -594,9 +594,11 @@
                 :show-opacity="false"
                 @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
-
+              <hr 
+                class="my-1" 
+                style="margin-inline: 15%; color: white" 
+              />
               <MiniFootprintSettings
-                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
