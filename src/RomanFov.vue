@@ -1127,7 +1127,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "Roman Images (Detail)",
+  label: "Roman Images (Chips)",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
