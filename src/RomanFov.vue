@@ -140,7 +140,7 @@
                 v-if="inExploreMode"
                 id="info-icon"
                 v-model="showTextSheet"
-                icon="info"
+                icon="mdi-book-open-variant"
                 :color="borderColor"
                 tooltip-text="Learn more"
                 tooltip-location="start"
@@ -186,8 +186,8 @@
                   <div class="explore-callout-lead">
                     Use these buttons to:
                   </div>
-                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
-                  <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
+                  <div class="mb-1"><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div class="mb-1"><v-icon icon="mdi-book-open-variant" /> learn more about Roman &amp; this app</div>
                   <div><v-icon icon="mdi-replay" /> play the tour again</div>
                 </div>
                 <v-icon
@@ -2356,6 +2356,11 @@ watch(autoOpenInfoDialog, (open: boolean) => {
   --default-font-size: clamp(0.7rem, min(1.7vh, 1.7vw), 1.1rem);
   --default-line-height: clamp(1rem, min(2.2vh, 2.2vw), 1.6rem);
 
+  /* The glyph size for the top-left buttons and for the callout rows that
+     describe them. Fixed rather than scaled: the buttons stay 40px on a phone,
+     so a glyph that shrinks with the viewport just rattles around inside. */
+  --control-icon-size: 20px;
+
   --accent-color: #c77fb3;
   --background-color-darkest: #502752;
   --background-color: #632b7d;
@@ -2554,6 +2559,18 @@ body {
     height: 40px;
     border-radius: 50%;
     border-width: 2px;
+
+    // FontAwesome renders an svg sized off its height, keeping its own aspect;
+    // MDI renders an <i> sized off font-size. They have to be set separately to
+    // come out the same height as each other.
+    .v-icon {
+      font-size: var(--control-icon-size);
+    }
+
+    svg {
+      height: var(--control-icon-size);
+      width: auto;
+    }
   }
 
   #explore-callout {
@@ -2601,12 +2618,15 @@ body {
         font-weight: 600;
       }
 
+      // the same glyph size as the buttons these rows describe; the fixed column
+      // keeps the labels lined up despite the two icon sets having different
+      // intrinsic widths
       svg,
       .v-icon {
-        flex: 0 0 1.25em;
-        width: 1.25em;
-        height: 1.25em;
-        font-size: 1em;
+        flex: 0 0 1.75rem;
+        height: var(--control-icon-size);
+        width: auto;
+        font-size: var(--control-icon-size);
       }
     }
 
