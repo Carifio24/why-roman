@@ -78,4 +78,24 @@ declare module "@wwtelescope/engine" {
     prepareBatch(): void;
   }
 
+  class Texture {}
+
+  interface PositionColoredTextured {
+    position: Vector3d;
+    tu: number;
+    tv: number;
+    color: Color;
+  }
+
+  class Sprite2d {
+    draw(renderContext: RenderContext, points: PositionColoredTextured[], count: number, texture: Texture, triangleStrips: boolean, opacity: number): void;
+  }
+
+  class Planets {
+    static _planetTextures: Texture[];
+    static _planetScales: number[];
+    static _planetPoints: PositionColoredTextured[];
+    static _planetSprite: Sprite2d;
+  }
+
 }
