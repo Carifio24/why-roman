@@ -3129,6 +3129,10 @@ video {
   padding-left: 2rem; // leaves the corner to #privacy-lock
 }
 
+#privacy-popup-dialog .v-card-actions {
+  display: flex;
+}
+
 /* Small and quiet in the corner, the way seasons places it -- bottom left,
    away from the logos. On the logo line rather than above it: #bottom-content
    reserves its 3rem of bottom padding for exactly that strip, so anything
