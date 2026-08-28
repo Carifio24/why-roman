@@ -380,9 +380,15 @@
           <v-row
             id="position-layout"
             align="start"
-            justify="center"
+            :justify="tourStep === 0 ? 'start': 'center'"
             class="pt-4"
           >
+            <v-checkbox
+              v-if="tourStep === 0"
+              v-model="showMoons"
+              class="show-moons"
+              label="Show 6 Full Moons"
+            />
             <div
               v-if="opacitySliders.length > 0"
               id="step-control"
@@ -2110,7 +2116,7 @@ const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
 
-const showMoons = ref(true);
+const showMoons = ref(false);
 const MOON_POSITIONS = [
   [9.6948, 40.2079],
   [10.0908, 40.6323],
@@ -3592,4 +3598,5 @@ h1.startup-screen-title {
 #change-optout {
   width: fit-content;
 }
+
 </style>
