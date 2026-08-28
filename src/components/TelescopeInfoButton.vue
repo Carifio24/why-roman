@@ -3,6 +3,7 @@
        the menu teleports out of #app so WWT's document listeners are the ones
        that would otherwise see the keystrokes -->
   <v-menu
+    v-model="open"
     :close-on-content-click="false"
     location="bottom end"
     offset="4"
@@ -25,6 +26,17 @@
       :style="{ '--fp-color': color }"
       @keydown="onKeydown"
     >
+      <!-- outside the heading so a long telescope name wraps beside it rather
+           than under it -->
+      <v-icon
+        class="telescope-info-close"
+        icon="mdi-close"
+        tabindex="0"
+        :aria-label="`Close ${info.name} details`"
+        @click="open = false"
+        @keyup.enter="open = false"
+      />
+
       <h3>{{ info.name }}</h3>
 
       <dl>
@@ -51,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { TelescopeInfo } from "../telescopeInfo";
 
 interface Props {
@@ -61,6 +73,8 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const open = ref(false);
 
 // WWT listens for keystrokes on the document, so typing here must not reach it
 // -- except Escape, which is how the menu closes. Blanket .stop swallowed that
@@ -95,6 +109,7 @@ const rows = computed(() => [
    bound by the drawer it was opened from and would otherwise run the width of
    a desktop screen. */
 .telescope-info-card {
+  position: relative;
   max-width: min(28rem, 90vw);
   max-height: 80vh;
   overflow-y: auto;
@@ -110,6 +125,17 @@ const rows = computed(() => [
   color: var(--fp-color);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  /* the close icon is out of flow, so keep the name clear of it */
+  padding-right: 1.75rem;
+}
+
+.telescope-info-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 1;
+  color: var(--text-color);
+  cursor: pointer;
 }
 
 .telescope-info-card h4 {
