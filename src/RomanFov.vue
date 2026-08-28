@@ -597,7 +597,7 @@
               />
               <hr 
                 class="my-1" 
-                style="margin-inline: 15%; color: white" 
+                style="margin-inline: 7%; color: gray"
               />
               <MiniFootprintSettings
                 v-for="footprint in pixelFootprints"
