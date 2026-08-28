@@ -522,7 +522,17 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
-              />
+              >
+                <template
+                  v-if="telescopeInfo[footprint.id]"
+                  #action
+                >
+                  <TelescopeInfoButton
+                    :info="telescopeInfo[footprint.id]"
+                    :color="footprint.color"
+                  />
+                </template>
+              </MiniFootprintSettings>
 
               <MiniFootprintSettings
                 v-for="footprint in pixelFootprints"
@@ -660,6 +670,8 @@ import SplashGesture from "./components/SplashGesture.vue";
 import SplashScreen from "./components/SplashScreen.vue";
 import FootprintSettings from "./components/FootprintSettings.vue";
 import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
+import TelescopeInfoButton from "./components/TelescopeInfoButton.vue";
+import { telescopeInfo } from "./telescopeInfo";
 import TourSheet from "./components/TourSheet.vue";
 import InstaTourSheet from "./components/InstaTourSheet.vue";
 import { tourExperiences } from "./experiences";
