@@ -745,6 +745,7 @@ import {
 } from "./composables/useWtmlLoader";
 import { useLayerOrdering } from "./composables/useLayerOrdering";
 import { useDataTracking } from "./composables/useDataTracking";
+import { drawMoon } from "./moon";
 
 // @ts-expect-error `Util.splitString` is defined
 wwtlib.Util.splitString = splitString;
@@ -2109,6 +2110,16 @@ const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
 
+const showMoons = ref(true);
+const MOON_POSITIONS = [
+  [9.6948, 40.2079],
+  [10.0908, 40.6323],
+  [10.4868, 41.0566],
+  [10.8826, 41.4810],
+  [11.2786, 41.9053],
+  [11.6746, 42.3297]
+];
+
 function showTextOverlay(id: string, show: boolean) {
   const setter = textVisibilitySetters[id];
   if (setter) {
@@ -2226,6 +2237,17 @@ onMounted(() => {
 
     store.addFrameCallback(_si => {
       footprints.forEach((footprint) => footprint.draw(WWTControl.singleton));
+
+      if (showMoons.value) {
+        MOON_POSITIONS.forEach(([raDeg, decDeg]) => {
+          drawMoon({
+            raDeg,
+            decDeg,
+            opacity: 0.5,
+            renderContext,
+          });
+        });
+      }
     });
     WWTControl.singleton.renderOneFrame();
 

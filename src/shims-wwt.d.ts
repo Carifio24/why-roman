@@ -78,7 +78,9 @@ declare module "@wwtelescope/engine" {
     prepareBatch(): void;
   }
 
-  class Texture {}
+  class Texture {
+    texture2d: unknown;
+  }
 
   interface PositionColoredTextured {
     position: Vector3d;
@@ -88,6 +90,11 @@ declare module "@wwtelescope/engine" {
   }
 
   class Sprite2d {
+    // Not sure if this is actualyl what it
+    vertexBuffer: WebGLBuffer;
+
+    create(points: WebGLBuffer);
+    update(points: WebGLBuffer);
     draw(renderContext: RenderContext, points: PositionColoredTextured[], count: number, texture: Texture, triangleStrips: boolean, opacity: number): void;
   }
 
