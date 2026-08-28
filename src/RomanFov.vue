@@ -1654,7 +1654,7 @@ function andromedaTour(n: number, tour = true) {
     store.gotoRADecZoom({
       raRad: 10.13 * D2R,
       decRad: 40.71 * D2R,
-      zoomDeg: 0.01,
+      zoomDeg: 0.002,
       rollRad: 0,
       instant: false,
       duration: 3,
