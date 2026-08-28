@@ -174,7 +174,7 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Control fields of view"
+                tooltip-text="Controls"
                 :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
@@ -233,7 +233,7 @@
                   <div class="explore-callout-lead">
                     Use these buttons to:
                   </div>
-                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div><font-awesome-icon icon="sliders" /> open controls </div>
                   <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
                   <div><v-icon icon="mdi-replay" /> play the tour again</div>
                 </div>
