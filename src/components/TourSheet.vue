@@ -45,6 +45,7 @@
             variant="flat"
             :density="smallSize ? 'compact' : 'default'"
             color="#502752"
+            :disabled="disablePrevious"
             @click="emit('previous')"
           >
             {{ backText }}
@@ -86,6 +87,7 @@
             variant="flat"
             color="#502752"
             :density="smallSize ? 'compact' : 'default'"
+            :disabled="disableNext"
             @click="emit('next')"
           >
             {{ nextText }}
@@ -109,6 +111,8 @@ interface Props {
   showBackOnFirstStep?: boolean,
   nextText?: string,
   backText?: string,
+  disableNext?: boolean,
+  disablePrevious?: boolean,
   /** a close icon in the corner. off where the caller supplies its own */
   showClose?: boolean,
   /**
@@ -125,6 +129,8 @@ const props = withDefaults(defineProps<Props>(), {
   showBackOnFirstStep: false,
   nextText: 'Next',
   backText: 'Back',
+  disableNext: false,
+  disablePrevious: false,
   showClose: false,
   showControls: true,
 });

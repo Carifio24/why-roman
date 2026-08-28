@@ -545,10 +545,11 @@
         :step="tourStep"
         :small-size="smallSize"
         show-next-on-last-step
+        show-back-on-first-step
         show-close
-        :next-text="showExploreUi ? 'Explore' : 'Next'"
-        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
-        @previous="goToStep(tourStep - 1)"
+        :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
+        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
+        @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
         @leave="leaveTour"
         @close="enterExplore"
         @step="(index) => goToStep(index)"
@@ -593,9 +594,11 @@
                 :show-opacity="false"
                 @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
-
+              <hr 
+                class="my-1" 
+                style="margin-inline: 7%; color: gray"
+              />
               <MiniFootprintSettings
-                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
@@ -944,8 +947,9 @@ const textColor = ref("#F5F0FF");
 import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
 import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
 import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
-import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
-import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
+// import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
+import { corners as hubbleFootprint } from "./footprints/hst_acs";
+// import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint_rot_off";
 import { corners as phastIFootprint } from "./footprints/m31_individual_footprints_rot_off";
 
@@ -1123,7 +1127,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "Roman Images (Detail)",
+  label: "Roman Images (Chips)",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -1219,7 +1223,7 @@ function handleSplashClose() {
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
-  startTourFromStartup("andromeda");
+  selectPlace(lastTourId.value, 0);
   hasSeenIntroSlides.value = true;
 }
 
@@ -1374,7 +1378,10 @@ function tourCloseOut() {
 
 function replayTour() {
   tourRestartedCount += 1;
-  selectPlace(lastTourId.value);
+  leaveTour(); // tear down the tour state and layers
+  inExploreMode.value = false;
+  showTextSheet.value = false;
+  showIntroSlides.value = true;
 }
 
 // leaving the tour for good: step -1 is the state explore mode starts from
@@ -1596,7 +1603,7 @@ function andromedaTour(n: number, tour = true) {
     store.gotoRADecZoom({ // center M31, zoomed to 
       raRad: 10.6847 * D2R,
       decRad: 41.269 * D2R,
-      zoomDeg: 2 * 6,
+      zoomDeg: 1.7 * 6,
       rollRad: 0,
       instant: false,
     });
@@ -1650,7 +1657,7 @@ function andromedaTour(n: number, tour = true) {
     store.gotoRADecZoom({
       raRad: 10.13 * D2R,
       decRad: 40.71 * D2R,
-      zoomDeg: 0.01,
+      zoomDeg: 0.002,
       rollRad: 0,
       instant: false,
       duration: 3,
@@ -1719,6 +1726,7 @@ function andromedaTour(n: number, tour = true) {
       ats.setMaxStep(n);
       return;
     });
+    return;
   }
   
   
@@ -1738,7 +1746,7 @@ function goToAndromeda() {
   });
 }
 
-const PIXEL_SCALE_ZOOM = 0.01;
+const PIXEL_SCALE_ZOOM = 0.002;
 // the zoom Go to Andromeda settles at, and the fallback for backing out of a
 // zoom the user pinched into themselves rather than reached with the button
 const ANDROMEDA_ZOOM = 3 * 6;
@@ -1963,12 +1971,20 @@ const tourStepTitle = computed(
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
 
 function goToStep(n: number) {
+  // out of range: change nothing at all. step(n) would otherwise still run,
+  // and step(-1) is explore mode's setup, not a tour step
+  if (!Number.isInteger(n) || n < 0 || n > tourTotalSteps.value - 1) {
+    console.warn("goToStep called with out-of-range step", n, "for tour", activeTour.value?.id);
+    return;
+  }
+
   // if going backwards, we need undo the tour close out steps
   if (n < tourStep.value && n < (tourTotalSteps.value - 1)) {
     if (showExploreUi.value) {
       showExploreUi.value = false;
     }
   }
+
   tourStep.value = n;
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
@@ -2281,7 +2297,7 @@ onMounted(() => {
     // If there are layers to set up, do that here!
     layersLoaded.value = true;
 
-    if (tourParam === "manual") {
+    if (tourParam === "manual" || tourParam === "explore") {
       const tour = tours.find((t) => t.id === lastTourId.value) ?? tours[0];
       await tour.wtml.ready; // enterExplore runs step -1, which needs layers
       enterExplore();
@@ -2331,7 +2347,7 @@ const showOptions = ref(false);
 // layout keys off -- the sheet itself, the gesture hint and the slider row --
 // so the condition can't drift between them again.
 const tourSheetOpen = computed(
-  () => inTour.value && !showOptions.value && !showTextSheet.value,
+  () => inTour.value && !showIntroSlides.value && !showOptions.value && !showTextSheet.value,
 );
 const tourSheetOverlays = computed(
   () => tourSheetOpen.value && isRoomyLandscape.value,
@@ -2507,14 +2523,15 @@ function tryGoToSearchPosition(
   positionSearchError.value = `Your value${multiple ? "s" : ""} for ${invalid.join(" and ")} ${isAre} invalid`;
 }
 
+// this is not used, but nice to have it filled in :)
 function shareURL(): string {
   const url = new URL(window.location.href);
-  const bgSet = backgroundImagesets.find(
-    (bg) => bg.imagesetName === backgroundImagesetName.value,
-  );
+  // const bgSet = backgroundImagesets.find(
+  //   (bg) => bg.imagesetName === backgroundImagesetName.value,
+  // );
   let search = `raDeg=${store.raRad * R2D}&decDeg=${store.decRad * R2D}&zoomDeg=${store.zoomDeg}&rollDeg=${store.rollRad * R2D}`;
-  if (bgSet) {
-    search = `${search}&bg=${bgSet.displayName}`;
+  if (selectedPlaceId.value) {
+    search += `&tour=${selectedPlaceId.value}&tourStep=${tourStep.value + 1}`;
   }
   url.search = search;
   return url.href;
