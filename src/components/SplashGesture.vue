@@ -61,7 +61,7 @@
       <v-btn
         class="ms-2"
         icon="mdi-close"
-        variant="outlined"
+        variant="tonal"
         density="compact"
         size="default"
         tabindex="0"
