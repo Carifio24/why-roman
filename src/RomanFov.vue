@@ -383,12 +383,35 @@
             :justify="tourStep === 0 ? 'start': 'center'"
             class="pt-4"
           >
-            <v-checkbox
-              v-if="tourStep === 0"
-              v-model="showMoons"
-              class="show-moons"
-              label="Show 6 Full Moons"
-            />
+            <div
+              id="moons-control" 
+              v-if="showMoons"
+              class="opacity-slider-row info-box"
+            >
+              <span
+                class="opacity-slider-label"
+                tabindex="0"
+                @click="() => { moonsOpacity = 0; sliderMinPressCount += 1; }"
+                @keyup.enter="() => { moonsOpacity = 0; sliderMinPressCount += 1; }"
+              >Transparent</span>
+              <v-slider
+                id="opacity-moons"
+                v-model="moonsOpacity"
+                :min="0"
+                :max="1"
+                :step="0.01"
+                color="grey"
+                density="compact"
+                hide-details
+                @end="sliderMoveCount += 1"
+              />
+              <span
+                class="opacity-slider-label"
+                tabindex="0"
+                @click="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
+                @keyup.enter="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
+              >Opaque</span>
+            </div>
             <div
               v-if="opacitySliders.length > 0"
               id="step-control"
@@ -2000,7 +2023,6 @@ const tourEndOptions = computed<{id: string, label: string, action: () => void}[
  */
 // set by showOpacitySliders, not worked out from what is showing
 const opacitySliders = ref<{ index: number; name: string; minLabel?: string; maxLabel?: string }[]>([]);
-const layerSliders = opacitySliders;
 
 function opacityOf(index: number): number {
   return layerOpacities.value[index] ?? 1;
@@ -2116,7 +2138,8 @@ const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
 
-const showMoons = ref(false);
+const showMoons = computed(() => tourStep.value === 0);
+const moonsOpacity = ref(0);
 const MOON_POSITIONS = [
   [9.6948, 40.2079],
   [10.0908, 40.6323],
@@ -2249,7 +2272,7 @@ onMounted(() => {
           drawMoon({
             raDeg,
             decDeg,
-            opacity: 0.5,
+            opacity: moonsOpacity.value,
             renderContext,
           });
         });
@@ -3483,7 +3506,7 @@ h1.startup-screen-title {
   line-height: 1;
 }
 
-#step-control {
+#step-control, #moons-control {
   flex: 1 0 auto;
   border: none;
   background: none;
