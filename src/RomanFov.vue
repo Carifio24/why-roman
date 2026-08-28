@@ -174,6 +174,7 @@
                 icon="sliders"
                 :color="borderColor"
                 tooltip-text="Control fields of view"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
                 @activate="handleShowOptions"
@@ -186,6 +187,7 @@
                 icon="info"
                 :color="borderColor"
                 tooltip-text="Learn more"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="handleShowInfo"
               >
@@ -197,16 +199,9 @@
                 icon="mdi-replay"
                 :color="borderColor"
                 tooltip-text="Play the tour again"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="replayTour"
-              ></icon-button>
-              <icon-button
-                icon="mdi-lock"
-                :color="borderColor"
-                tooltip-text="Change privacy settings"
-                tooltip-location="bottom"
-                tooltip-offset="5px"
-                mdSize="1em"
               ></icon-button>
 
 
@@ -479,6 +474,23 @@
               :extra-logos="cfaExtraLogo"
             />
           </footer>
+
+          <!-- Out of the button group and into the corner: this is a footnote,
+               not one of the tools. Absolute, so the overlay's flex column
+               still distributes only top and bottom content. -->
+          <div id="privacy-lock">
+            <icon-button
+              icon="mdi-lock"
+              :color="borderColor"
+              :border="false"
+              size="1.2em"
+              tooltip-text="Change privacy settings"
+              :show-tooltip="!mobile"
+              tooltip-location="start"
+              tooltip-offset="5px"
+              @activate="showPrivacyDialog = true"
+            ></icon-button>
+          </div>
         </div>
       </div>
 
@@ -697,6 +709,7 @@ import {
   skyBackgroundImagesets,
   blurActiveElement,
   useWWTKeyboardControls,
+  supportsTouchscreen,
 } from "@cosmicds/vue-toolkit";
 import PlaceCards from "./components/PlaceCards.vue";
 import { useDisplay, useTheme } from "vuetify";
@@ -2277,6 +2290,12 @@ const isLoading = computed(() => !ready.value);
 /* Properties related to device/screen characteristics */
 const smallSize = computed(() => smAndDown.value);
 
+// A tooltip is a pointer affordance. A touch has no hover to end, so tapping a
+// button leaves its tooltip stuck open over the panel it just opened -- turn
+// them off there instead, the way seasons does.
+const touchscreen = supportsTouchscreen();
+const mobile = computed(() => smallSize.value && touchscreen);
+
 /* This lets us inject component data into element CSS */
 const cssVars = computed(() => {
   return {
@@ -3107,6 +3126,47 @@ video {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 2rem; // leaves the corner to #privacy-lock
+}
+
+#privacy-popup-dialog .v-card-actions {
+  display: flex;
+}
+
+/* Small and quiet in the corner, the way seasons places it -- bottom left,
+   away from the logos. On the logo line rather than above it: #bottom-content
+   reserves its 3rem of bottom padding for exactly that strip, so anything
+   higher lands on the opacity slider's end button. #body-logos gets matching
+   padding so the imageset credits start clear of this.
+   Absolute, so the overlay's flex column still distributes only top and bottom
+   content. */
+#privacy-lock {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  pointer-events: none;
+
+  .icon-wrapper {
+    margin: 0;
+    padding: 0.15em;
+    border: none;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    opacity: 0.55;
+    pointer-events: auto;
+
+    &:hover,
+    &:focus-within {
+      opacity: 1;
+    }
+  }
+}
+
+/* The floating tour sheet takes this corner while it is up, so step past it --
+   the same offset #bottom-content and SplashGesture.vue use. */
+#app.app-tour-sheet-overlay #privacy-lock {
+  left: calc(var(--drawer-width) + 1rem);
 }
 
 // The overlay is a fixed-height flex column. #top-content has to be the one
@@ -3120,8 +3180,12 @@ video {
   flex: 0 0 auto;
   padding-bottom: 3rem; // the space #body-logos no longer takes
 
+  // No logo row to clear, so this can sit at the bottom -- but #privacy-lock is
+  // in that corner. Start the row to its right rather than lifting the whole
+  // thing above it; the slider just comes out a little shorter.
   &.no-footer {
     padding-bottom: 0;
+    padding-left: 1.5rem;
   }
 }
 
