@@ -10,7 +10,7 @@ export interface DrawMoonOptions {
   opacity: number;
 }
 
-function drawWithOpacityShader(sprite: Sprite2d, renderContext: RenderContext, points: PositionColoredTextured[], count: number, texture: Texture, triangleStrips: boolean, opacity: number) {
+function drawWithOpacityShader(sprite: Sprite2d, renderContext: RenderContext, points: PositionColoredTextured[], _count: number, texture: Texture, triangleStrips: boolean, opacity: number) {
   if (sprite.vertexBuffer == null) {
     sprite.create(points);
   } else {

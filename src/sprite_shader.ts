@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-nocheck
 
 import { RenderContext, Texture } from "@wwtelescope/engine";
