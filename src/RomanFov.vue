@@ -825,7 +825,7 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
-const OVERALL_DISPLAY_OFFSET = 70*(0.5 * 11 / 3600);
+const OVERALL_DISPLAY_OFFSET = 50*(0.5 * 11 / 3600);
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
