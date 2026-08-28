@@ -135,6 +135,7 @@
                 v-for="footprint in visibleFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
@@ -586,6 +587,7 @@
                 v-for="footprint in compareFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
@@ -598,6 +600,7 @@
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
@@ -624,6 +627,7 @@
                 v-for="footprint in andromedaFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
@@ -1068,7 +1072,7 @@ const phastI = useFootprint({
   color: "#00ff00",
   fixed: true,
   show: false,
-  opacity: 0.2,
+  opacity: 0.3,
   // offsetXDeg: PHAST_OFFSET_X_DEG,
   // offsetYDeg: PHAST_OFFSET_Y_DEG,
 });
@@ -1180,9 +1184,8 @@ function showControlFootprints() {
 }
 
 function hideVisibleFootprints() {
-  // set their opacity to 0
   footprints.forEach((footprint) => {
-    footprint.opacity = 0;
+    footprint.visible = false;
   });
 }
 import { useLocalStorage } from "@vueuse/core";
@@ -1240,10 +1243,7 @@ function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
     (footprint) => {
       const index = visible.indexOf(footprint);
       footprint.show = index !== -1;
-      // opacity doubles as the controls' checkbox state, so it has to be reset
-      // on every call, not just when `show` is passed -- otherwise the ones
-      // explore mode leaves unchecked stay at 0 through a replayed tour
-      footprint.opacity = index !== -1 && (show ? show[index] === true : true) ? 1 : 0;
+      footprint.visible = index !== -1 && (show ? show[index] === true : true);
     },
   );
 }
@@ -1738,9 +1738,7 @@ const zoomBeforePixelScale = ref<number | null>(null);
 function zoomToPixelScale() {
   // zooming to pixel scale with the grid off would look like nothing happened
   romanPixel.show = true;
-  if (romanPixel.opacity === 0) {
-    romanPixel.opacity = 1;
-  }
+  romanPixel.visible = true;
   zoomBeforePixelScale.value = store.zoomDeg;
   store.gotoRADecZoom({
     ...currentViewRad.value,

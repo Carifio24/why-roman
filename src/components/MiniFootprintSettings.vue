@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { watch } from "vue";
 
 interface Props {
   /** footprint label, e.g. "Roman" */
@@ -79,22 +79,10 @@ const opacity = defineModel<number>("opacity", { required: true });
 const fill = defineModel<boolean>("fill", { required: true });
 const color = defineModel<string>("color", { required: true });
 
-// the checkbox hides the footprint by taking opacity to 0 and putting the old
-// value back. `show` belongs to the tour, which flips footprints per step, so
-// this control can't use it
-let lastOpacity = opacity.value;
-const shown = computed({
-  get: () => opacity.value > 0,
-  set: (value: boolean) => {
-    if (value) {
-      opacity.value = lastOpacity || 1;
-    } else {
-      lastOpacity = opacity.value;
-      opacity.value = 0;
-    }
-    emit("show", value);
-  },
-});
+// the footprint's own opacity-based show/hide. `show` belongs to the tour,
+// which flips footprints per step, so this control can't use it
+const shown = defineModel<boolean>("visible", { required: true });
+watch(shown, (value: boolean) => emit("show", value));
 </script>
 
 <style scoped>

@@ -42,6 +42,9 @@ export function useFootprint(options: FootprintOptions) {
   const { id, footprint, offsetXDeg, offsetYDeg } = options;
   const drawWith = options.fixed ? drawStaticFootprint : drawFootprint;
 
+  // what `visible` puts back. 0 until something has actually been hidden
+  let lastOpacity = options.opacity ?? 1;
+
   // shallowReactive, not reactive: every setting here is a primitive, so deep
   // conversion would buy nothing, and `draw` stays a plain function rather than
   // something the proxy has to consider wrapping.
@@ -53,6 +56,22 @@ export function useFootprint(options: FootprintOptions) {
     fillOpacity: options.fillOpacity ?? 0.5,
     show: options.show ?? true,
     opacity: options.opacity ?? 1,
+    defaultOpacity: options.opacity ?? 1,
+
+    // an opacity-based show/hide, for controls that must leave `show` to the tour
+    get visible(): boolean {
+      return this.opacity > 0;
+    },
+    set visible(value: boolean) {
+      if (value) {
+        if (this.opacity === 0) { // already showing at some level: leave it there
+          this.opacity = lastOpacity || this.defaultOpacity;
+        }
+      } else if (this.opacity > 0) {
+        lastOpacity = this.opacity;
+        this.opacity = 0;
+      }
+    },
 
     draw(wwt: WWTControl) {
       drawWith(wwt, {
