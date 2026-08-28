@@ -546,10 +546,11 @@
         :step="tourStep"
         :small-size="smallSize"
         show-next-on-last-step
+        show-back-on-first-step
         show-close
         :next-text="showExploreUi ? 'Explore' : 'Next'"
         @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
-        @previous="goToStep(tourStep - 1)"
+        @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
         @leave="leaveTour"
         @close="enterExplore"
         @step="(index) => goToStep(index)"
@@ -1377,7 +1378,7 @@ function tourCloseOut() {
 
 function replayTour() {
   tourRestartedCount += 1;
-  selectPlace(lastTourId.value);
+  showIntroSlides.value = true;
 }
 
 // leaving the tour for good: step -1 is the state explore mode starts from
