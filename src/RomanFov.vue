@@ -388,12 +388,6 @@
               v-if="showMoons"
               class="opacity-slider-row info-box"
             >
-              <span
-                class="opacity-slider-label"
-                tabindex="0"
-                @click="() => { moonsOpacity = 0; sliderMinPressCount += 1; }"
-                @keyup.enter="() => { moonsOpacity = 0; sliderMinPressCount += 1; }"
-              >Transparent</span>
               <v-slider
                 id="opacity-moons"
                 v-model="moonsOpacity"
@@ -410,7 +404,7 @@
                 tabindex="0"
                 @click="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
                 @keyup.enter="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
-              >Opaque</span>
+              >Show Moons</span>
             </div>
             <div
               v-if="opacitySliders.length > 0"
