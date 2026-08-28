@@ -58,6 +58,49 @@
           </v-btn>
         </div>
       </component>
+
+      <!-- Data collection opt-out dialog -->
+      <v-dialog
+        scrim="false"
+        v-model="showPrivacyDialog"
+        max-width="400px"
+        id="privacy-popup-dialog"
+      >
+        <v-card>
+          <v-card-text>
+            To evaluate usage of this app, <strong>anonymized</strong> data may be collected, including locations viewed and map quiz responses. "My Location" data is NEVER collected.
+          </v-card-text>
+          <v-card-actions class="pt-3">
+            <v-spacer></v-spacer>
+            <v-btn
+              color="#BDBDBD"
+              href="https://www.cfa.harvard.edu/privacy-statement"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+            Privacy Policy
+            </v-btn>
+            <v-btn
+              color="#ff6666"
+              @click="() => {
+                responseOptOut = true;
+                showPrivacyDialog = false;
+              }"
+            >
+            Opt out
+            </v-btn>
+            <v-btn 
+              color="green"
+              @click="() => {
+                responseOptOut = false;
+                showPrivacyDialog = false;
+              }"
+            >
+              Allow
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       
       <IntroSlides 
         v-if="showIntroSlides" 
@@ -156,6 +199,14 @@
                 tooltip-text="Play the tour again"
                 tooltip-location="start"
                 @activate="replayTour"
+              ></icon-button>
+              <icon-button
+                icon="mdi-lock"
+                :color="borderColor"
+                tooltip-text="Change privacy settings"
+                tooltip-location="bottom"
+                tooltip-offset="5px"
+                mdSize="1em"
               ></icon-button>
 
 
@@ -350,8 +401,8 @@
                   <span
                     class="opacity-slider-label"
                     tabindex="0"
-                    @click="setOpacity(slider.index, 0)"
-                    @keyup.enter="setOpacity(slider.index, 0)"
+                    @click="sliderMinPressed(slider)"
+                    @keyup.enter="sliderMinPressed(slider)"
                   >{{ slider.minLabel ?? slider.name }}</span>
                   <v-slider
                     :id="`layer-opacity-${slider.index}`"
@@ -365,16 +416,20 @@
                     @update:model-value="
                       (value: number) => setOpacity(slider.index, value)
                     "
+                    @end="sliderMoveCount += 1"
                   />
                   <span
                     class="opacity-slider-label"
                     tabindex="0"
-                    @click="setOpacity(slider.index, 1)"
-                    @keyup.enter="setOpacity(slider.index, 1)"
+                    @click="sliderMaxPressed(slider)"
+                    @keyup.enter="sliderMaxPressed(slider)"
                   >{{ slider.maxLabel ?? slider.name }}</span>
                 </template>
                 <template v-else>
-                  <label :for="`layer-opacity-${slider.index}`">{{
+                  <label
+                    :for="`layer-opacity-${slider.index}`"
+                    @click="sliderLabelPressCount += 1"
+                  >{{
                     slider.name
                   }}</label>
                   <v-slider
@@ -389,6 +444,7 @@
                     @update:model-value="
                       (value: number) => setOpacity(slider.index, value)
                     "
+                    @end="sliderMoveCount += 1"
                   />
                 </template>
               </div>
@@ -522,9 +578,11 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
 
               <MiniFootprintSettings
+                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
@@ -532,7 +590,7 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
-                class="mt-3"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               >
                 <template #action>
                   <v-btn
@@ -558,6 +616,7 @@
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
               <!-- last, so it sits near the other column's zoom-to-pixel-scale
                    action. Out of the heading either way, which is what keeps the
@@ -668,8 +727,7 @@ import {
   type WtmlLoaderReturn,
 } from "./composables/useWtmlLoader";
 import { useLayerOrdering } from "./composables/useLayerOrdering";
-import { useSpreadsheetLayer } from "./composables/useSpreadsheetLayer";
-import { RAUnits } from "@wwtelescope/engine-types";
+import { useDataTracking } from "./composables/useDataTracking";
 
 // @ts-expect-error `Util.splitString` is defined
 wwtlib.Util.splitString = splitString;
@@ -692,6 +750,91 @@ const backgroundImagesetName = computed({
   set(name: string) {
     store.setBackgroundImageByName(name);
   },
+});
+
+let appStartTimestamp = Date.now();
+let controlsOpenStartTimestamp: number | null= null;
+let controlsOpenTimeMs = 0;
+let aboutRomanStartTimestamp: number | null = null;
+let aboutRomanTimeMs = 0;
+let userGuideStartTimestamp: number | null = null;
+let userGuideTimeMs = 0;
+let zoomToPixelScaleCount = 0;
+let footprintsToggleCount: Record<string, number> = {};
+let tourRestartedCount = 0;
+let sideControlsOpenedCount = 0;
+let sliderMinPressCount = 0;
+let sliderMaxPressCount = 0;
+let sliderLabelPressCount = 0;
+let sliderMoveCount = 0;
+
+const showPrivacyDialog = ref(false);
+
+function updateFootprintToggleCount(id: string) {
+  if (id in footprintsToggleCount) {
+    footprintsToggleCount[id] += 1;
+  } else {
+    footprintsToggleCount[id] = 1;
+  }
+}
+
+function resetTrackingData() {
+  const now = Date.now();
+  appStartTimestamp = now;
+  controlsOpenStartTimestamp = showOptions.value ? now : null;
+  controlsOpenTimeMs = 0;
+  aboutRomanStartTimestamp = (showTextSheet.value && infoSheetTab.value === 0) ? now : null;
+  aboutRomanTimeMs = 0;
+  userGuideStartTimestamp = (showTextSheet.value && infoSheetTab.value === 1) ? now : null;
+  userGuideTimeMs = 0;
+
+  zoomToPixelScaleCount = 0;
+  footprintsToggleCount = {};
+  tourRestartedCount = 0;
+  sideControlsOpenedCount = 0;
+  sliderMinPressCount = 0;
+  sliderMaxPressCount = 0;
+  sliderLabelPressCount = 0;
+  sliderMoveCount = 0;
+}
+
+function getTrackingData() {
+  const now = Date.now();
+
+  let controlsOpenTime = controlsOpenTimeMs;
+  if (showOptions.value && controlsOpenStartTimestamp !== null) {
+    controlsOpenTime += (now - controlsOpenStartTimestamp); 
+  }
+
+  let aboutRomanTime = aboutRomanTimeMs;
+  if (showTextSheet.value && infoSheetTab.value === 0 && aboutRomanStartTimestamp !== null) {
+    aboutRomanTime += (now - aboutRomanStartTimestamp);
+  }
+
+  let userGuideTime = userGuideTimeMs;
+  if (showTextSheet.value && infoSheetTab.value === 1 && userGuideStartTimestamp !== null) {
+    userGuideTime += (now - userGuideStartTimestamp);
+  }
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    app_time_ms: now - appStartTimestamp, zoom_to_pixel_scale_count: zoomToPixelScaleCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    footprints_toggle_count: footprintsToggleCount, tour_restarted_count: tourRestartedCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    side_controls_opened_count: sideControlsOpenedCount, about_roman_time_ms: aboutRomanTime, user_guide_time_ms: userGuideTime,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    controls_open_time_ms: controlsOpenTime, slider_min_press_count: sliderMinPressCount, slider_max_press_count: sliderMaxPressCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount, max_andromeda_tour_step: ats.maxStep,
+  };
+}
+
+const { createUserEntry, responseOptOut } = useDataTracking({
+  optOutKey: "why-roman:optOut",
+  userIDKey: "why-roman:userID",
+  storyPath: "/why-roman",
+  resetData: resetTrackingData,
+  getData: getTrackingData,
 });
 
 useWWTKeyboardControls(store);
@@ -1055,6 +1198,9 @@ const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
   showIntroSlides.value = true;
+  if (responseOptOut.value === null) {
+    showPrivacyDialog.value = true;
+  }
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
@@ -1215,6 +1361,7 @@ function tourCloseOut() {
 }
 
 function replayTour() {
+  tourRestartedCount += 1;
   selectPlace(lastTourId.value);
 }
 
@@ -1248,6 +1395,7 @@ function handleShowOptions() {
     if (!canStackPanels.value) {
       showTextSheet.value = false;
     }
+    sideControlsOpenedCount += 1;
   }
   showOptions.value = open;
 }
@@ -1586,6 +1734,7 @@ function zoomToPixelScale() {
     zoomDeg: PIXEL_SCALE_ZOOM,
     instant: false,
   });
+  zoomToPixelScaleCount += 1;
 }
 
 // the inverse of the above: same patch of sky, the zoom they came from.
@@ -1829,6 +1978,17 @@ function setOpacity(index: number, opacity: number) {
       layerOpacities.value[index] = opacity;
     }
   }
+}
+
+type Slider = (typeof opacitySliders.value)[number];
+function sliderMinPressed(slider: Slider) {
+  setOpacity(slider.index, 0);
+  sliderMinPressCount += 1;
+}
+
+function sliderMaxPressed(slider: Slider) {
+  setOpacity(slider.index, 1);
+  sliderMaxPressCount += 1;
 }
 
 function imagesetFor(place: Place | null | undefined): Imageset | null {
@@ -2105,6 +2265,8 @@ onMounted(() => {
 
     // showInfoDialog.value = autoOpenInfoDialog.value;
   });
+
+  createUserEntry();
 });
 
 const ready = computed(() => layersLoaded.value && positionSet.value);
@@ -2148,10 +2310,48 @@ const tourSheetOverlays = computed(
    showOptions is defined further down. */
 const lastOpenedPanel = ref<"controls" | "info">("info");
 watch(showOptions, (open) => {
-  if (open) lastOpenedPanel.value = "controls";
+  const now = Date.now();
+  if (open) {
+    lastOpenedPanel.value = "controls";
+    controlsOpenStartTimestamp = now;
+  } else if (controlsOpenStartTimestamp !== null) {
+    controlsOpenTimeMs += (now - controlsOpenStartTimestamp);
+    controlsOpenStartTimestamp = null;
+  }
 });
 watch(showTextSheet, (open) => {
-  if (open) lastOpenedPanel.value = "info";
+  const now = Date.now();
+  if (open) {
+    lastOpenedPanel.value = "info";
+    if (infoSheetTab.value === 0) {
+      aboutRomanStartTimestamp = now;
+    } else if (infoSheetTab.value === 1) {
+      userGuideStartTimestamp = now;
+    }
+  } else {
+    if (infoSheetTab.value === 0 && aboutRomanStartTimestamp !== null) {
+      aboutRomanTimeMs += (now - aboutRomanStartTimestamp);
+      aboutRomanStartTimestamp = null;
+    } else if (infoSheetTab.value === 1 && userGuideStartTimestamp !== null) {
+      userGuideTimeMs += (now - userGuideTimeMs);
+      userGuideStartTimestamp= null;
+    }
+  }
+});
+
+watch(infoSheetTab, (newTab, oldTab) => {
+  if (!showTextSheet.value) {
+    return;
+  }
+  const now = Date.now();
+  if (oldTab === 0 && aboutRomanStartTimestamp !== null) {
+    aboutRomanTimeMs += (now - aboutRomanStartTimestamp);
+    aboutRomanStartTimestamp = null;
+  } else if (oldTab === 1 && userGuideStartTimestamp !== null) {
+    userGuideTimeMs += (now - userGuideStartTimestamp);
+    userGuideStartTimestamp = null;
+  }
+
 });
 
 /* Stacking can stop being possible without anyone clicking -- rotating a
@@ -2671,6 +2871,9 @@ body {
 }
 
 #body-logos {
+
+  display: flex;
+
   #logo-credits img {
     height: 32px !important;
   }
@@ -3259,5 +3462,32 @@ h1.startup-screen-title {
     font-size: 1.17em;
   }
   
+}
+
+#privacy-popup-dialog {
+
+  .v-card-text {
+    color: #BDBDBD;
+  }
+
+  .v-overlay__content {
+    font-size: var(--default-font-size);
+    background-color: purple;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .v-btn--size-default {
+      font-size: calc(0.9 * var(--default-font-size));
+    }  
+
+  .v-card-actions .v-btn {
+    padding: 0 4px;
+  }
+}
+
+#change-optout {
+  width: fit-content;
 }
 </style>
