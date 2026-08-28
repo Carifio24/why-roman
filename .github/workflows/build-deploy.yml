@@ -41,6 +41,8 @@ jobs:
 
       - name: Build
         run: yarn build
+        env:
+          VITE_CDS_API_KEY: ${{ secrets.CDS_API_KEY }}
 
       - name: Check for draft flag
         uses: sergeysova/jq-action@v2

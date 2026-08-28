@@ -58,6 +58,48 @@
           </v-btn>
         </div>
       </component>
+
+      <!-- Data collection opt-out dialog -->
+      <v-dialog
+        scrim="false"
+        v-model="showPrivacyDialog"
+        id="privacy-popup-dialog"
+      >
+        <v-card>
+          <v-card-text>
+            To evaluate usage of this app, <strong>anonymized</strong> data may be collected.
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="#BDBDBD"
+              href="https://www.cfa.harvard.edu/privacy-statement"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+            Privacy Policy
+            </v-btn>
+            <v-btn
+              color="#ff6666"
+              @click="() => {
+                responseOptOut = true;
+                showPrivacyDialog = false;
+              }"
+            >
+            Opt out
+            </v-btn>
+            <v-btn 
+              color="green"
+              @click="() => {
+                responseOptOut = false;
+                showPrivacyDialog = false;
+              }"
+            >
+              Allow
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       
       <IntroSlides 
         v-if="showIntroSlides" 
@@ -92,6 +134,7 @@
                 v-for="footprint in visibleFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
@@ -130,7 +173,8 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Control fields of view"
+                tooltip-text="Controls"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
                 @activate="handleShowOptions"
@@ -143,6 +187,7 @@
                 icon="mdi-book-open-variant"
                 :color="borderColor"
                 tooltip-text="Learn more"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="handleShowInfo"
               >
@@ -154,6 +199,7 @@
                 icon="mdi-replay"
                 :color="borderColor"
                 tooltip-text="Play the tour again"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="replayTour"
               ></icon-button>
@@ -186,8 +232,9 @@
                   <div class="explore-callout-lead">
                     Use these buttons to:
                   </div>
-                  <div class="mb-1"><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div class="mb-1"><font-awesome-icon icon="sliders" /> open controls </div>
                   <div class="mb-1"><v-icon icon="mdi-book-open-variant" /> learn more about Roman &amp; this app</div>
+
                   <div><v-icon icon="mdi-replay" /> play the tour again</div>
                 </div>
                 <v-icon
@@ -350,8 +397,8 @@
                   <span
                     class="opacity-slider-label"
                     tabindex="0"
-                    @click="setOpacity(slider.index, 0)"
-                    @keyup.enter="setOpacity(slider.index, 0)"
+                    @click="sliderMinPressed(slider)"
+                    @keyup.enter="sliderMinPressed(slider)"
                   >{{ slider.minLabel ?? slider.name }}</span>
                   <v-slider
                     :id="`layer-opacity-${slider.index}`"
@@ -365,16 +412,20 @@
                     @update:model-value="
                       (value: number) => setOpacity(slider.index, value)
                     "
+                    @end="sliderMoveCount += 1"
                   />
                   <span
                     class="opacity-slider-label"
                     tabindex="0"
-                    @click="setOpacity(slider.index, 1)"
-                    @keyup.enter="setOpacity(slider.index, 1)"
+                    @click="sliderMaxPressed(slider)"
+                    @keyup.enter="sliderMaxPressed(slider)"
                   >{{ slider.maxLabel ?? slider.name }}</span>
                 </template>
                 <template v-else>
-                  <label :for="`layer-opacity-${slider.index}`">{{
+                  <label
+                    :for="`layer-opacity-${slider.index}`"
+                    @click="sliderLabelPressCount += 1"
+                  >{{
                     slider.name
                   }}</label>
                   <v-slider
@@ -389,6 +440,7 @@
                     @update:model-value="
                       (value: number) => setOpacity(slider.index, value)
                     "
+                    @end="sliderMoveCount += 1"
                   />
                 </template>
               </div>
@@ -423,6 +475,23 @@
               :extra-logos="cfaExtraLogo"
             />
           </footer>
+
+          <div
+            v-if="!showPrivacyDialog"
+            id="privacy-lock"
+          >
+            <icon-button
+              icon="mdi-lock"
+              :color="borderColor"
+              :border="false"
+              size="1.2em"
+              tooltip-text="Change privacy settings"
+              :show-tooltip="!mobile"
+              tooltip-location="start"
+              tooltip-offset="5px"
+              @activate="showPrivacyDialog = true"
+            ></icon-button>
+          </div>
         </div>
       </div>
 
@@ -518,10 +587,12 @@
                 v-for="footprint in compareFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               >
                 <template
                   v-if="telescopeInfo[footprint.id]"
@@ -535,14 +606,16 @@
               </MiniFootprintSettings>
 
               <MiniFootprintSettings
+                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
-                class="mt-3"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               >
                 <template #action>
                   <v-btn
@@ -564,10 +637,12 @@
                 v-for="footprint in andromedaFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
                 v-model:fill="footprint.fill"
                 :label="footprint.label"
                 :color="footprint.color"
                 :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
               />
               <!-- last, so it sits near the other column's zoom-to-pixel-scale
                    action. Out of the heading either way, which is what keeps the
@@ -648,6 +723,7 @@ import {
   skyBackgroundImagesets,
   blurActiveElement,
   useWWTKeyboardControls,
+  supportsTouchscreen,
 } from "@cosmicds/vue-toolkit";
 import PlaceCards from "./components/PlaceCards.vue";
 import { useDisplay, useTheme } from "vuetify";
@@ -680,8 +756,7 @@ import {
   type WtmlLoaderReturn,
 } from "./composables/useWtmlLoader";
 import { useLayerOrdering } from "./composables/useLayerOrdering";
-import { useSpreadsheetLayer } from "./composables/useSpreadsheetLayer";
-import { RAUnits } from "@wwtelescope/engine-types";
+import { useDataTracking } from "./composables/useDataTracking";
 
 // @ts-expect-error `Util.splitString` is defined
 wwtlib.Util.splitString = splitString;
@@ -704,6 +779,91 @@ const backgroundImagesetName = computed({
   set(name: string) {
     store.setBackgroundImageByName(name);
   },
+});
+
+let appStartTimestamp = Date.now();
+let controlsOpenStartTimestamp: number | null= null;
+let controlsOpenTimeMs = 0;
+let aboutRomanStartTimestamp: number | null = null;
+let aboutRomanTimeMs = 0;
+let userGuideStartTimestamp: number | null = null;
+let userGuideTimeMs = 0;
+let zoomToPixelScaleCount = 0;
+let footprintsToggleCount: Record<string, number> = {};
+let tourRestartedCount = 0;
+let sideControlsOpenedCount = 0;
+let sliderMinPressCount = 0;
+let sliderMaxPressCount = 0;
+let sliderLabelPressCount = 0;
+let sliderMoveCount = 0;
+
+const showPrivacyDialog = ref(false);
+
+function updateFootprintToggleCount(id: string) {
+  if (id in footprintsToggleCount) {
+    footprintsToggleCount[id] += 1;
+  } else {
+    footprintsToggleCount[id] = 1;
+  }
+}
+
+function resetTrackingData() {
+  const now = Date.now();
+  appStartTimestamp = now;
+  controlsOpenStartTimestamp = showOptions.value ? now : null;
+  controlsOpenTimeMs = 0;
+  aboutRomanStartTimestamp = (showTextSheet.value && infoSheetTab.value === 0) ? now : null;
+  aboutRomanTimeMs = 0;
+  userGuideStartTimestamp = (showTextSheet.value && infoSheetTab.value === 1) ? now : null;
+  userGuideTimeMs = 0;
+
+  zoomToPixelScaleCount = 0;
+  footprintsToggleCount = {};
+  tourRestartedCount = 0;
+  sideControlsOpenedCount = 0;
+  sliderMinPressCount = 0;
+  sliderMaxPressCount = 0;
+  sliderLabelPressCount = 0;
+  sliderMoveCount = 0;
+}
+
+function getTrackingData() {
+  const now = Date.now();
+
+  let controlsOpenTime = controlsOpenTimeMs;
+  if (showOptions.value && controlsOpenStartTimestamp !== null) {
+    controlsOpenTime += (now - controlsOpenStartTimestamp); 
+  }
+
+  let aboutRomanTime = aboutRomanTimeMs;
+  if (showTextSheet.value && infoSheetTab.value === 0 && aboutRomanStartTimestamp !== null) {
+    aboutRomanTime += (now - aboutRomanStartTimestamp);
+  }
+
+  let userGuideTime = userGuideTimeMs;
+  if (showTextSheet.value && infoSheetTab.value === 1 && userGuideStartTimestamp !== null) {
+    userGuideTime += (now - userGuideStartTimestamp);
+  }
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    app_time_ms: now - appStartTimestamp, zoom_to_pixel_scale_count: zoomToPixelScaleCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    footprints_toggle_count: footprintsToggleCount, tour_restarted_count: tourRestartedCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    side_controls_opened_count: sideControlsOpenedCount, about_roman_time_ms: aboutRomanTime, user_guide_time_ms: userGuideTime,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    controls_open_time_ms: controlsOpenTime, slider_min_press_count: sliderMinPressCount, slider_max_press_count: sliderMaxPressCount,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    slider_label_press_count: sliderLabelPressCount, slider_move_count: sliderMoveCount, max_andromeda_tour_step: ats.maxStep,
+  };
+}
+
+const { createUserEntry, responseOptOut } = useDataTracking({
+  optOutKey: "why-roman:optOut",
+  userIDKey: "why-roman:userID",
+  storyPath: "/why-roman",
+  resetData: resetTrackingData,
+  getData: getTrackingData,
 });
 
 useWWTKeyboardControls(store);
@@ -837,7 +997,7 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
-const OVERALL_DISPLAY_OFFSET = 70*(0.5 * 11 / 3600);
+const OVERALL_DISPLAY_OFFSET = 50*(0.5 * 11 / 3600);
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
@@ -924,7 +1084,7 @@ const phastI = useFootprint({
   color: "#00ff00",
   fixed: true,
   show: false,
-  opacity: 0.2,
+  opacity: 0.3,
   // offsetXDeg: PHAST_OFFSET_X_DEG,
   // offsetYDeg: PHAST_OFFSET_Y_DEG,
 });
@@ -1036,9 +1196,8 @@ function showControlFootprints() {
 }
 
 function hideVisibleFootprints() {
-  // set their opacity to 0
   footprints.forEach((footprint) => {
-    footprint.opacity = 0;
+    footprint.visible = false;
   });
 }
 import { useLocalStorage } from "@vueuse/core";
@@ -1067,6 +1226,9 @@ const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
   showIntroSlides.value = true;
+  if (responseOptOut.value === null) {
+    showPrivacyDialog.value = true;
+  }
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
@@ -1093,10 +1255,7 @@ function onlyFootprints(visible: Footprint[], show?: (boolean | undefined)[]) {
     (footprint) => {
       const index = visible.indexOf(footprint);
       footprint.show = index !== -1;
-      // opacity doubles as the controls' checkbox state, so it has to be reset
-      // on every call, not just when `show` is passed -- otherwise the ones
-      // explore mode leaves unchecked stay at 0 through a replayed tour
-      footprint.opacity = index !== -1 && (show ? show[index] === true : true) ? 1 : 0;
+      footprint.visible = index !== -1 && (show ? show[index] === true : true);
     },
   );
 }
@@ -1227,6 +1386,7 @@ function tourCloseOut() {
 }
 
 function replayTour() {
+  tourRestartedCount += 1;
   selectPlace(lastTourId.value);
 }
 
@@ -1260,6 +1420,7 @@ function handleShowOptions() {
     if (!canStackPanels.value) {
       showTextSheet.value = false;
     }
+    sideControlsOpenedCount += 1;
   }
   showOptions.value = open;
 }
@@ -1430,12 +1591,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
-      raRad: 10.6847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.68471 * D2R,
+      decRad: 41.2692 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
-    }).then(async () => {
+    }).finally(async () => {
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(n);
@@ -1475,8 +1636,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.7 * D2R,
-      decRad: 41.259 * D2R,
+      raRad: 10.7001 * D2R,
+      decRad: 41.25901 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
@@ -1548,11 +1709,29 @@ function andromedaTour(n: number, tour = true) {
   
   // step 9
   if (n === 9) {// close out
-    tourCloseOut();
-    showOpacitySliders();
-    onlyFootprints([]);
-    ats.setMaxStep(n);
-    return;
+    onlyFootprints([roman, romanPixel]);  
+    store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 1.9 * 6,
+      rollRad: 0,
+      instant: false, 
+      duration: 4,
+    }).then(async () => {
+      if (tourStep.value === 9) {
+        await store.gotoRADecZoom({
+          raRad: 10.75 * D2R,
+          decRad: 41.15 * D2R,
+          zoomDeg: 1.9 * 6,
+          instant: false,
+          duration: 2,
+        });
+      }
+      tourCloseOut();
+      showOpacitySliders();
+      onlyFootprints([roman]);
+      ats.setMaxStep(n);
+      return;
+    });
   }
   
   
@@ -1589,15 +1768,14 @@ const zoomBeforePixelScale = ref<number | null>(null);
 function zoomToPixelScale() {
   // zooming to pixel scale with the grid off would look like nothing happened
   romanPixel.show = true;
-  if (romanPixel.opacity === 0) {
-    romanPixel.opacity = 1;
-  }
+  romanPixel.visible = true;
   zoomBeforePixelScale.value = store.zoomDeg;
   store.gotoRADecZoom({
     ...currentViewRad.value,
     zoomDeg: PIXEL_SCALE_ZOOM,
     instant: false,
   });
+  zoomToPixelScaleCount += 1;
 }
 
 // the inverse of the above: same patch of sky, the zoom they came from.
@@ -1841,6 +2019,17 @@ function setOpacity(index: number, opacity: number) {
       layerOpacities.value[index] = opacity;
     }
   }
+}
+
+type Slider = (typeof opacitySliders.value)[number];
+function sliderMinPressed(slider: Slider) {
+  setOpacity(slider.index, 0);
+  sliderMinPressCount += 1;
+}
+
+function sliderMaxPressed(slider: Slider) {
+  setOpacity(slider.index, 1);
+  sliderMaxPressCount += 1;
 }
 
 function imagesetFor(place: Place | null | undefined): Imageset | null {
@@ -2117,6 +2306,8 @@ onMounted(() => {
 
     // showInfoDialog.value = autoOpenInfoDialog.value;
   });
+
+  createUserEntry();
 });
 
 const ready = computed(() => layersLoaded.value && positionSet.value);
@@ -2126,6 +2317,12 @@ const isLoading = computed(() => !ready.value);
 
 /* Properties related to device/screen characteristics */
 const smallSize = computed(() => smAndDown.value);
+
+// A tooltip is a pointer affordance. A touch has no hover to end, so tapping a
+// button leaves its tooltip stuck open over the panel it just opened -- turn
+// them off there instead, the way seasons does.
+const touchscreen = supportsTouchscreen();
+const mobile = computed(() => smallSize.value && touchscreen);
 
 /* This lets us inject component data into element CSS */
 const cssVars = computed(() => {
@@ -2160,10 +2357,48 @@ const tourSheetOverlays = computed(
    showOptions is defined further down. */
 const lastOpenedPanel = ref<"controls" | "info">("info");
 watch(showOptions, (open) => {
-  if (open) lastOpenedPanel.value = "controls";
+  const now = Date.now();
+  if (open) {
+    lastOpenedPanel.value = "controls";
+    controlsOpenStartTimestamp = now;
+  } else if (controlsOpenStartTimestamp !== null) {
+    controlsOpenTimeMs += (now - controlsOpenStartTimestamp);
+    controlsOpenStartTimestamp = null;
+  }
 });
 watch(showTextSheet, (open) => {
-  if (open) lastOpenedPanel.value = "info";
+  const now = Date.now();
+  if (open) {
+    lastOpenedPanel.value = "info";
+    if (infoSheetTab.value === 0) {
+      aboutRomanStartTimestamp = now;
+    } else if (infoSheetTab.value === 1) {
+      userGuideStartTimestamp = now;
+    }
+  } else {
+    if (infoSheetTab.value === 0 && aboutRomanStartTimestamp !== null) {
+      aboutRomanTimeMs += (now - aboutRomanStartTimestamp);
+      aboutRomanStartTimestamp = null;
+    } else if (infoSheetTab.value === 1 && userGuideStartTimestamp !== null) {
+      userGuideTimeMs += (now - userGuideTimeMs);
+      userGuideStartTimestamp= null;
+    }
+  }
+});
+
+watch(infoSheetTab, (newTab, oldTab) => {
+  if (!showTextSheet.value) {
+    return;
+  }
+  const now = Date.now();
+  if (oldTab === 0 && aboutRomanStartTimestamp !== null) {
+    aboutRomanTimeMs += (now - aboutRomanStartTimestamp);
+    aboutRomanStartTimestamp = null;
+  } else if (oldTab === 1 && userGuideStartTimestamp !== null) {
+    userGuideTimeMs += (now - userGuideStartTimestamp);
+    userGuideStartTimestamp = null;
+  }
+
 });
 
 /* Stacking can stop being possible without anyone clicking -- rotating a
@@ -2475,18 +2710,6 @@ body {
   overflow: hidden;
   font-size: var(--default-font-size);
 
-  // the share of the screen a drawer takes, in whichever axis it occupies.
-  // Every drawer rule and every "clear the floating sheet" offset reads these,
-  // so the proportion is defined once.
-  --drawer-width: 34%;
-  --drawer-height: 34%;
-
-  // a phone in landscape has little absolute width to spare, so the column
-  // takes a bigger share than it would on a large screen
-  &.app-is-small.app-is-landscape {
-    --drawer-width: 40%;
-  }
-
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
     position: absolute;
@@ -2703,6 +2926,9 @@ body {
 }
 
 #body-logos {
+
+  display: flex;
+
   #logo-credits img {
     height: 32px !important;
   }
@@ -2936,6 +3162,74 @@ video {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 2rem; // leaves the corner to #privacy-lock
+}
+
+/* The share of the screen a drawer takes, in whichever axis it occupies. Every
+   drawer rule and every "clear the floating sheet" offset reads these, so the
+   proportion is defined once -- on :root rather than #app because the privacy
+   dialog teleports out of #app and has to line up with the same drawer. */
+:root {
+  --drawer-width: 34%;
+  --drawer-height: 34%;
+}
+
+// a phone in landscape has little absolute width to spare, so the column takes
+// a bigger share than it would on a large screen
+@media (orientation: landscape) and (max-width: 959px) {
+  :root {
+    --drawer-width: 40%;
+  }
+}
+
+#privacy-popup-dialog .v-card-actions {
+  display: flex;
+}
+
+/* On a phone the tour sheet owns the bottom of the screen and this lands on top
+   of it, so make it as small as it can be and stay legible. A media query
+   because the dialog teleports out of #app, where app-is-small cannot reach it. */
+@media (max-width: 599px) {
+  #privacy-popup-dialog .v-btn {
+    min-width: 0;
+    padding-inline: 0.5rem;
+  }
+}
+
+/* Small and quiet in the corner, the way seasons places it -- bottom left,
+   away from the logos. On the logo line rather than above it: #bottom-content
+   reserves its 3rem of bottom padding for exactly that strip, so anything
+   higher lands on the opacity slider's end button. #body-logos gets matching
+   padding so the imageset credits start clear of this.
+   Absolute, so the overlay's flex column still distributes only top and bottom
+   content. */
+#privacy-lock {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  pointer-events: none;
+
+  .icon-wrapper {
+    margin: 0;
+    padding: 0.15em;
+    border: none;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    opacity: 0.55;
+    pointer-events: auto;
+
+    &:hover,
+    &:focus-within {
+      opacity: 1;
+    }
+  }
+}
+
+/* The floating tour sheet takes this corner while it is up, so step past it --
+   the same offset #bottom-content and SplashGesture.vue use. */
+#app.app-tour-sheet-overlay #privacy-lock {
+  left: calc(var(--drawer-width) + 1rem);
 }
 
 // The overlay is a fixed-height flex column. #top-content has to be the one
@@ -2949,8 +3243,12 @@ video {
   flex: 0 0 auto;
   padding-bottom: 3rem; // the space #body-logos no longer takes
 
+  // No logo row to clear, so this can sit at the bottom -- but #privacy-lock is
+  // in that corner. Start the row to its right rather than lifting the whole
+  // thing above it; the slider just comes out a little shorter.
   &.no-footer {
     padding-bottom: 0;
+    padding-left: 1.5rem;
   }
 }
 
@@ -3291,5 +3589,100 @@ h1.startup-screen-title {
     font-size: 1.17em;
   }
   
+}
+
+#privacy-popup-dialog {
+
+  .v-card-text {
+    color: #BDBDBD;
+  }
+
+  // one row: the stacked card-text/card-actions blocks are what put all that
+  // air between the sentence and the buttons
+  .v-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.25rem;
+
+    // symmetric padding on both, so their centres line up rather than the
+    // buttons riding low
+    .v-card-text {
+      flex: 1 1 12rem;
+      padding: 0.25rem 0.375rem;
+    }
+
+    .v-card-actions {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 0.25rem 0.5rem;
+      // keeps them right-aligned on their own line too, once the row wraps
+      margin-left: auto;
+    }
+  }
+
+  .v-overlay__content {
+    // fixed rather than the viewport-scaled --default-font-size: this is a
+    // footnote, and scaling it was what made the strip's height wander
+    font-size: 13px;
+    background-color: purple;
+    position: absolute;
+
+    // A strip along the bottom of the canvas, starting just right of
+    // #privacy-lock and sharing its baseline. Width comes from these insets
+    // rather than a max-width prop, so it can stay one row. The drawer sizes
+    // come from :root and the orientation from a media query because the dialog
+    // teleports out of #app and can see neither.
+    top: auto;
+    bottom: 0.75rem;
+    left: 1rem; // where the lock sits; it hides itself while this is open
+    right: 0.75rem;
+    // Vuetify gives .v-dialog > .v-overlay__content a fixed width and a 24px
+    // margin; with a width set, the right inset above is simply ignored
+    width: auto;
+    max-width: none;
+    margin: 0;
+
+    @media (orientation: portrait) {
+      bottom: calc(var(--drawer-height) + 0.75rem);
+    }
+
+    @media (orientation: landscape) {
+      left: calc(var(--drawer-width) + 1rem);
+    }
+
+    // The logo row renders from 960 up and shares this band. The cluster sits a
+    // near-constant ~245px in from the right edge whatever the viewport, so stop
+    // short of it and let the sentence take a second line rather than covering
+    // the logos.
+    @media (min-width: 960px) {
+      right: 16rem;
+    }
+  }
+
+  .v-btn--size-default {
+      font-size: calc(0.9 * var(--default-font-size));
+    }  
+
+  // a v-btn is a fixed 36px tall whatever its text, which is most of the air
+  // around these labels -- let it size to the text instead
+  .v-card-actions .v-btn {
+    height: auto;
+    min-height: 0;
+    padding: 2px 4px;
+    font-size: 12px;
+
+    // Hugging the text leaves a ~14px target, well under the ~44px a finger
+    // wants. Keep the tight look for a mouse and give touch something to hit.
+    @media (pointer: coarse) {
+      min-height: 32px;
+      padding-inline: 8px;
+    }
+  }
+}
+
+#change-optout {
+  width: fit-content;
 }
 </style>
