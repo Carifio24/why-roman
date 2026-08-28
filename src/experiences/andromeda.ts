@@ -94,7 +94,7 @@ export const andromedaExperience: TourExperience = [
       "The Webb and Hubble camera footprints are added in orange and blue.",
       "See how much more sky Roman can cover at once?"
     ],
-    instaText: 'Roman covers way more sky with each "snap!"',
+    instaText: 'Roman covers way more sky with each snap!',
   },
   {
     title: "What Hubble did, Roman can do in 3 hours",  // step 7, n=6
