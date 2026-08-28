@@ -3615,5 +3615,5 @@ h1.startup-screen-title {
 #change-optout {
   width: fit-content;
 }
-
+.opacity-slider-row { max-width: 400px }
 </style>
