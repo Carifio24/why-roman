@@ -1223,7 +1223,7 @@ function handleSplashClose() {
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
-  startTourFromStartup("andromeda");
+  startTourFromStartup(lastTourId.value);
   hasSeenIntroSlides.value = true;
 }
 
@@ -1378,6 +1378,9 @@ function tourCloseOut() {
 
 function replayTour() {
   tourRestartedCount += 1;
+  leaveTour(); // tear down the tour state and layers
+  inExploreMode.value = false;
+  showTextSheet.value = false;
   showIntroSlides.value = true;
 }
 
@@ -2285,7 +2288,7 @@ onMounted(() => {
     // If there are layers to set up, do that here!
     layersLoaded.value = true;
 
-    if (tourParam === "manual") {
+    if (tourParam === "manual" || tourParam === "explore") {
       const tour = tours.find((t) => t.id === lastTourId.value) ?? tours[0];
       await tour.wtml.ready; // enterExplore runs step -1, which needs layers
       enterExplore();
@@ -2511,14 +2514,15 @@ function tryGoToSearchPosition(
   positionSearchError.value = `Your value${multiple ? "s" : ""} for ${invalid.join(" and ")} ${isAre} invalid`;
 }
 
+// this is not used, but nice to have it filled in :)
 function shareURL(): string {
   const url = new URL(window.location.href);
-  const bgSet = backgroundImagesets.find(
-    (bg) => bg.imagesetName === backgroundImagesetName.value,
-  );
+  // const bgSet = backgroundImagesets.find(
+  //   (bg) => bg.imagesetName === backgroundImagesetName.value,
+  // );
   let search = `raDeg=${store.raRad * R2D}&decDeg=${store.decRad * R2D}&zoomDeg=${store.zoomDeg}&rollDeg=${store.rollRad * R2D}`;
-  if (bgSet) {
-    search = `${search}&bg=${bgSet.displayName}`;
+  if (selectedPlaceId.value) {
+    search += `&tour=${selectedPlaceId.value}&tourStep=${tourStep.value + 1}`;
   }
   url.search = search;
   return url.href;
