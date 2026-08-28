@@ -826,17 +826,7 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
-/*
- * A different number, for footprints that outline the PHAST mosaic: they have to
- * follow the PHAST imagery, which public/offset_phast.py moves onto DSS by its own
- * transform (PHAST carries a rotation error too). Translation part only -- a
- * footprint cannot be rotated, leaving ~0.3" at the mosaic edges.
- */
-const PHAST_DEC_OFFSET_ARCSEC = 1.869;
-const PHAST_RA_OFFSET_ARCSEC = -0.867 / Math.cos((41.3858 * Math.PI) / 180);
-const PHAST_OFFSET_X_DEG = -PHAST_RA_OFFSET_ARCSEC / 3600;
-const PHAST_OFFSET_Y_DEG = -PHAST_DEC_OFFSET_ARCSEC / 3600;
-
+const OVERALL_DISPLAY_OFFSET = 70*(0.5 * 11 / 3600);
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
@@ -844,7 +834,7 @@ const roman = useFootprint({
   color: "#e100ff",
   linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
-  offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
+  offsetYDeg: (-0.5 * 0.11 / 3600) -  OVERALL_DISPLAY_OFFSET,  // Half the height of one Roman pixel
 });
 
 const romanPixel = useFootprint({
@@ -855,35 +845,14 @@ const romanPixel = useFootprint({
   show: true,
   linewidth: 3,
 });
-const testFootprint = useFootprint({
-  id: "roman-fixed-footprint",
-  label: "TEST 10 deg",
-  // footprint: [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]],
-  footprint: [
-    [
-      [-0.5, -0.5],
-      [-0.5, 0.5],
-      [0.5, 0.5],
-      [0.5, -0.5],
-    ].map(([x, y]) => [x * 15, y * 10]),
-  ], // 1 hour x 10 deg. the equatorial grid spacing
-  // footprint: romanFootprint,
-  color: "#4afa4a",
-  fixed: false,
-  fill: false,
-  show: false,
-});
+
 const jwst = useFootprint({
   id: "jwst-footprint",
   label: "Webb",
   footprint: jwstFootprint,
-  // Was the Carina Spark JWST accent (#f0ab52), but that is the same hue and
-  // nearly the same lightness as the PHAST core it sits on, so it disappeared
-  // there (WCAG 1.06). This deeper orange keeps the warm/infrared association
-  // and stays clear of Hubble's blue for red-green colour blindness.
   color: "#ff6d00",
   offsetXDeg: -0.075, // left
-  offsetYDeg: 0.2, // down
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET, // down
   linewidth: 2,
   show: false,
 });
@@ -893,7 +862,26 @@ const hubble = useFootprint({
   footprint: hubbleFootprint,
   color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
-  offsetYDeg: 0.2,
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET,
+  linewidth: 2, 
+  show: false,
+});
+
+const jwstCentered = useFootprint({
+  id: "jwst-footprint-centered",
+  label: "Webb",
+  footprint: jwstFootprint,
+  color: "#ff6d00",
+  // offsetXDeg: -0.075, // left
+  linewidth: 2,
+  show: false,
+});
+const hubbleCentered = useFootprint({
+  id: "hubble-footprint-centered",
+  label: "Hubble",
+  footprint: hubbleFootprint,
+  color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
+  // offsetXDeg: 0.1,
   linewidth: 2, 
   show: false,
 });
@@ -1005,7 +993,9 @@ const footprints = [
   m31SfDiskOutline,
   m31SfDisk,
   jwst,
+  jwstCentered,
   hubble,
+  hubbleCentered,
   roman,
   romanPixel,
   // gbtds,
@@ -1024,7 +1014,7 @@ const visibleFootprints = computed(() =>
    current step happens to have on, so these groups are listed literally.
    Their checkboxes work by moving opacity, which only shows up if `show` is
    also on -- hence showControlFootprints() below. */
-const compareFootprints = [roman, hubble, jwst];
+const compareFootprints = [roman, hubbleCentered, jwstCentered];
 const pixelFootprints = [romanPixel];
 const andromedaFootprints = [m31SfDiskOutline, m31SfDisk, phast, phastI];
 
@@ -1441,12 +1431,12 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints([jwst]);
+    onlyFootprints([jwstCentered]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
       raRad: 10.6847 * D2R,
-      decRad: 41.469 * D2R,
+      decRad: 41.269 * D2R,
       zoomDeg: 2 * 6,
       rollRad: 0,
       instant: false,
@@ -1459,11 +1449,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.5847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.7 * D2R,
+      decRad: 41.259 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
+      duration: 1,
     });
     ats.setMaxStep(n);
     return;
@@ -1473,8 +1464,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.5847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.7 * D2R,
+      decRad: 41.259 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
@@ -1982,7 +1973,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Roman",
-      center: Coordinates.raDecTo3d(-0.004, 0.4),
+      center: Coordinates.raDecTo3d(-0.004, 0.4 + OVERALL_DISPLAY_OFFSET),
       // read off the footprint so the label can't drift from the shape it names
       color: roman.color,
       scale: 0.0008,
@@ -1991,7 +1982,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Hubble",
-      center: Coordinates.raDecTo3d(-0.018, -0.3),
+      center: Coordinates.raDecTo3d(-0.018, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: hubble.color,
       scale: 0.0008,
     });
@@ -1999,7 +1990,7 @@ onMounted(() => {
       store,
       renderContext,
       text: "Webb",
-      center: Coordinates.raDecTo3d(0.012, -0.3),
+      center: Coordinates.raDecTo3d(0.012, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: jwst.color,
       scale: 0.0008,
     });
