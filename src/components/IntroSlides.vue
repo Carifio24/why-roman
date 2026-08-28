@@ -120,17 +120,29 @@ const NUM_SLIDES = 1;
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* Two .v-overlay__scrim rules ship in the bundle -- Vuetify's themed one and a
+   legacy solid black -- and which of them lands last differs between dev and
+   the build, so the scrim was black locally and the themed wash once deployed.
+   The id pins the deployed one in both. */
+#intro-slides.intro-slides-dialog .v-overlay__scrim {
+  background: rgb(var(--v-theme-on-surface));
+}
+/* Vuetify's own card styling, deliberately: its CSS is emitted twice in the
+   production bundle and the second copy lands after this file, so a
+   single-class rule here silently lost its background, border and padding once
+   built. The elevated card that fell out of that is the look we want, so the
+   overrides are gone rather than fighting their way back in with more
+   specificity -- which also means dev and the deployed app now agree.
+
+   Dropping `height: 60vh` is what stops the figure's caption being clipped: the
+   card sizes to its content instead of to the viewport. */
 .intro-slides-container {
   position: relative;
-  height: 60vh;
-  min-height: 400px;
   display: flex;
-  background-color: rgba(0, 0, 0, 0.9);
-  border: 4px solid var(--background-color);
-  padding: 1.7rem;
 }
 
-// inside the 4px border and 1.7rem padding, so it sits in the visible corner
+// sits in the card's own corner
 .v-icon.intro-slides-close {
   position: absolute;
   top: 0.75rem;
@@ -159,7 +171,13 @@ const NUM_SLIDES = 1;
 }
 .intro-slides-window-item {
   text-align: center;
-  font-size: 1.5rem;
+  // keeps the centred copy clear of the close icon in the card's top corner,
+  // which is out of flow and so cannot push the first line along
+  padding-inline: 1.5rem;
+  font-size: 1.25rem;
+  // tighter than the inherited 1.5, so the card stays a reasonable height now
+  // that it grows with its content
+  line-height: 1.3;
   color: var(--text-color);
 
   p {
