@@ -7,7 +7,7 @@ export const andromedaExperience: TourExperience = [
     title: "Andromeda",  // step 1, n=0
     tourSheetText: [
       "Andromeda (M31) is our nearest neighboring spiral galaxy.",
-      "It spans 3 degrees (or 6 full Moons!) across the sky.",
+      "It spans 3 degrees of sky — or 6 full Moons! — though its outermost areas are too faint to see well. Use the slider to compare.",
       "By studying Andromeda, astronomers can better understand our own Milky Way galaxy.",
     ],
     instaText: "The Andromeda Galaxy is REALLY BIG on the sky",
