@@ -1578,12 +1578,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
-      raRad: 10.6847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.68471 * D2R,
+      decRad: 41.2692 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
-    }).then(async () => {
+    }).finally(async () => {
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(n);
@@ -1623,8 +1623,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.7 * D2R,
-      decRad: 41.259 * D2R,
+      raRad: 10.7001 * D2R,
+      decRad: 41.25901 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
