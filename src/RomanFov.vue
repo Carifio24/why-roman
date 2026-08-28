@@ -174,6 +174,7 @@
                 icon="sliders"
                 :color="borderColor"
                 tooltip-text="Control fields of view"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
                 @activate="handleShowOptions"
@@ -186,6 +187,7 @@
                 icon="info"
                 :color="borderColor"
                 tooltip-text="Learn more"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="handleShowInfo"
               >
@@ -197,6 +199,7 @@
                 icon="mdi-replay"
                 :color="borderColor"
                 tooltip-text="Play the tour again"
+                :show-tooltip="!mobile"
                 tooltip-location="start"
                 @activate="replayTour"
               ></icon-button>
@@ -706,6 +709,7 @@ import {
   skyBackgroundImagesets,
   blurActiveElement,
   useWWTKeyboardControls,
+  supportsTouchscreen,
 } from "@cosmicds/vue-toolkit";
 import PlaceCards from "./components/PlaceCards.vue";
 import { useDisplay, useTheme } from "vuetify";
@@ -2285,6 +2289,12 @@ const isLoading = computed(() => !ready.value);
 
 /* Properties related to device/screen characteristics */
 const smallSize = computed(() => smAndDown.value);
+
+// A tooltip is a pointer affordance. A touch has no hover to end, so tapping a
+// button leaves its tooltip stuck open over the panel it just opened -- turn
+// them off there instead, the way seasons does.
+const touchscreen = supportsTouchscreen();
+const mobile = computed(() => smallSize.value && touchscreen);
 
 /* This lets us inject component data into element CSS */
 const cssVars = computed(() => {
