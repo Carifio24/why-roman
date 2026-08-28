@@ -60,8 +60,12 @@
       </component>
 
       <!-- Data collection opt-out dialog -->
+      <!-- :scrim bound, not scrim="false": the bare attribute passes the string
+           "false", which is truthy, so Vuetify dimmed the whole app behind it -->
       <v-dialog
-        scrim="false"
+        :scrim="false"
+        :persistent="true"
+        no-click-animation
         v-model="showPrivacyDialog"
         id="privacy-popup-dialog"
       >
@@ -788,6 +792,24 @@ let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
 
 const showPrivacyDialog = ref(false);
+
+// Persistent means the notice cannot be clicked away, so give it its own way
+// out: if it is ignored it stands down rather than blocking the corner forever.
+// Declared after the ref because watch() reads its source immediately.
+const PRIVACY_NOTICE_TIMEOUT_MS = 20_000;
+let privacyNoticeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(showPrivacyDialog, (open) => {
+  if (privacyNoticeTimeout !== null) {
+    clearTimeout(privacyNoticeTimeout);
+    privacyNoticeTimeout = null;
+  }
+  if (open) {
+    privacyNoticeTimeout = setTimeout(() => {
+      showPrivacyDialog.value = false;
+    }, PRIVACY_NOTICE_TIMEOUT_MS);
+  }
+});
 
 function updateFootprintToggleCount(id: string) {
   if (id in footprintsToggleCount) {
