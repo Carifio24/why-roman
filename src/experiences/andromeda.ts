@@ -190,7 +190,7 @@ export const andromedaExperience: TourExperience = [
       "You can continue exploring different regions of the sky and the fields of view of Hubble, Webb, and Roman.",
       "We look forward to sharing Roman's beautiful images soon!"
     ],
-    instaText: 'Why Roman? Gigantic, sharp images in infrared light. Stay tuned!',
+    instaText: "Why Roman? Gigantic, sharp, infrared images! Stay tuned...",
   }
   
   

@@ -63,14 +63,13 @@
       <v-dialog
         scrim="false"
         v-model="showPrivacyDialog"
-        max-width="400px"
         id="privacy-popup-dialog"
       >
         <v-card>
           <v-card-text>
-            To evaluate usage of this app, <strong>anonymized</strong> data may be collected, including locations viewed and map quiz responses. "My Location" data is NEVER collected.
+            To evaluate usage of this app, <strong>anonymized</strong> data may be collected.
           </v-card-text>
-          <v-card-actions class="pt-3">
+          <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
               color="#BDBDBD"
@@ -174,7 +173,7 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Control fields of view"
+                tooltip-text="Controls"
                 :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
@@ -233,7 +232,7 @@
                   <div class="explore-callout-lead">
                     Use these buttons to:
                   </div>
-                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
+                  <div><font-awesome-icon icon="sliders" /> open controls </div>
                   <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
                   <div><v-icon icon="mdi-replay" /> play the tour again</div>
                 </div>
@@ -476,10 +475,10 @@
             />
           </footer>
 
-          <!-- Out of the button group and into the corner: this is a footnote,
-               not one of the tools. Absolute, so the overlay's flex column
-               still distributes only top and bottom content. -->
-          <div id="privacy-lock">
+          <div
+            v-if="!showPrivacyDialog"
+            id="privacy-lock"
+          >
             <icon-button
               icon="mdi-lock"
               :color="borderColor"
@@ -1583,12 +1582,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
-      raRad: 10.6847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.68471 * D2R,
+      decRad: 41.2692 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
-    }).then(async () => {
+    }).finally(async () => {
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(n);
@@ -1628,8 +1627,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.7 * D2R,
-      decRad: 41.259 * D2R,
+      raRad: 10.7001 * D2R,
+      decRad: 41.25901 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
@@ -2697,18 +2696,6 @@ body {
   overflow: hidden;
   font-size: var(--default-font-size);
 
-  // the share of the screen a drawer takes, in whichever axis it occupies.
-  // Every drawer rule and every "clear the floating sheet" offset reads these,
-  // so the proportion is defined once.
-  --drawer-width: 34%;
-  --drawer-height: 34%;
-
-  // a phone in landscape has little absolute width to spare, so the column
-  // takes a bigger share than it would on a large screen
-  &.app-is-small.app-is-landscape {
-    --drawer-width: 40%;
-  }
-
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
     position: absolute;
@@ -3149,8 +3136,35 @@ video {
   padding-left: 2rem; // leaves the corner to #privacy-lock
 }
 
+/* The share of the screen a drawer takes, in whichever axis it occupies. Every
+   drawer rule and every "clear the floating sheet" offset reads these, so the
+   proportion is defined once -- on :root rather than #app because the privacy
+   dialog teleports out of #app and has to line up with the same drawer. */
+:root {
+  --drawer-width: 34%;
+  --drawer-height: 34%;
+}
+
+// a phone in landscape has little absolute width to spare, so the column takes
+// a bigger share than it would on a large screen
+@media (orientation: landscape) and (max-width: 959px) {
+  :root {
+    --drawer-width: 40%;
+  }
+}
+
 #privacy-popup-dialog .v-card-actions {
   display: flex;
+}
+
+/* On a phone the tour sheet owns the bottom of the screen and this lands on top
+   of it, so make it as small as it can be and stay legible. A media query
+   because the dialog teleports out of #app, where app-is-small cannot reach it. */
+@media (max-width: 599px) {
+  #privacy-popup-dialog .v-btn {
+    min-width: 0;
+    padding-inline: 0.5rem;
+  }
 }
 
 /* Small and quiet in the corner, the way seasons places it -- bottom left,
@@ -3554,20 +3568,88 @@ h1.startup-screen-title {
     color: #BDBDBD;
   }
 
+  // one row: the stacked card-text/card-actions blocks are what put all that
+  // air between the sentence and the buttons
+  .v-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.25rem;
+
+    // symmetric padding on both, so their centres line up rather than the
+    // buttons riding low
+    .v-card-text {
+      flex: 1 1 12rem;
+      padding: 0.25rem 0.375rem;
+    }
+
+    .v-card-actions {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 0.25rem 0.5rem;
+      // keeps them right-aligned on their own line too, once the row wraps
+      margin-left: auto;
+    }
+  }
+
   .v-overlay__content {
-    font-size: var(--default-font-size);
+    // fixed rather than the viewport-scaled --default-font-size: this is a
+    // footnote, and scaling it was what made the strip's height wander
+    font-size: 13px;
     background-color: purple;
     position: absolute;
-    bottom: 0;
-    right: 0;
+
+    // A strip along the bottom of the canvas, starting just right of
+    // #privacy-lock and sharing its baseline. Width comes from these insets
+    // rather than a max-width prop, so it can stay one row. The drawer sizes
+    // come from :root and the orientation from a media query because the dialog
+    // teleports out of #app and can see neither.
+    top: auto;
+    bottom: 0.75rem;
+    left: 1rem; // where the lock sits; it hides itself while this is open
+    right: 0.75rem;
+    // Vuetify gives .v-dialog > .v-overlay__content a fixed width and a 24px
+    // margin; with a width set, the right inset above is simply ignored
+    width: auto;
+    max-width: none;
+    margin: 0;
+
+    @media (orientation: portrait) {
+      bottom: calc(var(--drawer-height) + 0.75rem);
+    }
+
+    @media (orientation: landscape) {
+      left: calc(var(--drawer-width) + 1rem);
+    }
+
+    // The logo row renders from 960 up and shares this band. The cluster sits a
+    // near-constant ~245px in from the right edge whatever the viewport, so stop
+    // short of it and let the sentence take a second line rather than covering
+    // the logos.
+    @media (min-width: 960px) {
+      right: 16rem;
+    }
   }
 
   .v-btn--size-default {
       font-size: calc(0.9 * var(--default-font-size));
     }  
 
+  // a v-btn is a fixed 36px tall whatever its text, which is most of the air
+  // around these labels -- let it size to the text instead
   .v-card-actions .v-btn {
-    padding: 0 4px;
+    height: auto;
+    min-height: 0;
+    padding: 2px 4px;
+    font-size: 12px;
+
+    // Hugging the text leaves a ~14px target, well under the ~44px a finger
+    // wants. Keep the tight look for a mouse and give touch something to hit.
+    @media (pointer: coarse) {
+      min-height: 32px;
+      padding-inline: 8px;
+    }
   }
 }
 
