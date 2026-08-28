@@ -549,20 +549,7 @@
             </div>
 
             <div class="tour-controls-column">
-              <!-- wraps so the button drops below the heading in the narrow
-                 side-by-side columns of the portrait drawer -->
-              <div class="d-flex align-center justify-space-between flex-wrap ga-2">
-                <h3>Andromeda Footprints</h3>
-                <v-btn
-                  id="go-to-andromeda"
-                  variant="text"
-                  size="small"
-                  class="px-2"
-                  @click="goToAndromeda"
-                >
-                  Go to Andromeda
-                </v-btn>
-              </div>
+              <h3>Andromeda</h3>
               <MiniFootprintSettings
                 v-for="footprint in andromedaFootprints"
                 :key="footprint.id"
@@ -572,6 +559,18 @@
                 :color="footprint.color"
                 :show-opacity="false"
               />
+              <!-- last, so it sits near the other column's zoom-to-pixel-scale
+                   action. Out of the heading either way, which is what keeps the
+                   two titles level and the checkbox rows aligned. -->
+              <v-btn
+                id="go-to-andromeda"
+                variant="text"
+                size="small"
+                class="px-2"
+                @click="goToAndromeda"
+              >
+                Go to Andromeda
+              </v-btn>
             </div>
 
             <v-icon
@@ -826,25 +825,15 @@ const DSS_RA_OFFSET_ARCSEC = -1.446 / Math.cos((41.2687 * Math.PI) / 180);
 const DSS_OFFSET_X_DEG = -DSS_RA_OFFSET_ARCSEC / 3600;
 const DSS_OFFSET_Y_DEG = -DSS_DEC_OFFSET_ARCSEC / 3600;
 
-/*
- * A different number, for footprints that outline the PHAST mosaic: they have to
- * follow the PHAST imagery, which public/offset_phast.py moves onto DSS by its own
- * transform (PHAST carries a rotation error too). Translation part only -- a
- * footprint cannot be rotated, leaving ~0.3" at the mosaic edges.
- */
-const PHAST_DEC_OFFSET_ARCSEC = 1.869;
-const PHAST_RA_OFFSET_ARCSEC = -0.867 / Math.cos((41.3858 * Math.PI) / 180);
-const PHAST_OFFSET_X_DEG = -PHAST_RA_OFFSET_ARCSEC / 3600;
-const PHAST_OFFSET_Y_DEG = -PHAST_DEC_OFFSET_ARCSEC / 3600;
-
+const OVERALL_DISPLAY_OFFSET = 70*(0.5 * 11 / 3600);
 const roman = useFootprint({
   id: "roman-footprint",
   label: "Roman",
   footprint: romanFootprint,
   color: "#e100ff",
-  // linewidth: 2, // faking the linewidth can leave artifacts
+  linewidth: 2, // faking the linewidth can leave artifacts
   offsetXDeg: 0.05,
-  offsetYDeg: -0.5 * 0.11 / 3600,  // Half the height of one Roman pixel
+  offsetYDeg: (-0.5 * 0.11 / 3600) -  OVERALL_DISPLAY_OFFSET,  // Half the height of one Roman pixel
 });
 
 const romanPixel = useFootprint({
@@ -853,37 +842,17 @@ const romanPixel = useFootprint({
   footprint: romanPixelFootprint,
   color: "#108de0",
   show: true,
+  linewidth: 3,
 });
-const testFootprint = useFootprint({
-  id: "roman-fixed-footprint",
-  label: "TEST 10 deg",
-  // footprint: [[[-0.5, -0.5], [-0.5, 0.5], [0.5, 0.5], [0.5, -0.5]]],
-  footprint: [
-    [
-      [-0.5, -0.5],
-      [-0.5, 0.5],
-      [0.5, 0.5],
-      [0.5, -0.5],
-    ].map(([x, y]) => [x * 15, y * 10]),
-  ], // 1 hour x 10 deg. the equatorial grid spacing
-  // footprint: romanFootprint,
-  color: "#4afa4a",
-  fixed: false,
-  fill: false,
-  show: false,
-});
+
 const jwst = useFootprint({
   id: "jwst-footprint",
   label: "Webb",
   footprint: jwstFootprint,
-  // Was the Carina Spark JWST accent (#f0ab52), but that is the same hue and
-  // nearly the same lightness as the PHAST core it sits on, so it disappeared
-  // there (WCAG 1.06). This deeper orange keeps the warm/infrared association
-  // and stays clear of Hubble's blue for red-green colour blindness.
   color: "#ff6d00",
   offsetXDeg: -0.075, // left
-  offsetYDeg: 0.2, // down
-  // linewidth: 2,
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET, // down
+  linewidth: 2,
   show: false,
 });
 const hubble = useFootprint({
@@ -892,8 +861,27 @@ const hubble = useFootprint({
   footprint: hubbleFootprint,
   color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
   offsetXDeg: 0.1,
-  offsetYDeg: 0.2,
-  // linewidth: 2, 
+  offsetYDeg: 0.2 -  OVERALL_DISPLAY_OFFSET,
+  linewidth: 2, 
+  show: false,
+});
+
+const jwstCentered = useFootprint({
+  id: "jwst-footprint-centered",
+  label: "Webb",
+  footprint: jwstFootprint,
+  color: "#ff6d00",
+  // offsetXDeg: -0.075, // left
+  linewidth: 2,
+  show: false,
+});
+const hubbleCentered = useFootprint({
+  id: "hubble-footprint-centered",
+  label: "Hubble",
+  footprint: hubbleFootprint,
+  color: "#18d2ed", //https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/mission/35th-anniversary/hubble-35-anniversary-graphic-blue-rgb.png?w=1341&h=1413&fit=clip&crop=faces%2Cfocalpoint
+  // offsetXDeg: 0.1,
+  linewidth: 2, 
   show: false,
 });
 // const wfpc2 = useFootprint({
@@ -908,7 +896,7 @@ const hubble = useFootprint({
 // });
 const phast = useFootprint({
   id: "phast-footprint",
-  label: "Hubble Outline",
+  label: "Hubble Survey Area",
   footprint: phastFootprint,
   color: "#00ff95",
   fixed: true,
@@ -919,7 +907,7 @@ const phast = useFootprint({
 
 const phastI = useFootprint({
   id: "phastI-footprint",
-  label: "Hubble Pointings",
+  label: "Hubble Images",
   footprint: phastIFootprint,
   color: "#00ff00",
   fixed: true,
@@ -976,7 +964,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "Roman Pointings (Chips)",
+  label: "Roman Images (Detail)",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -986,7 +974,7 @@ const m31SfDisk = useFootprint({
 });
 const m31SfDiskOutline = useFootprint({
   id: "m31-sf-disk-footprint-outline",
-  label: "Roman Pointings (Outlines)",
+  label: "Roman Planned Images",
   footprint: m31SfDiskFootprintOutline,
   color: "#C77FB3",  // TODO: Feel free to change this
   fixed: true,
@@ -1004,7 +992,9 @@ const footprints = [
   m31SfDiskOutline,
   m31SfDisk,
   jwst,
+  jwstCentered,
   hubble,
+  hubbleCentered,
   roman,
   romanPixel,
   // gbtds,
@@ -1023,7 +1013,7 @@ const visibleFootprints = computed(() =>
    current step happens to have on, so these groups are listed literally.
    Their checkboxes work by moving opacity, which only shows up if `show` is
    also on -- hence showControlFootprints() below. */
-const compareFootprints = [roman, hubble, jwst];
+const compareFootprints = [roman, hubbleCentered, jwstCentered];
 const pixelFootprints = [romanPixel];
 const andromedaFootprints = [m31SfDiskOutline, m31SfDisk, phast, phastI];
 
@@ -1440,12 +1430,12 @@ function andromedaTour(n: number, tour = true) {
     return;
   }
   if (n === 4) { // JWST can only see this
-    onlyFootprints([jwst]);
+    onlyFootprints([jwstCentered]);
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
       raRad: 10.6847 * D2R,
-      decRad: 41.469 * D2R,
+      decRad: 41.269 * D2R,
       zoomDeg: 2 * 6,
       rollRad: 0,
       instant: false,
@@ -1458,11 +1448,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.5847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.7 * D2R,
+      decRad: 41.259 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
+      duration: 1,
     });
     ats.setMaxStep(n);
     return;
@@ -1472,8 +1463,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.5847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.7 * D2R,
+      decRad: 41.259 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
@@ -1981,26 +1972,26 @@ onMounted(() => {
       store,
       renderContext,
       text: "Roman",
-      center: Coordinates.raDecTo3d(-0.001, 0.4),
+      center: Coordinates.raDecTo3d(-0.004, 0.4 + OVERALL_DISPLAY_OFFSET),
       // read off the footprint so the label can't drift from the shape it names
       color: roman.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
     const { setVisible: setHubbleTextVisible } = createTextOverlay({
       store,
       renderContext,
       text: "Hubble",
-      center: Coordinates.raDecTo3d(-0.01, -0.3),
+      center: Coordinates.raDecTo3d(-0.018, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: hubble.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
     const { setVisible: setJWSTTextVisible } = createTextOverlay({
       store,
       renderContext,
-      text: "JWST",
-      center: Coordinates.raDecTo3d(0.01, -0.3),
+      text: "Webb",
+      center: Coordinates.raDecTo3d(0.012, -0.3 + OVERALL_DISPLAY_OFFSET),
       color: jwst.color,
-      scale: 0.0005,
+      scale: 0.0008,
     });
 
     textVisibilitySetters[roman.id] = setRomanTextVisible;
@@ -2952,6 +2943,10 @@ video {
     flex-direction: column;
     gap: 0.5rem;
     flex: 1 1 0;
+    // flex-basis: 0 only splits evenly with this: min-width defaults to auto,
+    // which held the fields-of-view column at its min-content width and left
+    // the Andromeda one with the remainder
+    min-width: 0;
   }
 
   .v-icon {
@@ -2967,11 +2962,49 @@ video {
   #zoom-to-pixel-scale {
     color: white;
     flex: 0 0 auto;
+
+    // on a 320px phone an even split leaves each column too narrow for these
+    // on one line -- wrap rather than run past the column edge, the same way
+    // #tour-options' .tour-option does
+    height: auto;
+    min-height: 32px;
+
+    .v-btn__content {
+      white-space: normal;
+    }
+  }
+
+  // Grows to fill whatever is left of its line. On its own line -- which is
+  // where it lands once the chip is too narrow to hold it beside the label --
+  // that is the full width, so its text centres like Go to Andromeda's rather
+  // than sitting off to the left. Only this one: Go to Andromeda is a child of
+  // the column, where flex-grow would stretch it vertically instead.
+  #zoom-to-pixel-scale {
+    flex: 1 1 auto;
   }
 
   // outlined so it reads as the section's action rather than part of the heading
   #go-to-andromeda {
     border: 1px solid white;
+
+    // The checkbox rows are 8px of padding either side of a line of the panel's
+    // own text plus a 1px border, so they grow with the responsive font while a
+    // v-btn's height is fixed -- 3px shorter on a phone, 12px on a desktop.
+    // font-size: inherit is here for the em to resolve against the panel font
+    // rather than the button's own; the lettering is put back on the content.
+    font-size: inherit;
+    line-height: inherit;
+    padding-block: 0;
+    // 18px is the row's 8px padding either side plus its 1px border. The em
+    // version is the fallback: the lh unit postdates the :has() baseline by a
+    // version or two, and browsers without it land within a pixel.
+    min-height: calc(1.5em + 18px);
+    min-height: calc(1lh + 18px);
+
+    .v-btn__content {
+      font-size: 0.75rem;
+      letter-spacing: 0.0892857143em;
+    }
   }
 }
 
@@ -2990,6 +3023,33 @@ video {
    The controls take their natural height (capped, so a long list can't crowd
    the info sheet out) and the info sheet takes the rest -- the same division
    Zoom uses for participants over chat. */
+/* --drawer-width is a share of the screen, which stops making sense once the
+   screen is very wide: at 2560 the column is 870px, and neither panel has
+   anything to do with it -- the control chips just stretch, and the info
+   sheet's prose runs well past a comfortable line length. Caps the pair
+   together, since they share this column when stacked.
+
+   Landscape only: in portrait the stack is the full-width bottom drawer, where
+   a cap would leave it stranded in the corner. It binds above ~1750px wide,
+   so every smaller screen keeps the full 34%.
+
+   420 rather than 500 because the info sheet's side gutters are now a fixed
+   16px instead of 4vw (see InformationSheet.vue) -- that gave back 86px at the
+   width where this cap starts to bite, so the column loses the padding rather
+   than the prose. */
+#app.app-is-landscape #side-panel-stack.side-drawer-open {
+  max-width: 420px;
+}
+
+/* The controls need a fixed ~180px -- a checkbox, its label and the section
+   button -- and no more however wide the phone is, so 40% of a landscape phone
+   is mostly empty chip. The info sheet is prose and still wants its full share,
+   and the two never stack at this size, so only the controls-alone case is
+   narrowed. Same shape of selector as the portrait height cap below. */
+#app.app-is-small.app-is-landscape #side-panel-stack.side-drawer-open:not(:has(> #side-drawer.side-panel-open)) {
+  max-width: 220px;
+}
+
 #side-panel-stack {
   display: flex;
   flex-direction: column;
@@ -3033,12 +3093,13 @@ video {
   gap: 2rem;
 }
 
-// side by side, the second column's heading runs all the way to the right,
-// where the close icon now sits -- keep it clear. Padding works because an
-// absolutely positioned child anchors to the padding box, so the icon stays
-// put while the content shifts in.
-#app.app-is-portrait #tour-controls {
-  padding-right: 1.75rem;
+// Both section titles sit at the top of an equal-height box, so they stay level
+// with each other and the first item under each -- the Go to Andromeda button
+// and the Roman checkbox -- starts on the same line. The height covers the
+// longer title wrapping to two lines in a narrow column.
+#tour-controls .tour-controls-column > h3 {
+  display: flex;
+  align-items: flex-start;
 }
 
 #middle-content {
