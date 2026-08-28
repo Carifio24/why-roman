@@ -174,7 +174,7 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Control fields of view"
+                tooltip-text="Controls"
                 :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
