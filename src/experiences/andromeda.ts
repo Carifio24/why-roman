@@ -24,7 +24,7 @@ export const andromedaExperience: TourExperience = [
   {
     title: "Hubble's view from space",  // step 3, n=2
     tourSheetText: [
-      "The Hubble Space Telescope has provided the clearest view to date of Andromeda in visible light (that we can see with our eyes).",
+      "The Hubble Space Telescope has provided the clearest view to date of Andromeda in <strong>visible</strong> light (that we can see with our eyes).",
       "Zoom in to see how much more detail you can notice with Hubble.",
       "Use the slider to compare the 2 images.",
     ],
@@ -49,7 +49,7 @@ export const andromedaExperience: TourExperience = [
     instaText: "Hubble captured 600 images for Andromeda. It took 500 hours!",
   },
   {
-    title: "Webb sees this",  // step 5, n=4
+    title: "Webb camera size",  // step 5, n=4
     // Webb's camera sees a patch about 100 times smaller than Roman's. It would take Webb more
     // than 300 pointings to cover just the piece of Andromeda that Hubble mapped; Roman needs 3.
     //
@@ -62,18 +62,18 @@ export const andromedaExperience: TourExperience = [
     // better. Webb's mirror is nearly three times the size of Roman's -- it is built to look
     // deep and sharp at one spot, not to map a whole galaxy.
     tourSheetText: [
-      "The James Webb Space Telescope takes images using infrared light (which has less energy than what our eyes can see).",
+      "The James Webb Space Telescope takes images using <strong>infrared</strong> light, which has less energy than what our eyes can see.",
       "Webb's biggest camera has two chips that are side-by-side. The orange squares show how much (or little) of the sky Webb can photograph at once.",
     ],
-    instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time",
+    instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time.",
   },
   {
     title: "Roman's View",  // step 6, n=5
     tourSheetText: [
-      "Like Webb, Roman will capture images in infrared light, revealing secrets invisible to our eyes.",
+      "Like Webb, Roman will capture images in <strong>infrared</strong> light, revealing secrets invisible to our eyes.",
       `Roman's camera has 18 large chips arranged in a boomerang shape. The camera's footprint or "field of view" is shown here.`,
     ],
-    instaText: "Why Roman?!",
+    instaText: "Enter Roman...",
   },
   {
     title: "Compare 3 Space Telescopes",  // step 7, n=6
@@ -112,7 +112,8 @@ export const andromedaExperience: TourExperience = [
     //          over the same area (187x) | Roman SF disk as flown: 1.77 deg^2, 20 epochs,
     //          26.9 h, 0.91 mag deeper stacked
     tourSheetText: [
-      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 600 images (taken over 500 hrs) with Hubble!",
+      "Just 6 images (taken over 3 hrs) with Roman will cover more of Andromeda than 600 images (taken over 500 hrs) with Hubble.",
+      "Note: This is NOT a Hubble diss track. 🎤 Hubble has been the hero of space photography for 36 years! Roman is just joining the team."
     ],
     instaText: "Roman is 100x faster than Hubble.",
   },
@@ -128,7 +129,7 @@ export const andromedaExperience: TourExperience = [
     // Precise: Hubble visible-light (ACS) pixel 0.05" = 0.19 pc at 785 kpc | 3,918 s per point |
     //          faintest stars mag 27.1 at S/N 4 (27.52 AB) | 200 million stars
     tourSheetText: [
-      "Roman's high resolution will allow very detailed images, similar to Hubble.",
+      "Roman's high resolution will allow very detailed images, similar to Hubble (but less detailed than Webb).",
       "The blue grid shows the size of Roman's pixels, overlaid on the image taken by Hubble.",
       "Zoom out from here to see how much area Roman can cover with this level of detail."
     ],
@@ -189,7 +190,7 @@ export const andromedaExperience: TourExperience = [
       "You can continue exploring different regions of the sky and the fields of view of Hubble, Webb, and Roman.",
       "We look forward to sharing Roman's beautiful images soon!"
     ],
-    instaText: 'Stay tuned for "First Look" images in early 2027!',
+    instaText: 'Stay tuned for Roman "First Look" images in early 2027!',
   }
   
   
