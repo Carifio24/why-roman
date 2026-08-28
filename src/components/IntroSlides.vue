@@ -222,7 +222,7 @@ const NUM_SLIDES = 1;
 
   figcaption {
     margin-top: 0.4em;
-    font-size: calc(1.2 * var(--default-font-size));
+    font-size: calc(1.4 * var(--default-font-size));
     line-height: 1.3;
     opacity: 0.8;
     text-align: center;
