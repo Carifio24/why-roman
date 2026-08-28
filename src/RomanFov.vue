@@ -844,7 +844,6 @@ const romanPixel = useFootprint({
   color: "#108de0",
   show: true,
   linewidth: 3,
-  offsetYDeg: -OVERALL_DISPLAY_OFFSET
 });
 
 const jwst = useFootprint({
