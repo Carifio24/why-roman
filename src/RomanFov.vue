@@ -948,8 +948,9 @@ const textColor = ref("#F5F0FF");
 import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
 import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
 import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
-import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
-import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
+// import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
+import { corners as hubbleFootprint } from "./footprints/hst_acs";
+// import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint_rot_off";
 import { corners as phastIFootprint } from "./footprints/m31_individual_footprints_rot_off";
 
