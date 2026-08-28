@@ -548,8 +548,7 @@
         show-back-on-first-step
         show-close
         :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
-        :disable-next="onLastStep && !showExploreUi"
-        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
+        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
         @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
         @leave="leaveTour"
         @close="enterExplore"
