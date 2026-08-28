@@ -1426,10 +1426,10 @@ const carinaWtml = useWtmlLoader("carina.wtml", {
 });
 const currentViewRad = computed(() => {
   return {
-    raRad: store.raRad + 0.0001,
-    decRad: store.decRad + 0.0001,
+    raRad: store.raRad,
+    decRad: store.decRad,
     zoomDeg: store.zoomDeg,
-    rollRad: store.rollRad + 0.0001,
+    rollRad: store.rollRad,
   };
 });
 
@@ -1569,8 +1569,6 @@ function andromedaTour(n: number, tour = true) {
         });
         showOpacitySliders({ index: 0, minLabel: "Ground", maxLabel: "Hubble" });
       }
-    }).catch((err) => {
-      console.error(`gotoRADecZoom failed step ${n}`, err);
     });
     ats.setMaxStep(n);
     return;
@@ -1586,10 +1584,7 @@ function andromedaTour(n: number, tour = true) {
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
-    }).catch((err) => {
-      console.error(`gotoRADecZoom failed step ${n}`, err);
     }).finally(async () => {
-      console.log("finally");
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(n);
@@ -1605,8 +1600,6 @@ function andromedaTour(n: number, tour = true) {
       zoomDeg: 2 * 6,
       rollRad: 0,
       instant: false,
-    }).catch((err) => {
-      console.error(`gotoRADecZoom failed step ${n}`, err);
     });
     ats.setMaxStep(n);
     return;
@@ -1622,8 +1615,6 @@ function andromedaTour(n: number, tour = true) {
       rollRad: 0,
       instant: false,
       duration: 1,
-    }).catch((err) => {
-      console.error(`gotoRADecZoom failed step ${n}`, err);
     });
     ats.setMaxStep(n);
     return;
