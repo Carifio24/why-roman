@@ -8,7 +8,9 @@ declare module "@wwtelescope/engine" {
     function parse(data: string): number;
     function parseRA(ra: string, degrees: boolean): number;
     function parseDec(dec: string): number;
+    function raDecTo3dAu(ra: number, dec: number, au: number): Vector3d;
   }
+
 
   interface Matrix3d {
     clone(): Matrix3d;
