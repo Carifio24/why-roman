@@ -835,7 +835,6 @@ const { createUserEntry, responseOptOut } = useDataTracking({
   storyPath: "/why-roman",
   resetData: resetTrackingData,
   getData: getTrackingData,
-  apiUrl: "http://localhost:8080",
 });
 
 useWWTKeyboardControls(store);
