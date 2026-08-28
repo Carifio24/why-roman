@@ -162,10 +162,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, h, type SetupContext } from 'vue';
+import { h, type SetupContext } from 'vue';
+import { supportsTouchscreen} from "@cosmicds/vue-toolkit";
 
-
-const touchscreen = ref(true);
+const touchscreen = supportsTouchscreen();
 // https://v3-migration.vuejs.org/breaking-changes/functional-components
 const easyLink = (props: { href: string }, { slots }: SetupContext) => {
   return h('a', { href: props.href, target: '_blank' }, slots.default?.());

@@ -19,7 +19,7 @@ export const andromedaExperience: TourExperience = [
       "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
       "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
     ],
-    instaText: "A telescope on the ground can see this...",
+    instaText: "A telescope on the GROUND can see this...",
   },
   {
     title: "Hubble's view from space",  // step 3, n=2
