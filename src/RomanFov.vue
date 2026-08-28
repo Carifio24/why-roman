@@ -1697,11 +1697,29 @@ function andromedaTour(n: number, tour = true) {
   
   // step 9
   if (n === 9) {// close out
-    tourCloseOut();
-    showOpacitySliders();
-    onlyFootprints([]);
-    ats.setMaxStep(n);
-    return;
+    onlyFootprints([roman, romanPixel]);  
+    store.gotoRADecZoom({
+      ...currentViewRad.value,
+      zoomDeg: 1.9 * 6,
+      rollRad: 0,
+      instant: false, 
+      duration: 4,
+    }).then(async () => {
+      if (tourStep.value === 9) {
+        await store.gotoRADecZoom({
+          raRad: 10.75 * D2R,
+          decRad: 41.15 * D2R,
+          zoomDeg: 1.9 * 6,
+          instant: false,
+          duration: 2,
+        });
+      }
+      tourCloseOut();
+      showOpacitySliders();
+      onlyFootprints([roman]);
+      ats.setMaxStep(n);
+      return;
+    });
   }
   
   
