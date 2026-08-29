@@ -7,7 +7,7 @@ export const andromedaExperience: TourExperience = [
     title: "Andromeda",  // step 1, n=0
     tourSheetText: [
       "Andromeda (M31) is our nearest neighboring spiral galaxy.",
-      "It spans 3 degrees (or 6 full Moons!) across the sky.",
+      "It spans 3 degrees of sky — or 6 full Moons! — though its outermost areas are too faint to see well. Use the slider to compare.",
       "By studying Andromeda, astronomers can better understand our own Milky Way galaxy.",
     ],
     instaText: "The Andromeda Galaxy is REALLY BIG on the sky",
@@ -19,7 +19,7 @@ export const andromedaExperience: TourExperience = [
       "This image shows Andromeda as viewed from a 1.2-m telescope on Earth.",
       "Zoom in and pan around Andromeda to explore the stars and dust lanes in the spiral arms.",
     ],
-    instaText: "A telescope on the ground can see this...",
+    instaText: "A telescope on the GROUND can see this...",
   },
   {
     title: "Hubble's view from space",  // step 3, n=2
@@ -62,7 +62,7 @@ export const andromedaExperience: TourExperience = [
     // better. Webb's mirror is nearly three times the size of Roman's -- it is built to look
     // deep and sharp at one spot, not to map a whole galaxy.
     tourSheetText: [
-      "The James Webb Space Telescope takes images using <strong>infrared</strong> light, which has less energy than what our eyes can see.",
+      "The James Webb Space Telescope takes images using <strong>infrared</strong> light (which has a longer wavelength — and less energy — than what our eyes can see.)",
       "Webb's biggest camera has two chips that are side-by-side. The orange squares show how much (or little) of the sky Webb can photograph at once.",
     ],
     instaText: "Like Hubble, Webb can see only tiny pieces of sky at a time.",
@@ -187,10 +187,11 @@ export const andromedaExperience: TourExperience = [
     //
     // Keep it short. This step's job is to hand over and get out of the way.
     tourSheetText: [
-      "You can continue exploring different regions of the sky and the fields of view of Hubble, Webb, and Roman.",
+      "Roman is built to survey huge amounts of sky — and all that sky adds up to big answers about our universe.",
+      "Now it's your turn. Explore how Hubble, Webb, and Roman each see the universe differently.",
       "We look forward to sharing Roman's beautiful images soon!"
     ],
-    instaText: 'Why Roman? Gigantic, sharp images in infrared light. Stay tuned!',
+    instaText: "Why Roman? Gigantic, sharp, infrared images! Stay tuned...",
   }
   
   
