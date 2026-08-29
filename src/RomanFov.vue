@@ -9,6 +9,183 @@
       'app-tour-sheet-overlay': tourSheetOverlays,
     }"
   >
+    <!-- The drawers come before #main-content so the tab order follows the
+         visual one: in landscape they sit to its left, and CSS `order` moves
+         a flex item visually without moving it in the tab order. -->
+
+    <div
+      id="side-drawer-tour-sheet"
+      class="layout-drawer"
+      :class="[tourSheetOpen ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
+      <!-- @close runs enterExplore, not leaveTour, so closing mid-tour lands
+           where finishing the tour would: leaveTour only tears the tour down,
+           enterExplore also sets up the explore layers, camera and controls -->
+      <TourSheet
+        v-if="tourSheetOpen && activeTour"
+        :tour-id="activeTour.id"
+        :step="tourStep"
+        :small-size="smallSize"
+        show-next-on-last-step
+        show-back-on-first-step
+        show-close
+        :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
+        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
+        @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
+        @leave="leaveTour"
+        @close="enterExplore"
+        @step="(index) => goToStep(index)"
+      />
+    </div>
+
+    <!-- The controls and the info sheet share one drawer column. On a screen
+         with room for both they stack inside it (the way Zoom stacks
+         participants over chat); everywhere else only one is ever open, so the
+         stack holds a single panel and behaves like a plain drawer. Either
+         way the column is one --drawer-width wide, never two. -->
+    <div
+      id="side-panel-stack"
+      class="layout-drawer"
+      :class="[(showOptions || showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
+    >
+      <!-- the controls are their own panel, not part of the tour sheet: in a
+         roomy landscape the tour sheet floats while these still push WWT over -->
+      <div
+        id="side-drawer-controls"
+        :class="[showOptions ? 'side-panel-open' : 'side-panel-closed']"
+      >
+        <TourSheet
+          v-if="showOptions"
+          tour-id="there-is-no-tour-just-showing-options"
+          :step="tourStep"
+          :small-size="smallSize"
+          :show-breadcrumbs="false"
+          :show-controls="false"
+        >
+          <div id="tour-controls">
+            <!-- First in the DOM so it is the first tab stop in the panel: a
+                 keyboard user should be able to leave without walking the whole
+                 checkbox list. It is absolutely positioned, so the corner it
+                 appears in is unchanged. Focusable and Enter-activated, like
+                 the tour sheet's and info sheet's close icons -- a bare v-icon
+                 is neither by default. -->
+            <v-icon
+              icon="mdi-close"
+              tabindex="0"
+              role="button"
+              aria-label="Close the controls"
+              @click="showOptions = false"
+              @keyup.enter="showOptions = false"
+            />
+            <div class="tour-controls-column">
+              <h3>Compare Fields of View</h3>
+              <MiniFootprintSettings
+                v-for="footprint in compareFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
+              >
+                <template
+                  v-if="telescopeInfo[footprint.id]"
+                  #action
+                >
+                  <TelescopeInfoButton
+                    :info="telescopeInfo[footprint.id]"
+                    :color="footprint.color"
+                  />
+                </template>
+              </MiniFootprintSettings>
+              <hr 
+                class="my-1" 
+                style="margin-inline: 7%; color: gray"
+              />
+              <MiniFootprintSettings
+                v-for="footprint in pixelFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
+              >
+                <template #action>
+                  <v-btn
+                    id="zoom-to-pixel-scale"
+                    variant="text"
+                    size="small"
+                    class="px-1"
+                    @click="zoomedToPixelScale ? zoomBackOut() : zoomToPixelScale()"
+                  >
+                    {{ zoomedToPixelScale ? 'zoom back out' : 'zoom to pixel scale' }}
+                  </v-btn>
+                </template>
+              </MiniFootprintSettings>
+            </div>
+
+            <div class="tour-controls-column">
+              <h3>Andromeda</h3>
+              <MiniFootprintSettings
+                v-for="footprint in andromedaFootprints"
+                :key="footprint.id"
+                v-model:opacity="footprint.opacity"
+                v-model:visible="footprint.visible"
+                v-model:fill="footprint.fill"
+                :label="footprint.label"
+                :color="footprint.color"
+                :show-opacity="false"
+                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
+              />
+              <!-- last, so it sits near the other column's zoom-to-pixel-scale
+                   action. Out of the heading either way, which is what keeps the
+                   two titles level and the checkbox rows aligned. -->
+              <v-btn
+                id="go-to-andromeda"
+                variant="text"
+                size="small"
+                class="px-2"
+                @click="goToAndromeda"
+              >
+                Go to Andromeda
+              </v-btn>
+            </div>
+
+          </div>
+        </TourSheet>
+      </div>
+    
+      <div
+        id="side-drawer"
+        :class="[(showTextSheet) ? 'side-panel-open' : 'side-panel-closed']"
+      >
+        <InformationSheet
+          v-if="showTextSheet"
+          v-model="showTextSheet"
+          v-model:tab="infoSheetTab"
+          :tab-color="borderColor"
+          :text-color="textColor"
+          :heading-color="borderColor"
+          :accent-color="roman.color"
+          tab-title="WWT Why Roman"
+        >
+          <InfoPage title="About Roman">
+            <ScienceInfo />
+          </InfoPage>
+          <InfoPage
+            title="User Guide"
+          >
+            <UserGuide />
+          </InfoPage>
+        </InformationSheet>
+      </div>
+    </div>
+
     <div id="main-content">
       <WorldWideTelescope :wwt-namespace="wwtNamespace"></WorldWideTelescope>
 
@@ -557,169 +734,6 @@
           </video>
         </div>
       </v-dialog>
-    </div>
-
-    <div
-      id="side-drawer-tour-sheet"
-      class="layout-drawer"
-      :class="[tourSheetOpen ? 'side-drawer-open' : 'side-drawer-closed']"
-    >
-      <!-- @close runs enterExplore, not leaveTour, so closing mid-tour lands
-           where finishing the tour would: leaveTour only tears the tour down,
-           enterExplore also sets up the explore layers, camera and controls -->
-      <TourSheet
-        v-if="tourSheetOpen && activeTour"
-        :tour-id="activeTour.id"
-        :step="tourStep"
-        :small-size="smallSize"
-        show-next-on-last-step
-        show-back-on-first-step
-        show-close
-        :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
-        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
-        @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
-        @leave="leaveTour"
-        @close="enterExplore"
-        @step="(index) => goToStep(index)"
-      />
-    </div>
-
-    <!-- The controls and the info sheet share one drawer column. On a screen
-         with room for both they stack inside it (the way Zoom stacks
-         participants over chat); everywhere else only one is ever open, so the
-         stack holds a single panel and behaves like a plain drawer. Either
-         way the column is one --drawer-width wide, never two. -->
-    <div
-      id="side-panel-stack"
-      class="layout-drawer"
-      :class="[(showOptions || showTextSheet) ? 'side-drawer-open' : 'side-drawer-closed']"
-    >
-      <!-- the controls are their own panel, not part of the tour sheet: in a
-         roomy landscape the tour sheet floats while these still push WWT over -->
-      <div
-        id="side-drawer-controls"
-        :class="[showOptions ? 'side-panel-open' : 'side-panel-closed']"
-      >
-        <TourSheet
-          v-if="showOptions"
-          tour-id="there-is-no-tour-just-showing-options"
-          :step="tourStep"
-          :small-size="smallSize"
-          :show-breadcrumbs="false"
-          :show-controls="false"
-        >
-          <div id="tour-controls">
-            <div class="tour-controls-column">
-              <h3>Compare Fields of View</h3>
-              <MiniFootprintSettings
-                v-for="footprint in compareFootprints"
-                :key="footprint.id"
-                v-model:opacity="footprint.opacity"
-                v-model:visible="footprint.visible"
-                v-model:fill="footprint.fill"
-                :label="footprint.label"
-                :color="footprint.color"
-                :show-opacity="false"
-                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
-              >
-                <template
-                  v-if="telescopeInfo[footprint.id]"
-                  #action
-                >
-                  <TelescopeInfoButton
-                    :info="telescopeInfo[footprint.id]"
-                    :color="footprint.color"
-                  />
-                </template>
-              </MiniFootprintSettings>
-              <hr 
-                class="my-1" 
-                style="margin-inline: 7%; color: gray"
-              />
-              <MiniFootprintSettings
-                v-for="footprint in pixelFootprints"
-                :key="footprint.id"
-                v-model:opacity="footprint.opacity"
-                v-model:visible="footprint.visible"
-                v-model:fill="footprint.fill"
-                :label="footprint.label"
-                :color="footprint.color"
-                :show-opacity="false"
-                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
-              >
-                <template #action>
-                  <v-btn
-                    id="zoom-to-pixel-scale"
-                    variant="text"
-                    size="small"
-                    class="px-1"
-                    @click="zoomedToPixelScale ? zoomBackOut() : zoomToPixelScale()"
-                  >
-                    {{ zoomedToPixelScale ? 'zoom back out' : 'zoom to pixel scale' }}
-                  </v-btn>
-                </template>
-              </MiniFootprintSettings>
-            </div>
-
-            <div class="tour-controls-column">
-              <h3>Andromeda</h3>
-              <MiniFootprintSettings
-                v-for="footprint in andromedaFootprints"
-                :key="footprint.id"
-                v-model:opacity="footprint.opacity"
-                v-model:visible="footprint.visible"
-                v-model:fill="footprint.fill"
-                :label="footprint.label"
-                :color="footprint.color"
-                :show-opacity="false"
-                @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
-              />
-              <!-- last, so it sits near the other column's zoom-to-pixel-scale
-                   action. Out of the heading either way, which is what keeps the
-                   two titles level and the checkbox rows aligned. -->
-              <v-btn
-                id="go-to-andromeda"
-                variant="text"
-                size="small"
-                class="px-2"
-                @click="goToAndromeda"
-              >
-                Go to Andromeda
-              </v-btn>
-            </div>
-
-            <v-icon
-              icon="mdi-close"
-              @click="showOptions = false"
-            />
-          </div>
-        </TourSheet>
-      </div>
-    
-      <div
-        id="side-drawer"
-        :class="[(showTextSheet) ? 'side-panel-open' : 'side-panel-closed']"
-      >
-        <InformationSheet
-          v-if="showTextSheet"
-          v-model="showTextSheet"
-          v-model:tab="infoSheetTab"
-          :tab-color="borderColor"
-          :text-color="textColor"
-          :heading-color="borderColor"
-          :accent-color="roman.color"
-          tab-title="WWT Why Roman"
-        >
-          <InfoPage title="About Roman">
-            <ScienceInfo />
-          </InfoPage>
-          <InfoPage
-            title="User Guide"
-          >
-            <UserGuide />
-          </InfoPage>
-        </InformationSheet>
-      </div>
     </div>
   </v-app>
 </template>
@@ -2209,7 +2223,26 @@ const AUTO_SHOW_INFO_KEY = "roman-view-finder__auto-show-info";
 //   autoOpenInfoDialog.value = window.localStorage.getItem(AUTO_SHOW_INFO_KEY)?.toLowerCase() !== "false";
 // });
 
+// Ported from solar-eclipse-2026. :focus-visible's own heuristic makes an
+// exception for inputs -- unlike buttons, they count as focus-visible even when
+// clicked or dragged with a mouse, on the reasoning that you need to see a text
+// cursor. That gives the oreo ring to sliders and the like on plain mouse use.
+// Tracking Tab against mouse/touch lets the CSS below undo that exception.
+function onKeydownForFocusIndicator(event: KeyboardEvent) {
+  if (event.key === "Tab") {
+    document.body.classList.add("keyboard-focus-only");
+  }
+}
+
+function onPointerForFocusIndicator() {
+  document.body.classList.remove("keyboard-focus-only");
+}
+
 onMounted(() => {
+  document.addEventListener("keydown", onKeydownForFocusIndicator);
+  document.addEventListener("mousedown", onPointerForFocusIndicator);
+  document.addEventListener("touchstart", onPointerForFocusIndicator);
+
   store.waitForReady().then(async () => {
     if (webglDisabled.value) {
       layersLoaded.value = true;
@@ -2739,12 +2772,13 @@ body {
    drawer and share these rules. Only the tour sheet deviates, and only in a
    roomy landscape, where it floats instead (see .app-tour-sheet-overlay
    below). Each is a flex sibling of #main-content, so opening one shrinks the
-   WWT view; `order: -1` puts it before #main-content, i.e. on the left. */
+   WWT view. They precede #main-content in the markup, so in landscape they
+   land on its left with no `order` needed -- and the tab order matches, which
+   `order` would have broken. */
 .layout-drawer {
   flex: 0 0 auto;
   overflow: hidden;
   width: 0;
-  order: -1;
 
   &.side-drawer-open {
     width: var(--drawer-width);
@@ -3046,6 +3080,29 @@ body {
 .v-text-field input:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+}
+
+// The carve-out described above onKeydownForFocusIndicator: inputs -- sliders
+// included -- match :focus-visible on a plain click or drag, so without this the
+// oreo ring appears on mouse use. body.keyboard-focus-only is only set while the
+// last interaction was a Tab.
+body:not(.keyboard-focus-only) input:focus-visible,
+body:not(.keyboard-focus-only) textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+// The toolkit's icon-button carries its own pre-oreo focus styling: plain
+// :focus rules that swap colour and border-colour to --focus-color, and the
+// box-shadow while active. Neutralise both so the oreo ring is the only focus
+// indicator these buttons show.
+.icon-wrapper:focus {
+  color: var(--color) !important;
+  border-color: var(--color) !important;
+}
+
+.icon-wrapper.active:focus {
+  box-shadow: 0 0 10px 3px var(--active-shadow) !important;
 }
 
 .video-wrapper {

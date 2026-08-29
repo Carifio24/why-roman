@@ -1,6 +1,10 @@
 <!-- eslint-disable vue/max-attributes-per-line -->
 <template>
   <v-card class="info-sheet" height="100%">
+    <!-- Vuetify gives the unselected tab tabindex="-1" (the ARIA roving-tabindex
+         pattern, where arrow keys move between tabs) but its own arrow handling
+         does not fire here, leaving that tab unreachable by keyboard. Drive it
+         ourselves. -->
     <v-tabs
       v-model="tab"
       class="info-sheet-tabs"
@@ -8,11 +12,18 @@
       :slider-color="tabColor"
       density="compact"
       align-tabs="end"
+      @keydown.left.prevent="cycleTab(-1)"
+      @keydown.right.prevent="cycleTab(1)"
     >
+      <!-- tabindex="0" on every tab, not just the selected one: Vuetify's
+           default is the roving-tabindex pattern, where Tab reaches the bar and
+           arrows move within it. With two tabs that just reads as "the second
+           one is unreachable", so make both Tab stops. Arrow keys still work. -->
       <v-tab 
         v-for="tabName in tabs" 
         :key="tabName"
         class="info-sheet-tab" 
+        tabindex="0"
       >
         <h3>{{ tabName }}</h3>
       </v-tab>
@@ -56,7 +67,7 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch} from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import{ provide, readonly } from 'vue';
 
 
@@ -76,6 +87,20 @@ function registerTab(title: string) {
 
 function activateTab(index: number) {
   tab.value = index;
+}
+
+// left/right through the tabs, wrapping, then move focus to the new one so the
+// keyboard user can see where they are
+function cycleTab(delta: number) {
+  const count = tabs.value.length;
+  if (count < 2) {
+    return;
+  }
+  tab.value = (tab.value + delta + count) % count;
+  nextTick(() => {
+    const selected = document.querySelector<HTMLElement>(".info-sheet-tab.v-tab--selected");
+    selected?.focus();
+  });
 }
 
 // This is where the magic happens.
