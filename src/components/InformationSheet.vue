@@ -15,10 +15,15 @@
       @keydown.left.prevent="cycleTab(-1)"
       @keydown.right.prevent="cycleTab(1)"
     >
+      <!-- tabindex="0" on every tab, not just the selected one: Vuetify's
+           default is the roving-tabindex pattern, where Tab reaches the bar and
+           arrows move within it. With two tabs that just reads as "the second
+           one is unreachable", so make both Tab stops. Arrow keys still work. -->
       <v-tab 
         v-for="tabName in tabs" 
         :key="tabName"
         class="info-sheet-tab" 
+        tabindex="0"
       >
         <h3>{{ tabName }}</h3>
       </v-tab>

@@ -671,9 +671,15 @@
               </v-btn>
             </div>
 
+            <!-- focusable and Enter-activated, like the tour sheet's and info
+                 sheet's close icons -- a bare v-icon is neither by default -->
             <v-icon
               icon="mdi-close"
+              tabindex="0"
+              role="button"
+              aria-label="Close the controls"
               @click="showOptions = false"
+              @keyup.enter="showOptions = false"
             />
           </div>
         </TourSheet>
