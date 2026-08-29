@@ -380,7 +380,7 @@
           <v-row
             id="position-layout"
             align="start"
-            :justify="tourStep === 0 ? 'start': 'center'"
+            :justify="tourStep === 0 ? 'center': 'center'"
             class="pt-4"
           >
             <div
@@ -3504,6 +3504,8 @@ h1.startup-screen-title {
   flex: 1 0 auto;
   border: none;
   background: none;
+  display: flex;
+  justify-content: center;
 }
 
 .opacity-slider-row {
@@ -3511,6 +3513,8 @@ h1.startup-screen-title {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  flex-grow: 1;
+  
 }
 
 .opacity-slider-label {
