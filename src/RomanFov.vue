@@ -7,6 +7,7 @@
       'app-is-portrait': isPortrait,
       'app-is-landscape': !isPortrait,
       'app-tour-sheet-overlay': tourSheetOverlays,
+      'app-privacy-notice-open': showPrivacyDialog,
     }"
   >
     <!-- The drawers come before #main-content so the tab order follows the
@@ -246,8 +247,14 @@
         v-model="showPrivacyDialog"
         id="privacy-popup-dialog"
       >
-        <v-card>
-          <v-card-text>
+        <v-card
+          ref="privacyCard"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="privacy-notice-text"
+          tabindex="-1"
+        >
+          <v-card-text id="privacy-notice-text">
             To evaluate usage of this app, <strong>anonymized</strong> data may be collected.
           </v-card-text>
           <v-card-actions>
@@ -843,6 +850,21 @@ let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
 
 const showPrivacyDialog = ref(false);
+// replaying the tour brings the intro back, and the notice is a once-per-session
+// ask -- the lock still opens it on demand
+let privacyNoticeShown = false;
+
+const privacyCard = ref<{ $el: HTMLElement } | null>(null);
+
+// The notice is teleported to the end of <body> and, with no scrim, Vuetify does
+// not trap focus in it -- so by tab order it lands after everything else in the
+// app. Move focus to it instead, so a keyboard user can answer it before they
+// start exploring rather than tabbing the whole page first.
+function focusPrivacyNotice() {
+  nextTick(() => {
+    (privacyCard.value?.$el as HTMLElement | undefined)?.focus();
+  });
+}
 
 // Persistent means the notice cannot be clicked away, so give it its own way
 // out: if it is ignored it stands down rather than blocking the corner forever.
@@ -856,6 +878,8 @@ watch(showPrivacyDialog, (open) => {
     privacyNoticeTimeout = null;
   }
   if (open) {
+    focusPrivacyNotice();
+
     privacyNoticeTimeout = setTimeout(() => {
       showPrivacyDialog.value = false;
     }, PRIVACY_NOTICE_TIMEOUT_MS);
@@ -1290,14 +1314,17 @@ const showIntroSlides = ref(false);
 function handleSplashClose() {
   showStartup.value = false;
   showIntroSlides.value = true;
-  if (responseOptOut.value === null) {
-    showPrivacyDialog.value = true;
-  }
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
   selectPlace(lastTourId.value, 0);
   hasSeenIntroSlides.value = true;
+  // held back until the intro is out of the way: it is modal, so a notice
+  // opened alongside it sits underneath and cannot take the focus
+  if (responseOptOut.value === null && !privacyNoticeShown) {
+    privacyNoticeShown = true;
+    showPrivacyDialog.value = true;
+  }
 }
 
 
@@ -3313,6 +3340,18 @@ video {
 :root {
   --drawer-width: 34%;
   --drawer-height: 34%;
+  // read by the teleported privacy notice and by the rule that clears a space
+  // for it in #bottom-content, so the two cannot drift apart
+  --privacy-card-width: 19rem;
+  // the height of the #bottom-content band the notice has to sit above when
+  // there is no room to sit beside it -- the logo row is the taller case
+  --privacy-band-clearance: 3.5rem;
+}
+
+@media (min-width: 960px) {
+  :root {
+    --privacy-band-clearance: 7rem;
+  }
 }
 
 // a phone in landscape has little absolute width to spare, so the column takes
@@ -3727,6 +3766,17 @@ h1.startup-screen-title {
   padding-left: calc(var(--drawer-width) + 1rem);
 }
 
+// The notice sits in the bottom-left corner, so start the slider to its right
+// for as long as it is up -- the same trade as .no-footer above, and it keeps
+// the notice off the sky it would need to climb into to clear the row.
+#app.app-is-landscape:not(.app-is-small).app-privacy-notice-open #bottom-content {
+  padding-left: calc(var(--privacy-card-width) + 2rem);
+}
+
+#app.app-is-landscape:not(.app-is-small).app-privacy-notice-open.app-tour-sheet-overlay #bottom-content {
+  padding-left: calc(var(--drawer-width) + var(--privacy-card-width) + 2rem);
+}
+
 #side-drawer-controls {
   display: flex;
   
@@ -3774,35 +3824,35 @@ h1.startup-screen-title {
     background-color: purple;
     position: absolute;
 
-    // A strip along the bottom of the canvas, starting just right of
-    // #privacy-lock and sharing its baseline. Width comes from these insets
-    // rather than a max-width prop, so it can stay one row. The drawer sizes
-    // come from :root and the orientation from a media query because the dialog
-    // teleports out of #app and can see neither.
+    // A small card in #privacy-lock's own corner rather than a strip across the
+    // bottom: it covers a fixed patch of sky instead of having to dodge every
+    // panel down there. The drawer sizes come from :root and the orientation
+    // from a media query because the dialog teleports out of #app and can see
+    // neither.
     top: auto;
-    bottom: 0.75rem;
     left: 1rem; // where the lock sits; it hides itself while this is open
-    right: 0.75rem;
-    // Vuetify gives .v-dialog > .v-overlay__content a fixed width and a 24px
-    // margin; with a width set, the right inset above is simply ignored
-    width: auto;
-    max-width: none;
+    right: auto;
+    width: var(--privacy-card-width);
+    max-width: calc(100vw - 2rem);
     margin: 0;
 
-    @media (orientation: portrait) {
-      bottom: calc(var(--drawer-height) + 0.75rem);
-    }
+    // Default: nowhere near enough width to seat the opacity slider beside the
+    // card, so sit above that band rather than pushing it along.
+    bottom: calc(var(--privacy-band-clearance) + 0.75rem);
 
     @media (orientation: landscape) {
       left: calc(var(--drawer-width) + 1rem);
     }
 
-    // The logo row renders from 960 up and shares this band. The cluster sits a
-    // near-constant ~245px in from the right edge whatever the viewport, so stop
-    // short of it and let the sentence take a second line rather than covering
-    // the logos.
-    @media (min-width: 960px) {
-      right: 16rem;
+    @media (orientation: portrait) {
+      bottom: calc(var(--drawer-height) + var(--privacy-band-clearance));
+    }
+
+    // Wide landscape is the one case with room to spare: drop onto the lock's
+    // own baseline and let #bottom-content clear a space instead (see
+    // app-privacy-notice-open below).
+    @media (orientation: landscape) and (min-width: 960px) {
+      bottom: 0.75rem;
     }
   }
 
