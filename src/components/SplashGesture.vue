@@ -58,13 +58,16 @@
     <template
       #actions
     >
-      <v-icon
+      <v-btn
         class="ms-2"
         icon="mdi-close"
+        variant="tonal"
+        density="compact"
+        size="default"
         tabindex="0"
         @click.stop="handleClose"
         @keyup.enter.stop="handleClose"
-      ></v-icon>
+      ></v-btn>
     </template>
   </v-snackbar>
 </template>
@@ -72,8 +75,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { supportsTouchscreen } from '@cosmicds/vue-toolkit';
-const touchscreen = supportsTouchscreen();
+// import { supportsTouchscreen } from '@cosmicds/vue-toolkit';
+const touchscreen = ref(true);
 // const iconSize = ref('large');
 import { useDisplay } from 'vuetify';
 const show = defineModel<boolean>({default: true});

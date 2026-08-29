@@ -60,17 +60,20 @@
       </component>
 
       <!-- Data collection opt-out dialog -->
+      <!-- :scrim bound, not scrim="false": the bare attribute passes the string
+           "false", which is truthy, so Vuetify dimmed the whole app behind it -->
       <v-dialog
-        scrim="false"
+        :scrim="false"
+        :persistent="true"
+        no-click-animation
         v-model="showPrivacyDialog"
-        max-width="400px"
         id="privacy-popup-dialog"
       >
         <v-card>
           <v-card-text>
-            To evaluate usage of this app, <strong>anonymized</strong> data may be collected, including locations viewed and map quiz responses. "My Location" data is NEVER collected.
+            To evaluate usage of this app, <strong>anonymized</strong> data may be collected.
           </v-card-text>
-          <v-card-actions class="pt-3">
+          <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
               color="#BDBDBD"
@@ -174,7 +177,7 @@
                 id="options-closed"
                 icon="sliders"
                 :color="borderColor"
-                tooltip-text="Control fields of view"
+                tooltip-text="Controls"
                 :show-tooltip="!mobile"
                 tooltip-location="start"
                 tabindex="0"
@@ -185,7 +188,7 @@
                 v-if="inExploreMode"
                 id="info-icon"
                 v-model="showTextSheet"
-                icon="info"
+                icon="mdi-book-open-variant"
                 :color="borderColor"
                 tooltip-text="Learn more"
                 :show-tooltip="!mobile"
@@ -233,8 +236,9 @@
                   <div class="explore-callout-lead">
                     Use these buttons to:
                   </div>
-                  <div><font-awesome-icon icon="sliders" /> open field of view controls </div>
-                  <div><font-awesome-icon icon="info" /> learn more about Roman & this app</div>
+                  <div class="mb-1"><font-awesome-icon icon="sliders" /> open controls </div>
+                  <div class="mb-1"><v-icon icon="mdi-book-open-variant" /> learn more about Roman &amp; this app</div>
+
                   <div><v-icon icon="mdi-replay" /> play the tour again</div>
                 </div>
                 <v-icon
@@ -499,10 +503,10 @@
             />
           </footer>
 
-          <!-- Out of the button group and into the corner: this is a footnote,
-               not one of the tools. Absolute, so the overlay's flex column
-               still distributes only top and bottom content. -->
-          <div id="privacy-lock">
+          <div
+            v-if="!showPrivacyDialog"
+            id="privacy-lock"
+          >
             <icon-button
               icon="mdi-lock"
               :color="borderColor"
@@ -569,10 +573,11 @@
         :step="tourStep"
         :small-size="smallSize"
         show-next-on-last-step
+        show-back-on-first-step
         show-close
-        :next-text="showExploreUi ? 'Explore' : 'Next'"
-        @next="showExploreUi ? enterExplore() : goToStep(tourStep + 1)"
-        @previous="goToStep(tourStep - 1)"
+        :next-text="showExploreUi || onLastStep ? 'Explore' : 'Next'"
+        @next="showExploreUi || onLastStep ? enterExplore() : goToStep(tourStep + 1)"
+        @previous="tourStep === 0 ? replayTour() : goToStep(tourStep - 1)"
         @leave="leaveTour"
         @close="enterExplore"
         @step="(index) => goToStep(index)"
@@ -616,10 +621,22 @@
                 :color="footprint.color"
                 :show-opacity="false"
                 @show="(_value: boolean) => updateFootprintToggleCount(footprint.id)"
+              >
+                <template
+                  v-if="telescopeInfo[footprint.id]"
+                  #action
+                >
+                  <TelescopeInfoButton
+                    :info="telescopeInfo[footprint.id]"
+                    :color="footprint.color"
+                  />
+                </template>
+              </MiniFootprintSettings>
+              <hr 
+                class="my-1" 
+                style="margin-inline: 7%; color: gray"
               />
-
               <MiniFootprintSettings
-                class="mt-3"
                 v-for="footprint in pixelFootprints"
                 :key="footprint.id"
                 v-model:opacity="footprint.opacity"
@@ -759,6 +776,8 @@ import SplashGesture from "./components/SplashGesture.vue";
 import SplashScreen from "./components/SplashScreen.vue";
 import FootprintSettings from "./components/FootprintSettings.vue";
 import MiniFootprintSettings from "./components/MiniFootprintSettings.vue";
+import TelescopeInfoButton from "./components/TelescopeInfoButton.vue";
+import { telescopeInfo } from "./telescopeInfo";
 import TourSheet from "./components/TourSheet.vue";
 import InstaTourSheet from "./components/InstaTourSheet.vue";
 import { tourExperiences } from "./experiences";
@@ -810,6 +829,24 @@ let sliderLabelPressCount = 0;
 let sliderMoveCount = 0;
 
 const showPrivacyDialog = ref(false);
+
+// Persistent means the notice cannot be clicked away, so give it its own way
+// out: if it is ignored it stands down rather than blocking the corner forever.
+// Declared after the ref because watch() reads its source immediately.
+const PRIVACY_NOTICE_TIMEOUT_MS = 20_000;
+let privacyNoticeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(showPrivacyDialog, (open) => {
+  if (privacyNoticeTimeout !== null) {
+    clearTimeout(privacyNoticeTimeout);
+    privacyNoticeTimeout = null;
+  }
+  if (open) {
+    privacyNoticeTimeout = setTimeout(() => {
+      showPrivacyDialog.value = false;
+    }, PRIVACY_NOTICE_TIMEOUT_MS);
+  }
+});
 
 function updateFootprintToggleCount(id: string) {
   if (id in footprintsToggleCount) {
@@ -969,8 +1006,9 @@ const textColor = ref("#F5F0FF");
 import { full as jwstFootprint } from "./footprints/jwst_nircam_modules";
 import { corners as romanFootprint } from "./footprints/roman_wfi_footprint";
 import { corners as romanPixelFootprint } from "./footprints/roman_wfi_pixels";
-import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
-import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
+// import { corners as hubbleFootprint } from "./footprints/hubble_wfc3_footprint";
+import { corners as hubbleFootprint } from "./footprints/hst_acs";
+// import { corners as wfpc2Footprint } from "./footprints/hst_wfpc2_footprint";
 import { corners as phastFootprint } from "./footprints/m31_footprint_rot_off";
 import { corners as phastIFootprint } from "./footprints/m31_individual_footprints_rot_off";
 
@@ -1148,7 +1186,7 @@ const m31HiDisk = useFootprint({
 
 const m31SfDisk = useFootprint({
   id: "m31-sf-disk-footprint",
-  label: "Roman Images (Detail)",
+  label: "Roman Images (Chips)",
   footprint: m31SfDiskFootprint,
   color: "#bd93f9",
   fixed: true,
@@ -1244,7 +1282,7 @@ function handleSplashClose() {
 }
 function handleIntroClose() {
   showIntroSlides.value = false;
-  startTourFromStartup("andromeda");
+  selectPlace(lastTourId.value, 0);
   hasSeenIntroSlides.value = true;
 }
 
@@ -1399,7 +1437,10 @@ function tourCloseOut() {
 
 function replayTour() {
   tourRestartedCount += 1;
-  selectPlace(lastTourId.value);
+  leaveTour(); // tear down the tour state and layers
+  inExploreMode.value = false;
+  showTextSheet.value = false;
+  showIntroSlides.value = true;
 }
 
 // leaving the tour for good: step -1 is the state explore mode starts from
@@ -1603,12 +1644,12 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();  // no slides
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({
-      raRad: 10.6847 * D2R,
-      decRad: 41.269 * D2R,
+      raRad: 10.68471 * D2R,
+      decRad: 41.2692 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
-    }).then(async () => {
+    }).finally(async () => {
       onlyFootprints([phast, phastI]); 
     }); // zoom back out
     ats.setMaxStep(n);
@@ -1621,7 +1662,7 @@ function andromedaTour(n: number, tour = true) {
     store.gotoRADecZoom({ // center M31, zoomed to 
       raRad: 10.6847 * D2R,
       decRad: 41.269 * D2R,
-      zoomDeg: 2 * 6,
+      zoomDeg: 1.7 * 6,
       rollRad: 0,
       instant: false,
     });
@@ -1648,8 +1689,8 @@ function andromedaTour(n: number, tour = true) {
     showOpacitySliders();
     showImagesets(andromedaWtml, 0);
     store.gotoRADecZoom({ // center M31, zoomed to 
-      raRad: 10.7 * D2R,
-      decRad: 41.259 * D2R,
+      raRad: 10.7001 * D2R,
+      decRad: 41.25901 * D2R,
       zoomDeg: 2 * 6, 
       rollRad: 0,
       instant: false,
@@ -1675,7 +1716,7 @@ function andromedaTour(n: number, tour = true) {
     store.gotoRADecZoom({
       raRad: 10.13 * D2R,
       decRad: 40.71 * D2R,
-      zoomDeg: 0.01,
+      zoomDeg: 0.002,
       rollRad: 0,
       instant: false,
       duration: 3,
@@ -1744,6 +1785,7 @@ function andromedaTour(n: number, tour = true) {
       ats.setMaxStep(n);
       return;
     });
+    return;
   }
   
   
@@ -1763,7 +1805,7 @@ function goToAndromeda() {
   });
 }
 
-const PIXEL_SCALE_ZOOM = 0.01;
+const PIXEL_SCALE_ZOOM = 0.002;
 // the zoom Go to Andromeda settles at, and the fallback for backing out of a
 // zoom the user pinched into themselves rather than reached with the button
 const ANDROMEDA_ZOOM = 3 * 6;
@@ -1988,12 +2030,20 @@ const tourStepTitle = computed(
 const onLastStep = computed(() => tourStep.value >= tourTotalSteps.value - 1);
 
 function goToStep(n: number) {
+  // out of range: change nothing at all. step(n) would otherwise still run,
+  // and step(-1) is explore mode's setup, not a tour step
+  if (!Number.isInteger(n) || n < 0 || n > tourTotalSteps.value - 1) {
+    console.warn("goToStep called with out-of-range step", n, "for tour", activeTour.value?.id);
+    return;
+  }
+
   // if going backwards, we need undo the tour close out steps
   if (n < tourStep.value && n < (tourTotalSteps.value - 1)) {
     if (showExploreUi.value) {
       showExploreUi.value = false;
     }
   }
+
   tourStep.value = n;
 
   endTourOverlay.value = false; // so it goes away if we go backward, step() will bring it back if needed
@@ -2327,7 +2377,7 @@ onMounted(() => {
     // If there are layers to set up, do that here!
     layersLoaded.value = true;
 
-    if (tourParam === "manual") {
+    if (tourParam === "manual" || tourParam === "explore") {
       const tour = tours.find((t) => t.id === lastTourId.value) ?? tours[0];
       await tour.wtml.ready; // enterExplore runs step -1, which needs layers
       enterExplore();
@@ -2377,7 +2427,7 @@ const showOptions = ref(false);
 // layout keys off -- the sheet itself, the gesture hint and the slider row --
 // so the condition can't drift between them again.
 const tourSheetOpen = computed(
-  () => inTour.value && !showOptions.value && !showTextSheet.value,
+  () => inTour.value && !showIntroSlides.value && !showOptions.value && !showTextSheet.value,
 );
 const tourSheetOverlays = computed(
   () => tourSheetOpen.value && isRoomyLandscape.value,
@@ -2553,14 +2603,15 @@ function tryGoToSearchPosition(
   positionSearchError.value = `Your value${multiple ? "s" : ""} for ${invalid.join(" and ")} ${isAre} invalid`;
 }
 
+// this is not used, but nice to have it filled in :)
 function shareURL(): string {
   const url = new URL(window.location.href);
-  const bgSet = backgroundImagesets.find(
-    (bg) => bg.imagesetName === backgroundImagesetName.value,
-  );
+  // const bgSet = backgroundImagesets.find(
+  //   (bg) => bg.imagesetName === backgroundImagesetName.value,
+  // );
   let search = `raDeg=${store.raRad * R2D}&decDeg=${store.decRad * R2D}&zoomDeg=${store.zoomDeg}&rollDeg=${store.rollRad * R2D}`;
-  if (bgSet) {
-    search = `${search}&bg=${bgSet.displayName}`;
+  if (selectedPlaceId.value) {
+    search += `&tour=${selectedPlaceId.value}&tourStep=${tourStep.value + 1}`;
   }
   url.search = search;
   return url.href;
@@ -2623,6 +2674,11 @@ watch(autoOpenInfoDialog, (open: boolean) => {
 :root {
   --default-font-size: clamp(0.7rem, min(1.7vh, 1.7vw), 1.1rem);
   --default-line-height: clamp(1rem, min(2.2vh, 2.2vw), 1.6rem);
+
+  /* The glyph size for the top-left buttons and for the callout rows that
+     describe them. Fixed rather than scaled: the buttons stay 40px on a phone,
+     so a glyph that shrinks with the viewport just rattles around inside. */
+  --control-icon-size: 20px;
 
   --accent-color: #c77fb3;
   --background-color-darkest: #502752;
@@ -2738,18 +2794,6 @@ body {
   overflow: hidden;
   font-size: var(--default-font-size);
 
-  // the share of the screen a drawer takes, in whichever axis it occupies.
-  // Every drawer rule and every "clear the floating sheet" offset reads these,
-  // so the proportion is defined once.
-  --drawer-width: 34%;
-  --drawer-height: 34%;
-
-  // a phone in landscape has little absolute width to spare, so the column
-  // takes a bigger share than it would on a large screen
-  &.app-is-small.app-is-landscape {
-    --drawer-width: 40%;
-  }
-
   // inset: 0 fills #main-content and resizes with it, no explicit w/h needed
   .wwtelescope-component {
     position: absolute;
@@ -2822,6 +2866,18 @@ body {
     height: 40px;
     border-radius: 50%;
     border-width: 2px;
+
+    // FontAwesome renders an svg sized off its height, keeping its own aspect;
+    // MDI renders an <i> sized off font-size. They have to be set separately to
+    // come out the same height as each other.
+    .v-icon {
+      font-size: var(--control-icon-size);
+    }
+
+    svg {
+      height: var(--control-icon-size);
+      width: auto;
+    }
   }
 
   #explore-callout {
@@ -2869,12 +2925,15 @@ body {
         font-weight: 600;
       }
 
+      // the same glyph size as the buttons these rows describe; the fixed column
+      // keeps the labels lined up despite the two icon sets having different
+      // intrinsic widths
       svg,
       .v-icon {
-        flex: 0 0 1.25em;
-        width: 1.25em;
-        height: 1.25em;
-        font-size: 1em;
+        flex: 0 0 1.75rem;
+        height: var(--control-icon-size);
+        width: auto;
+        font-size: var(--control-icon-size);
       }
     }
 
@@ -3190,8 +3249,35 @@ video {
   padding-left: 2rem; // leaves the corner to #privacy-lock
 }
 
+/* The share of the screen a drawer takes, in whichever axis it occupies. Every
+   drawer rule and every "clear the floating sheet" offset reads these, so the
+   proportion is defined once -- on :root rather than #app because the privacy
+   dialog teleports out of #app and has to line up with the same drawer. */
+:root {
+  --drawer-width: 34%;
+  --drawer-height: 34%;
+}
+
+// a phone in landscape has little absolute width to spare, so the column takes
+// a bigger share than it would on a large screen
+@media (orientation: landscape) and (max-width: 959px) {
+  :root {
+    --drawer-width: 40%;
+  }
+}
+
 #privacy-popup-dialog .v-card-actions {
   display: flex;
+}
+
+/* On a phone the tour sheet owns the bottom of the screen and this lands on top
+   of it, so make it as small as it can be and stay legible. A media query
+   because the dialog teleports out of #app, where app-is-small cannot reach it. */
+@media (max-width: 599px) {
+  #privacy-popup-dialog .v-btn {
+    min-width: 0;
+    padding-inline: 0.5rem;
+  }
 }
 
 /* Small and quiet in the corner, the way seasons places it -- bottom left,
@@ -3599,20 +3685,88 @@ h1.startup-screen-title {
     color: #BDBDBD;
   }
 
+  // one row: the stacked card-text/card-actions blocks are what put all that
+  // air between the sentence and the buttons
+  .v-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.25rem;
+
+    // symmetric padding on both, so their centres line up rather than the
+    // buttons riding low
+    .v-card-text {
+      flex: 1 1 12rem;
+      padding: 0.25rem 0.375rem;
+    }
+
+    .v-card-actions {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 0.25rem 0.5rem;
+      // keeps them right-aligned on their own line too, once the row wraps
+      margin-left: auto;
+    }
+  }
+
   .v-overlay__content {
-    font-size: var(--default-font-size);
+    // fixed rather than the viewport-scaled --default-font-size: this is a
+    // footnote, and scaling it was what made the strip's height wander
+    font-size: 13px;
     background-color: purple;
     position: absolute;
-    bottom: 0;
-    right: 0;
+
+    // A strip along the bottom of the canvas, starting just right of
+    // #privacy-lock and sharing its baseline. Width comes from these insets
+    // rather than a max-width prop, so it can stay one row. The drawer sizes
+    // come from :root and the orientation from a media query because the dialog
+    // teleports out of #app and can see neither.
+    top: auto;
+    bottom: 0.75rem;
+    left: 1rem; // where the lock sits; it hides itself while this is open
+    right: 0.75rem;
+    // Vuetify gives .v-dialog > .v-overlay__content a fixed width and a 24px
+    // margin; with a width set, the right inset above is simply ignored
+    width: auto;
+    max-width: none;
+    margin: 0;
+
+    @media (orientation: portrait) {
+      bottom: calc(var(--drawer-height) + 0.75rem);
+    }
+
+    @media (orientation: landscape) {
+      left: calc(var(--drawer-width) + 1rem);
+    }
+
+    // The logo row renders from 960 up and shares this band. The cluster sits a
+    // near-constant ~245px in from the right edge whatever the viewport, so stop
+    // short of it and let the sentence take a second line rather than covering
+    // the logos.
+    @media (min-width: 960px) {
+      right: 16rem;
+    }
   }
 
   .v-btn--size-default {
       font-size: calc(0.9 * var(--default-font-size));
     }  
 
+  // a v-btn is a fixed 36px tall whatever its text, which is most of the air
+  // around these labels -- let it size to the text instead
   .v-card-actions .v-btn {
-    padding: 0 4px;
+    height: auto;
+    min-height: 0;
+    padding: 2px 4px;
+    font-size: 12px;
+
+    // Hugging the text leaves a ~14px target, well under the ~44px a finger
+    // wants. Keep the tight look for a mouse and give touch something to hit.
+    @media (pointer: coarse) {
+      min-height: 32px;
+      padding-inline: 8px;
+    }
   }
 }
 
