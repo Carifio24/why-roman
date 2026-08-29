@@ -8,7 +8,9 @@ declare module "@wwtelescope/engine" {
     function parse(data: string): number;
     function parseRA(ra: string, degrees: boolean): number;
     function parseDec(dec: string): number;
+    function raDecTo3dAu(ra: number, dec: number, au: number): Vector3d;
   }
+
 
   interface Matrix3d {
     clone(): Matrix3d;
@@ -76,6 +78,33 @@ declare module "@wwtelescope/engine" {
     add(text: Text3d): void;
     draw(renderContext: RenderContext, opacity: number, color: Color): void;
     prepareBatch(): void;
+  }
+
+  class Texture {
+    texture2d: unknown;
+  }
+
+  interface PositionColoredTextured {
+    position: Vector3d;
+    tu: number;
+    tv: number;
+    color: Color;
+  }
+
+  class Sprite2d {
+    // Not sure if this is actualyl what it
+    vertexBuffer: WebGLBuffer;
+
+    create(points: WebGLBuffer);
+    update(points: WebGLBuffer);
+    draw(renderContext: RenderContext, points: PositionColoredTextured[], count: number, texture: Texture, triangleStrips: boolean, opacity: number): void;
+  }
+
+  class Planets {
+    static _planetTextures: Texture[];
+    static _planetScales: number[];
+    static _planetPoints: PositionColoredTextured[];
+    static _planetSprite: Sprite2d;
   }
 
 }

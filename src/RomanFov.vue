@@ -384,9 +384,32 @@
           <v-row
             id="position-layout"
             align="start"
-            justify="center"
+            :justify="tourStep === 0 ? 'center': 'center'"
             class="pt-4"
           >
+            <div
+              id="moons-control" 
+              v-if="showMoons"
+              class="opacity-slider-row info-box"
+            >
+              <v-slider
+                id="opacity-moons"
+                v-model="moonsOpacity"
+                :min="0"
+                :max="1"
+                :step="0.01"
+                color="grey"
+                density="compact"
+                hide-details
+                @end="sliderMoveCount += 1"
+              />
+              <span
+                class="opacity-slider-label"
+                tabindex="0"
+                @click="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
+                @keyup.enter="() => { moonsOpacity = 1; sliderMaxPressCount += 1; }"
+              >Show Moons</span>
+            </div>
             <div
               v-if="opacitySliders.length > 0"
               id="step-control"
@@ -764,6 +787,7 @@ import {
 } from "./composables/useWtmlLoader";
 import { useLayerOrdering } from "./composables/useLayerOrdering";
 import { useDataTracking } from "./composables/useDataTracking";
+import { drawMoon } from "./moon";
 
 // @ts-expect-error `Util.splitString` is defined
 wwtlib.Util.splitString = splitString;
@@ -2043,7 +2067,6 @@ const tourEndOptions = computed<{id: string, label: string, action: () => void}[
  */
 // set by showOpacitySliders, not worked out from what is showing
 const opacitySliders = ref<{ index: number; name: string; minLabel?: string; maxLabel?: string }[]>([]);
-const layerSliders = opacitySliders;
 
 function opacityOf(index: number): number {
   return layerOpacities.value[index] ?? 1;
@@ -2158,6 +2181,17 @@ const settings = Settings.get_active();
 const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
+
+const showMoons = computed(() => tourStep.value === 0 && inTour.value);
+const moonsOpacity = ref(0);
+const MOON_POSITIONS = [
+  [9.6948, 40.2079],
+  [10.0908, 40.6323],
+  [10.4868, 41.0566],
+  [10.8826, 41.4810],
+  [11.2786, 41.9053],
+  [11.6746, 42.3297]
+];
 
 function showTextOverlay(id: string, show: boolean) {
   const setter = textVisibilitySetters[id];
@@ -2276,6 +2310,17 @@ onMounted(() => {
 
     store.addFrameCallback(_si => {
       footprints.forEach((footprint) => footprint.draw(WWTControl.singleton));
+
+      if (showMoons.value) {
+        MOON_POSITIONS.forEach(([raDeg, decDeg]) => {
+          drawMoon({
+            raDeg,
+            decDeg,
+            opacity: moonsOpacity.value,
+            renderContext,
+          });
+        });
+      }
     });
     WWTControl.singleton.renderOneFrame();
 
@@ -3541,10 +3586,12 @@ h1.startup-screen-title {
   line-height: 1;
 }
 
-#step-control {
+#step-control, #moons-control {
   flex: 1 0 auto;
   border: none;
   background: none;
+  display: flex;
+  justify-content: center;
 }
 
 .opacity-slider-row {
@@ -3552,6 +3599,8 @@ h1.startup-screen-title {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+  flex-grow: 1;
+  
 }
 
 .opacity-slider-label {
@@ -3724,4 +3773,5 @@ h1.startup-screen-title {
 #change-optout {
   width: fit-content;
 }
+.opacity-slider-row { max-width: 450px }
 </style>
