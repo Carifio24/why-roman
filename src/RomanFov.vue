@@ -2223,7 +2223,10 @@ const webglDisabled = ref(false);
 
 const textVisibilitySetters: Record<string, (show: boolean) => void> = {};
 
-const showMoons = computed(() => tourStep.value === 0 && inTour.value);
+// parked at AG's request. This gates both the slider and the moons drawn on
+// the sky, so `false` takes the whole comparison out; swap the lines to restore.
+// const showMoons = computed(() => tourStep.value === 0 && inTour.value);
+const showMoons = computed(() => false);
 const moonsOpacity = ref(0);
 const MOON_POSITIONS = [
   [9.6948, 40.2079],
